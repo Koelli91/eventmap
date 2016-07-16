@@ -2,29 +2,46 @@ doctype html
 html
   head
     title eventmap
-    meta(name="viewport" content="width=device-width, initial-scale=1.0")
-    link(href="../res/css/bootstrap.min.css" rel="stylesheet")
-    link(href="landing.css" rel="stylesheet")
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    link(href='../res/css/bootstrap.min.css', rel='stylesheet')
+    link(href='../res/css/styles.css', rel='stylesheet')
   body
-    
     .overlay
+      nav.eventnav.navbar.navbar-default.navbar-custom.navbar-fixed-top
+        .container-fluid
+          .navbar-header
+            button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1', aria-expanded='false')
+              span.sr-only Navigation ein-/ausblenden
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+            span.logo.nav.navbar-nav
+              a.navbar-brand(href='map.html')
+                img(src='../res/img/logo_white.png')
+          #bs-example-navbar-collapse-1.collapse.navbar-collapse
+            ul.nav.navbar-nav.navbar-right
+              li
+                a(href='imprint.html') Impressum
+              li
+                a(href='about.html') Über Uns
       .container.search-block
-        .col-md-3.col-md-offset-2
-          input.form-control.index-control.custom-input-index(placeholder="Stadt")
-        .col-md-3
-          select.form-control.index-control.custom-input-index
-            option(selected) Alle
-            option Festivals
-            option Party
-            option Konzerte
-        .col-md-3
-          button.btn.custom-btn.index-control.custom-btn-index Suchen
+        .row
+          .col-mde-12.index-text.text-center Veranstaltungen in deiner Nähe
+            
+        .row
+          .col-md-3.col-md-offset-2
+            input.form-control.index-control.custom-input-index(placeholder='Stadt')
+          .col-md-3
+            select.form-control.index-control.custom-input-index
+              option(selected='') All
+              option Festivals
+              option Party
+              option Konzerte
+          .col-md-3
+            button.btn.custom-btn.index-control.custom-btn-index Suchen
     .map
-    
-    
-    
-          
-    script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js")
-    script(src="../res/js/bootstrap.min.js")
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js')
+    script(src='../res/js/bootstrap.min.js')
   
   
