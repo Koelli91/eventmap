@@ -27,7 +27,7 @@
             <input name="lat" type="hidden" value="" id="lat">
             <input name="lng" type="hidden" value="" id="lng">
             <div class="input-group">
-                <input type="text" style="width: auto" placeholder="Ort" class="form-control input-map">
+                <input id="city" type="text" style="width: auto" placeholder="Ort" class="form-control input-map">
                 <select style="width: auto" class="form-control input-map">
                   <option selected="">Alle</option>
                   <option>Konzerte</option>
@@ -42,7 +42,8 @@
                   <option>Ausstellungen</option>
                 </select>
                 <input type="number" step="1" min="1" max="200" style="width: auto"
-                       text="20" class="form-control input-map">
+                       value="20" class="form-control input-map">
+                       <span class="input-group-addon">km</span>
             </div>
             <button type="submit" class="btn btn-default custom-btn custom-btn-map-nav">Suche</button>
           </form>

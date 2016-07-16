@@ -79,6 +79,7 @@ var map;
 var markers = new Array(sample_data.length);
 
 function initialize() {
+    initSearchForm()
     var latlng = new google.maps.LatLng(51.494229755747405, 7.4204922026910936);
     var mapOptions = {
         zoom: 8,
