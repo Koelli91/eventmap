@@ -29,15 +29,20 @@ Coolibri.prototype.scrape_event_page = function(html, url) {
   data['category'] = $('.details > .what > p.d').text().trim()
 
   data['time_start'] = $('meta[property="og:start_time"]').attr('content')
-  data['time_start'] = $('meta[property="og:start_time"]').attr('content')
-  // data['time_start'] = $('.when .d time[itemprop=startDate]').attr('datetime')
-  // data['time_end'] = $('.when .d time[itemprop=endDate]').attr('datetime')
+  data['time_end'] = $('meta[property="og:end_time"]').attr('content')
+  if(data['time_start'] == ''){
+    data['time_start'] = $('em.gr time[itemprop=startDate]').attr('datetime')
+  }
+  if(data['time_end'] == ''){
+    data['time_end'] = $('em.gr time[itemprop=endDate]').attr('datetime')
+  }
   data['website'] = url
   data['location']['lat'] = $('.details > span meta[itemprop=latitude]').attr('content')
   data['location']['lon'] = $('.details > span meta[itemprop=longitude]').attr('content')
   data['location']['plz'] = $('.address > div > span[itemprop=postalCode]').text()
   data['location']['city'] = $('.address > div > span[itemprop=addressLocality]').text()
   data['location']['street'] = $('.address > div[itemprop=streetAddress]').text()
+  data['location']['name'] = $('meta[property="og:location"]').attr('content')
   data['location']['country'] = 'DE'
   return data
 }
