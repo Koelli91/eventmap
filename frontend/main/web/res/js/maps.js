@@ -131,9 +131,18 @@ function parseDay(time) {
     var date = day + "." + month + "." + year;
     return date;
 }
-function loadEvents(config) {
-  $.get("api/v1/events", config, function (data) {
-
+function loadEvents() {
+  var search_data = {
+    "radius": $('#radius').val(),
+    "lat": $('#lat').val(),
+    "lng": $('#lng').val(),
+    "category": $('#category').val(),
+  }
+  $.get("api/v1/events", search_data, function (data) {
+    emptyEventList();
+    for (var i = 0; i < data.length; i++) {
+      addElement(data, i)
+    }
   })
 }
 function initSearchForm() {
@@ -142,8 +151,15 @@ function initSearchForm() {
     if( $("#lng").val() == "" || $("#lat").val() == ""){
       alert("Bitte Ort aus Liste auswählen")
       return false
+    }else {
+      loadEvents();
+      return false
     }
   })
+}
+
+function emptyEventList() {
+    $("#eventlist").empty();
 }
 
 function addElement(data, i) {
