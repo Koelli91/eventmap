@@ -81,3 +81,17 @@ function parseDay(time) {
     alert('day ' + date);
     return date;
 }
+function loadEvents(config) {
+  $.get("api/v1/events", config, function (data) {
+
+  })
+}
+function initSearchForm() {
+  $("#city").geocomplete({ details: "form" });
+  $("#search").submit(function (event) {
+    if( $("#lng").val() == "" || $("#lat").val() == ""){
+      alert("Bitte Ort aus Liste auswählen")
+      return false
+    }
+  })
+}

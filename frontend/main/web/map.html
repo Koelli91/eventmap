@@ -23,24 +23,33 @@
             </span>
         </div>
         <div id="bs-example-navbar-collapse-1" class="collapse navbar-collapse">
-            <form role="search" class="navbar-form navbar-left">
-                <div class="input-group">
-                    <input type="text" style="width: auto" placeholder="Ort" class="form-control input-map">
-                    <select style="width: auto" class="form-control input-map">
-                        <option>Alles</option>
-                        <option>Party</option>
-                        <option>Festival</option>
-                        <option>Konzert</option>
-                    </select>
-                    <input type="number" step="1" min="1" max="200" style="width: auto"
-                           placeholder="Radius in km" class="form-control input-map">
-                </div>
-                <button type="submit" class="btn btn-default custom-btn custom-btn-map-nav">Suche</button>
-            </form>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="imprint.html">Impressum</a></li>
-                <li><a href="about.html">Über Uns</a></li>
-            </ul>
+          <form class="navbar-form navbar-left" role="search" action="map.html" method="get" id="search">
+            <input name="lat" type="hidden" value="" id="lat">
+            <input name="lng" type="hidden" value="" id="lng">
+            <div class="input-group">
+                <input type="text" style="width: auto" placeholder="Ort" class="form-control input-map">
+                <select style="width: auto" class="form-control input-map">
+                  <option selected="">Alle</option>
+                  <option>Konzerte</option>
+                  <option>Party</option>
+                  <option>Comedy & Co.</option>
+                  <option>Musical & Show</option>
+                  <option>Theater & Tanz</option>
+                  <option>Oper & Klassik</option>
+                  <option>Vortrag & Lesung</option>
+                  <option>Für Kinder</option>
+                  <option>Und Sonst</option>
+                  <option>Ausstellungen</option>
+                </select>
+                <input type="number" step="1" min="1" max="200" style="width: auto"
+                       text="20" class="form-control input-map">
+            </div>
+            <button type="submit" class="btn btn-default custom-btn custom-btn-map-nav">Suche</button>
+          </form>
+          <ul class="nav navbar-nav navbar-right">
+              <li><a href="imprint.html">Impressum</a></li>
+              <li><a href="about.html">Über Uns</a></li>
+          </ul>
         </div>
     </div>
 </nav>
@@ -58,5 +67,7 @@
 <script src="http://maps.googleapis.com/maps/api/js"></script>
 <script src="../res/js/sample.js"></script>
 <script src="../res/js/maps.js"></script>
+<script src="http://maps.googleapis.com/maps/api/js?libraries=places"></script>
+<script src="../res/js/jquery.geocomplete.min.js"></script>
 </body>
 </html>
