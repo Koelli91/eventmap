@@ -78,11 +78,11 @@ abstract class Image implements ActiveRecordInterface
     protected $image;
 
     /**
-     * The value for the type field.
+     * The value for the type_id field.
      * 
-     * @var        string
+     * @var        int
      */
-    protected $type;
+    protected $type_id;
 
     /**
      * The value for the event_id field.
@@ -355,13 +355,13 @@ abstract class Image implements ActiveRecordInterface
     }
 
     /**
-     * Get the [type] column value.
+     * Get the [type_id] column value.
      * 
-     * @return string
+     * @return int
      */
-    public function getType()
+    public function getTypeId()
     {
-        return $this->type;
+        return $this->type_id;
     }
 
     /**
@@ -418,28 +418,28 @@ abstract class Image implements ActiveRecordInterface
     } // setImage()
 
     /**
-     * Set the value of [type] column.
+     * Set the value of [type_id] column.
      * 
-     * @param string $v new value
+     * @param int $v new value
      * @return $this|\Image The current object (for fluent API support)
      */
-    public function setType($v)
+    public function setTypeId($v)
     {
         if ($v !== null) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
-        if ($this->type !== $v) {
-            $this->type = $v;
-            $this->modifiedColumns[ImageTableMap::COL_TYPE] = true;
+        if ($this->type_id !== $v) {
+            $this->type_id = $v;
+            $this->modifiedColumns[ImageTableMap::COL_TYPE_ID] = true;
         }
 
-        if ($this->aImagetype !== null && $this->aImagetype->getType() !== $v) {
+        if ($this->aImagetype !== null && $this->aImagetype->getId() !== $v) {
             $this->aImagetype = null;
         }
 
         return $this;
-    } // setType()
+    } // setTypeId()
 
     /**
      * Set the value of [event_id] column.
@@ -513,8 +513,8 @@ abstract class Image implements ActiveRecordInterface
                 $this->image = null;
             }
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ImageTableMap::translateFieldName('Type', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->type = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ImageTableMap::translateFieldName('TypeId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->type_id = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ImageTableMap::translateFieldName('EventId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->event_id = (null !== $col) ? (int) $col : null;
@@ -548,7 +548,7 @@ abstract class Image implements ActiveRecordInterface
      */
     public function ensureConsistency()
     {
-        if ($this->aImagetype !== null && $this->type !== $this->aImagetype->getType()) {
+        if ($this->aImagetype !== null && $this->type_id !== $this->aImagetype->getId()) {
             $this->aImagetype = null;
         }
         if ($this->aEvent !== null && $this->event_id !== $this->aEvent->getId()) {
@@ -761,8 +761,8 @@ abstract class Image implements ActiveRecordInterface
         if ($this->isColumnModified(ImageTableMap::COL_IMAGE)) {
             $modifiedColumns[':p' . $index++]  = 'image';
         }
-        if ($this->isColumnModified(ImageTableMap::COL_TYPE)) {
-            $modifiedColumns[':p' . $index++]  = 'type';
+        if ($this->isColumnModified(ImageTableMap::COL_TYPE_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'type_id';
         }
         if ($this->isColumnModified(ImageTableMap::COL_EVENT_ID)) {
             $modifiedColumns[':p' . $index++]  = 'event_id';
@@ -787,8 +787,8 @@ abstract class Image implements ActiveRecordInterface
                         }
                         $stmt->bindValue($identifier, $this->image, PDO::PARAM_LOB);
                         break;
-                    case 'type':                        
-                        $stmt->bindValue($identifier, $this->type, PDO::PARAM_STR);
+                    case 'type_id':                        
+                        $stmt->bindValue($identifier, $this->type_id, PDO::PARAM_INT);
                         break;
                     case 'event_id':                        
                         $stmt->bindValue($identifier, $this->event_id, PDO::PARAM_INT);
@@ -862,7 +862,7 @@ abstract class Image implements ActiveRecordInterface
                 return $this->getImage();
                 break;
             case 2:
-                return $this->getType();
+                return $this->getTypeId();
                 break;
             case 3:
                 return $this->getEventId();
@@ -899,7 +899,7 @@ abstract class Image implements ActiveRecordInterface
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getImage(),
-            $keys[2] => $this->getType(),
+            $keys[2] => $this->getTypeId(),
             $keys[3] => $this->getEventId(),
         );
         $virtualColumns = $this->virtualColumns;
@@ -979,7 +979,7 @@ abstract class Image implements ActiveRecordInterface
                 $this->setImage($value);
                 break;
             case 2:
-                $this->setType($value);
+                $this->setTypeId($value);
                 break;
             case 3:
                 $this->setEventId($value);
@@ -1017,7 +1017,7 @@ abstract class Image implements ActiveRecordInterface
             $this->setImage($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setType($arr[$keys[2]]);
+            $this->setTypeId($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
             $this->setEventId($arr[$keys[3]]);
@@ -1069,8 +1069,8 @@ abstract class Image implements ActiveRecordInterface
         if ($this->isColumnModified(ImageTableMap::COL_IMAGE)) {
             $criteria->add(ImageTableMap::COL_IMAGE, $this->image);
         }
-        if ($this->isColumnModified(ImageTableMap::COL_TYPE)) {
-            $criteria->add(ImageTableMap::COL_TYPE, $this->type);
+        if ($this->isColumnModified(ImageTableMap::COL_TYPE_ID)) {
+            $criteria->add(ImageTableMap::COL_TYPE_ID, $this->type_id);
         }
         if ($this->isColumnModified(ImageTableMap::COL_EVENT_ID)) {
             $criteria->add(ImageTableMap::COL_EVENT_ID, $this->event_id);
@@ -1162,7 +1162,7 @@ abstract class Image implements ActiveRecordInterface
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setImage($this->getImage());
-        $copyObj->setType($this->getType());
+        $copyObj->setTypeId($this->getTypeId());
         $copyObj->setEventId($this->getEventId());
         if ($makeNew) {
             $copyObj->setNew(true);
@@ -1202,9 +1202,9 @@ abstract class Image implements ActiveRecordInterface
     public function setImagetype(ChildImagetype $v = null)
     {
         if ($v === null) {
-            $this->setType(NULL);
+            $this->setTypeId(NULL);
         } else {
-            $this->setType($v->getType());
+            $this->setTypeId($v->getId());
         }
 
         $this->aImagetype = $v;
@@ -1229,8 +1229,8 @@ abstract class Image implements ActiveRecordInterface
      */
     public function getImagetype(ConnectionInterface $con = null)
     {
-        if ($this->aImagetype === null && (($this->type !== "" && $this->type !== null))) {
-            $this->aImagetype = ChildImagetypeQuery::create()->findPk($this->type, $con);
+        if ($this->aImagetype === null && ($this->type_id !== null)) {
+            $this->aImagetype = ChildImagetypeQuery::create()->findPk($this->type_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
@@ -1309,7 +1309,7 @@ abstract class Image implements ActiveRecordInterface
         }
         $this->id = null;
         $this->image = null;
-        $this->type = null;
+        $this->type_id = null;
         $this->event_id = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();

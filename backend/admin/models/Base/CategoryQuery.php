@@ -20,8 +20,10 @@ use Propel\Runtime\Exception\PropelException;
  *
  * 
  *
+ * @method     ChildCategoryQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildCategoryQuery orderByName($order = Criteria::ASC) Order by the name column
  *
+ * @method     ChildCategoryQuery groupById() Group by the id column
  * @method     ChildCategoryQuery groupByName() Group by the name column
  *
  * @method     ChildCategoryQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -47,14 +49,17 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildCategory findOne(ConnectionInterface $con = null) Return the first ChildCategory matching the query
  * @method     ChildCategory findOneOrCreate(ConnectionInterface $con = null) Return the first ChildCategory matching the query, or a new ChildCategory object populated from the query conditions when no match is found
  *
+ * @method     ChildCategory findOneById(int $id) Return the first ChildCategory filtered by the id column
  * @method     ChildCategory findOneByName(string $name) Return the first ChildCategory filtered by the name column *
 
  * @method     ChildCategory requirePk($key, ConnectionInterface $con = null) Return the ChildCategory by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCategory requireOne(ConnectionInterface $con = null) Return the first ChildCategory matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
+ * @method     ChildCategory requireOneById(int $id) Return the first ChildCategory filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildCategory requireOneByName(string $name) Return the first ChildCategory filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildCategory[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildCategory objects based on current ModelCriteria
+ * @method     ChildCategory[]|ObjectCollection findById(int $id) Return ChildCategory objects filtered by the id column
  * @method     ChildCategory[]|ObjectCollection findByName(string $name) Return ChildCategory objects filtered by the name column
  * @method     ChildCategory[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -154,10 +159,10 @@ abstract class CategoryQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT name FROM category WHERE name = :p0';
+        $sql = 'SELECT id, name FROM category WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);            
-            $stmt->bindValue(':p0', $key, PDO::PARAM_STR);
+            $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
             $stmt->execute();
         } catch (Exception $e) {
             Propel::log($e->getMessage(), Propel::LOG_ERR);
@@ -228,7 +233,7 @@ abstract class CategoryQuery extends ModelCriteria
     public function filterByPrimaryKey($key)
     {
 
-        return $this->addUsingAlias(CategoryTableMap::COL_NAME, $key, Criteria::EQUAL);
+        return $this->addUsingAlias(CategoryTableMap::COL_ID, $key, Criteria::EQUAL);
     }
 
     /**
@@ -241,7 +246,48 @@ abstract class CategoryQuery extends ModelCriteria
     public function filterByPrimaryKeys($keys)
     {
 
-        return $this->addUsingAlias(CategoryTableMap::COL_NAME, $keys, Criteria::IN);
+        return $this->addUsingAlias(CategoryTableMap::COL_ID, $keys, Criteria::IN);
+    }
+
+    /**
+     * Filter the query on the id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterById(1234); // WHERE id = 1234
+     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
+     * $query->filterById(array('min' => 12)); // WHERE id > 12
+     * </code>
+     *
+     * @param     mixed $id The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildCategoryQuery The current query, for fluid interface
+     */
+    public function filterById($id = null, $comparison = null)
+    {
+        if (is_array($id)) {
+            $useMinMax = false;
+            if (isset($id['min'])) {
+                $this->addUsingAlias(CategoryTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($id['max'])) {
+                $this->addUsingAlias(CategoryTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(CategoryTableMap::COL_ID, $id, $comparison);
     }
 
     /**
@@ -282,7 +328,7 @@ abstract class CategoryQuery extends ModelCriteria
     {
         if ($eventCategory instanceof \EventCategory) {
             return $this
-                ->addUsingAlias(CategoryTableMap::COL_NAME, $eventCategory->getCategoryName(), $comparison);
+                ->addUsingAlias(CategoryTableMap::COL_ID, $eventCategory->getCategoryId(), $comparison);
         } elseif ($eventCategory instanceof ObjectCollection) {
             return $this
                 ->useEventCategoryQuery()
@@ -370,7 +416,7 @@ abstract class CategoryQuery extends ModelCriteria
     public function prune($category = null)
     {
         if ($category) {
-            $this->addUsingAlias(CategoryTableMap::COL_NAME, $category->getName(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(CategoryTableMap::COL_ID, $category->getId(), Criteria::NOT_EQUAL);
         }
 
         return $this;

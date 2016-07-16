@@ -82,9 +82,9 @@ class ImageTableMap extends TableMap
     const COL_IMAGE = 'image.image';
 
     /**
-     * the column name for the type field
+     * the column name for the type_id field
      */
-    const COL_TYPE = 'image.type';
+    const COL_TYPE_ID = 'image.type_id';
 
     /**
      * the column name for the event_id field
@@ -103,10 +103,10 @@ class ImageTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Image', 'Type', 'EventId', ),
-        self::TYPE_CAMELNAME     => array('id', 'image', 'type', 'eventId', ),
-        self::TYPE_COLNAME       => array(ImageTableMap::COL_ID, ImageTableMap::COL_IMAGE, ImageTableMap::COL_TYPE, ImageTableMap::COL_EVENT_ID, ),
-        self::TYPE_FIELDNAME     => array('id', 'image', 'type', 'event_id', ),
+        self::TYPE_PHPNAME       => array('Id', 'Image', 'TypeId', 'EventId', ),
+        self::TYPE_CAMELNAME     => array('id', 'image', 'typeId', 'eventId', ),
+        self::TYPE_COLNAME       => array(ImageTableMap::COL_ID, ImageTableMap::COL_IMAGE, ImageTableMap::COL_TYPE_ID, ImageTableMap::COL_EVENT_ID, ),
+        self::TYPE_FIELDNAME     => array('id', 'image', 'type_id', 'event_id', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
@@ -117,10 +117,10 @@ class ImageTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Image' => 1, 'Type' => 2, 'EventId' => 3, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'image' => 1, 'type' => 2, 'eventId' => 3, ),
-        self::TYPE_COLNAME       => array(ImageTableMap::COL_ID => 0, ImageTableMap::COL_IMAGE => 1, ImageTableMap::COL_TYPE => 2, ImageTableMap::COL_EVENT_ID => 3, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'image' => 1, 'type' => 2, 'event_id' => 3, ),
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Image' => 1, 'TypeId' => 2, 'EventId' => 3, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'image' => 1, 'typeId' => 2, 'eventId' => 3, ),
+        self::TYPE_COLNAME       => array(ImageTableMap::COL_ID => 0, ImageTableMap::COL_IMAGE => 1, ImageTableMap::COL_TYPE_ID => 2, ImageTableMap::COL_EVENT_ID => 3, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'image' => 1, 'type_id' => 2, 'event_id' => 3, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
@@ -143,7 +143,7 @@ class ImageTableMap extends TableMap
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('image', 'Image', 'BLOB', true, null, null);
-        $this->addForeignKey('type', 'Type', 'VARCHAR', 'imagetype', 'type', true, 255, null);
+        $this->addForeignKey('type_id', 'TypeId', 'INTEGER', 'imagetype', 'id', true, null, null);
         $this->addForeignKey('event_id', 'EventId', 'INTEGER', 'event', 'id', true, null, null);
     } // initialize()
 
@@ -155,8 +155,8 @@ class ImageTableMap extends TableMap
         $this->addRelation('Imagetype', '\\Imagetype', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
-    0 => ':type',
-    1 => ':type',
+    0 => ':type_id',
+    1 => ':id',
   ),
 ), null, null, null, false);
         $this->addRelation('Event', '\\Event', RelationMap::MANY_TO_ONE, array (
@@ -311,12 +311,12 @@ class ImageTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(ImageTableMap::COL_ID);
             $criteria->addSelectColumn(ImageTableMap::COL_IMAGE);
-            $criteria->addSelectColumn(ImageTableMap::COL_TYPE);
+            $criteria->addSelectColumn(ImageTableMap::COL_TYPE_ID);
             $criteria->addSelectColumn(ImageTableMap::COL_EVENT_ID);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.image');
-            $criteria->addSelectColumn($alias . '.type');
+            $criteria->addSelectColumn($alias . '.type_id');
             $criteria->addSelectColumn($alias . '.event_id');
         }
     }

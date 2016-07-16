@@ -20,8 +20,10 @@ use Propel\Runtime\Exception\PropelException;
  *
  * 
  *
+ * @method     ChildImagetypeQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildImagetypeQuery orderByType($order = Criteria::ASC) Order by the type column
  *
+ * @method     ChildImagetypeQuery groupById() Group by the id column
  * @method     ChildImagetypeQuery groupByType() Group by the type column
  *
  * @method     ChildImagetypeQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -47,14 +49,17 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildImagetype findOne(ConnectionInterface $con = null) Return the first ChildImagetype matching the query
  * @method     ChildImagetype findOneOrCreate(ConnectionInterface $con = null) Return the first ChildImagetype matching the query, or a new ChildImagetype object populated from the query conditions when no match is found
  *
+ * @method     ChildImagetype findOneById(int $id) Return the first ChildImagetype filtered by the id column
  * @method     ChildImagetype findOneByType(string $type) Return the first ChildImagetype filtered by the type column *
 
  * @method     ChildImagetype requirePk($key, ConnectionInterface $con = null) Return the ChildImagetype by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildImagetype requireOne(ConnectionInterface $con = null) Return the first ChildImagetype matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
+ * @method     ChildImagetype requireOneById(int $id) Return the first ChildImagetype filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildImagetype requireOneByType(string $type) Return the first ChildImagetype filtered by the type column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildImagetype[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildImagetype objects based on current ModelCriteria
+ * @method     ChildImagetype[]|ObjectCollection findById(int $id) Return ChildImagetype objects filtered by the id column
  * @method     ChildImagetype[]|ObjectCollection findByType(string $type) Return ChildImagetype objects filtered by the type column
  * @method     ChildImagetype[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -154,10 +159,10 @@ abstract class ImagetypeQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT type FROM imagetype WHERE type = :p0';
+        $sql = 'SELECT id, type FROM imagetype WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);            
-            $stmt->bindValue(':p0', $key, PDO::PARAM_STR);
+            $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
             $stmt->execute();
         } catch (Exception $e) {
             Propel::log($e->getMessage(), Propel::LOG_ERR);
@@ -228,7 +233,7 @@ abstract class ImagetypeQuery extends ModelCriteria
     public function filterByPrimaryKey($key)
     {
 
-        return $this->addUsingAlias(ImagetypeTableMap::COL_TYPE, $key, Criteria::EQUAL);
+        return $this->addUsingAlias(ImagetypeTableMap::COL_ID, $key, Criteria::EQUAL);
     }
 
     /**
@@ -241,7 +246,48 @@ abstract class ImagetypeQuery extends ModelCriteria
     public function filterByPrimaryKeys($keys)
     {
 
-        return $this->addUsingAlias(ImagetypeTableMap::COL_TYPE, $keys, Criteria::IN);
+        return $this->addUsingAlias(ImagetypeTableMap::COL_ID, $keys, Criteria::IN);
+    }
+
+    /**
+     * Filter the query on the id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterById(1234); // WHERE id = 1234
+     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
+     * $query->filterById(array('min' => 12)); // WHERE id > 12
+     * </code>
+     *
+     * @param     mixed $id The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildImagetypeQuery The current query, for fluid interface
+     */
+    public function filterById($id = null, $comparison = null)
+    {
+        if (is_array($id)) {
+            $useMinMax = false;
+            if (isset($id['min'])) {
+                $this->addUsingAlias(ImagetypeTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($id['max'])) {
+                $this->addUsingAlias(ImagetypeTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(ImagetypeTableMap::COL_ID, $id, $comparison);
     }
 
     /**
@@ -282,7 +328,7 @@ abstract class ImagetypeQuery extends ModelCriteria
     {
         if ($image instanceof \Image) {
             return $this
-                ->addUsingAlias(ImagetypeTableMap::COL_TYPE, $image->getType(), $comparison);
+                ->addUsingAlias(ImagetypeTableMap::COL_ID, $image->getTypeId(), $comparison);
         } elseif ($image instanceof ObjectCollection) {
             return $this
                 ->useImageQuery()
@@ -353,7 +399,7 @@ abstract class ImagetypeQuery extends ModelCriteria
     public function prune($imagetype = null)
     {
         if ($imagetype) {
-            $this->addUsingAlias(ImagetypeTableMap::COL_TYPE, $imagetype->getType(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(ImagetypeTableMap::COL_ID, $imagetype->getId(), Criteria::NOT_EQUAL);
         }
 
         return $this;

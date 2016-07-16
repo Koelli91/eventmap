@@ -20,8 +20,10 @@ use Propel\Runtime\Exception\PropelException;
  *
  * 
  *
+ * @method     ChildWebsitetypeQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildWebsitetypeQuery orderByType($order = Criteria::ASC) Order by the type column
  *
+ * @method     ChildWebsitetypeQuery groupById() Group by the id column
  * @method     ChildWebsitetypeQuery groupByType() Group by the type column
  *
  * @method     ChildWebsitetypeQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -47,14 +49,17 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildWebsitetype findOne(ConnectionInterface $con = null) Return the first ChildWebsitetype matching the query
  * @method     ChildWebsitetype findOneOrCreate(ConnectionInterface $con = null) Return the first ChildWebsitetype matching the query, or a new ChildWebsitetype object populated from the query conditions when no match is found
  *
+ * @method     ChildWebsitetype findOneById(int $id) Return the first ChildWebsitetype filtered by the id column
  * @method     ChildWebsitetype findOneByType(string $type) Return the first ChildWebsitetype filtered by the type column *
 
  * @method     ChildWebsitetype requirePk($key, ConnectionInterface $con = null) Return the ChildWebsitetype by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildWebsitetype requireOne(ConnectionInterface $con = null) Return the first ChildWebsitetype matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
+ * @method     ChildWebsitetype requireOneById(int $id) Return the first ChildWebsitetype filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildWebsitetype requireOneByType(string $type) Return the first ChildWebsitetype filtered by the type column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildWebsitetype[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildWebsitetype objects based on current ModelCriteria
+ * @method     ChildWebsitetype[]|ObjectCollection findById(int $id) Return ChildWebsitetype objects filtered by the id column
  * @method     ChildWebsitetype[]|ObjectCollection findByType(string $type) Return ChildWebsitetype objects filtered by the type column
  * @method     ChildWebsitetype[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -154,10 +159,10 @@ abstract class WebsitetypeQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT type FROM websitetype WHERE type = :p0';
+        $sql = 'SELECT id, type FROM websitetype WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);            
-            $stmt->bindValue(':p0', $key, PDO::PARAM_STR);
+            $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
             $stmt->execute();
         } catch (Exception $e) {
             Propel::log($e->getMessage(), Propel::LOG_ERR);
@@ -228,7 +233,7 @@ abstract class WebsitetypeQuery extends ModelCriteria
     public function filterByPrimaryKey($key)
     {
 
-        return $this->addUsingAlias(WebsitetypeTableMap::COL_TYPE, $key, Criteria::EQUAL);
+        return $this->addUsingAlias(WebsitetypeTableMap::COL_ID, $key, Criteria::EQUAL);
     }
 
     /**
@@ -241,7 +246,48 @@ abstract class WebsitetypeQuery extends ModelCriteria
     public function filterByPrimaryKeys($keys)
     {
 
-        return $this->addUsingAlias(WebsitetypeTableMap::COL_TYPE, $keys, Criteria::IN);
+        return $this->addUsingAlias(WebsitetypeTableMap::COL_ID, $keys, Criteria::IN);
+    }
+
+    /**
+     * Filter the query on the id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterById(1234); // WHERE id = 1234
+     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
+     * $query->filterById(array('min' => 12)); // WHERE id > 12
+     * </code>
+     *
+     * @param     mixed $id The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildWebsitetypeQuery The current query, for fluid interface
+     */
+    public function filterById($id = null, $comparison = null)
+    {
+        if (is_array($id)) {
+            $useMinMax = false;
+            if (isset($id['min'])) {
+                $this->addUsingAlias(WebsitetypeTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($id['max'])) {
+                $this->addUsingAlias(WebsitetypeTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(WebsitetypeTableMap::COL_ID, $id, $comparison);
     }
 
     /**
@@ -282,7 +328,7 @@ abstract class WebsitetypeQuery extends ModelCriteria
     {
         if ($website instanceof \Website) {
             return $this
-                ->addUsingAlias(WebsitetypeTableMap::COL_TYPE, $website->getType(), $comparison);
+                ->addUsingAlias(WebsitetypeTableMap::COL_ID, $website->getTypeId(), $comparison);
         } elseif ($website instanceof ObjectCollection) {
             return $this
                 ->useWebsiteQuery()
@@ -353,7 +399,7 @@ abstract class WebsitetypeQuery extends ModelCriteria
     public function prune($websitetype = null)
     {
         if ($websitetype) {
-            $this->addUsingAlias(WebsitetypeTableMap::COL_TYPE, $websitetype->getType(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(WebsitetypeTableMap::COL_ID, $websitetype->getId(), Criteria::NOT_EQUAL);
         }
 
         return $this;

@@ -46,44 +46,153 @@ $app->group('/api', function () {
         // Events group
         $this->group('/events', function () {
 
-            // returns all events, filtered by optional parameters
-            $this->get('', function (Request $request, Response $response, $args) {
-                $response->getBody()->write("Hello World!");
-                return $response;
-            });
-
-            /*
-            // returns a specific event
-            $app->get('/events/{id}', function($id) use ($app) {
-
-            });
-
-            // updates an event
-            $app->put('/events/{id}', function(Request $request, Response $response) {
-
-            });
-            */
-
             // creates a new event
             $this->post('/new', function (Request $request, Response $response, $args) {
+                $data = $request->getParam('event');
 
+                /*$category_name = filter_var($request->getParam('category_name'), FILTER_SANITIZE_STRING);
 
+                $data = array();
+                $errors = array();
+
+                if (true === add_category($category_name)) {
+                    $data['success'] = true;
+                    $data['message'] = "Kategorie '$category_name' erfolgreich hinzugefügt.";
+                    $data['category'] = get_category_by_name($category_name)->toArray();
+                } else {
+                    $errors['category'] = "Kategorie bereits vorhanden.";
+                }
+
+                if (!empty($errors)) {
+                    $data['success'] = false;
+                    $data['errors'] = $errors;
+                }*/
+
+                $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
                 return $response;
             });
+
         });
 
         // Categories group
         $this->group('/category', function () {
 
+            $this->get('/byId/{id}', function(Request $request, Response $response, $args) {
+                $category_id = filter_var($args['id'], FILTER_SANITIZE_STRING);
+
+                $data = array();
+                $errors = array();
+
+                $category = get_category_by_id($category_id);
+
+                if ($category !== null) {
+                    $data['success'] = true;
+                    $data['category'] = $category->toArray();
+                }
+                else {
+                    $errors['category'] = "Keine Kategorie mit der ID '$category_id' gefunden.";
+                }
+
+                if (!empty($errors)) {
+                    $data['success'] = false;
+                    $data['errors'] = $errors;
+                }
+
+                $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
+                return $response;
+            });
+
+            $this->get('/byName/{name}', function(Request $request, Response $response, $args) {
+                $category_name = filter_var($args['name'], FILTER_SANITIZE_STRING);
+
+                $data = array();
+                $errors = array();
+
+                $category = get_category_by_name($category_name);
+
+                if ($category !== null) {
+                    $data['success'] = true;
+                    $data['category'] = $category->toArray();
+                }
+                else {
+                    $errors['category'] = "Keine Kategorie mit dem Namen '$category_name' gefunden.";
+                }
+
+                if (!empty($errors)) {
+                    $data['success'] = false;
+                    $data['errors'] = $errors;
+                }
+
+                $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
+                return $response;
+            });
+
             $this->post('/new', function (Request $request, Response $response, $args) {
                 $category_name = filter_var($request->getParam('category_name'), FILTER_SANITIZE_STRING);
 
-                if (true == add_category($category_name)) {
-                    $response->getBody()->write("Kategorie '" . $category_name . "' erfolgreich hinzugefügt.");
+                $data = array();
+                $errors = array();
+
+                if (true === add_category($category_name)) {
+                    $data['success'] = true;
+                    $data['message'] = "Kategorie '$category_name' erfolgreich hinzugefügt.";
+                    $data['category'] = get_category_by_name($category_name)->toArray();
                 } else {
-                    $response->getBody()->write("Kategorie bereits vorhanden.");
+                    $errors['category'] = "Kategorie bereits vorhanden.";
                 }
 
+                if (!empty($errors)) {
+                    $data['success'] = false;
+                    $data['errors'] = $errors;
+                }
+
+                $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
+                return $response;
+            });
+
+            $this->put('/byId/{id}/{newName}', function(Request $request, Response $response, $args) {
+                $id = filter_var($args['id'], FILTER_SANITIZE_STRING);
+                $newName = filter_var($args['newName'], FILTER_SANITIZE_STRING);
+
+                $data = array();
+                $errors = array();
+
+                if (update_category_by_id($id, $newName) == true) {
+                    $data['success'] = true;
+                    $data['message'] = "Kategorie erfolgreich in '$newName' umbenannt.";
+                } else {
+                    $errors['category'] = "Kategorie nicht gefunden oder Fehler bei der Umbenennung. Überprüfen Sie Ihre Eingaben";
+                }
+
+                if (!empty($errors)) {
+                    $data['success'] = false;
+                    $data['errors'] = $errors;
+                }
+
+                $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
+                return $response;
+            });
+
+            $this->put('/byName/{oldName}/{newName}', function(Request $request, Response $response, $args) {
+                $oldName = filter_var($args['oldName'], FILTER_SANITIZE_STRING);
+                $newName = filter_var($args['newName'], FILTER_SANITIZE_STRING);
+
+                $data = array();
+                $errors = array();
+
+                if (update_category_by_name($oldName, $newName) == true) {
+                    $data['success'] = true;
+                    $data['message'] = "Kategorie erfolgreich in '$newName' umbenannt.";
+                } else {
+                    $errors['category'] = "Kategorie nicht gefunden oder Fehler bei der Umbenennung. Überprüfen Sie Ihre Eingaben.";
+                }
+
+                if (!empty($errors)) {
+                    $data['success'] = false;
+                    $data['errors'] = $errors;
+                }
+
+                $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
                 return $response;
             });
 

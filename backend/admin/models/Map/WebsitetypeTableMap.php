@@ -59,7 +59,7 @@ class WebsitetypeTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 1;
+    const NUM_COLUMNS = 2;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,12 @@ class WebsitetypeTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 1;
+    const NUM_HYDRATE_COLUMNS = 2;
+
+    /**
+     * the column name for the id field
+     */
+    const COL_ID = 'websitetype.id';
 
     /**
      * the column name for the type field
@@ -88,11 +93,11 @@ class WebsitetypeTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Type', ),
-        self::TYPE_CAMELNAME     => array('type', ),
-        self::TYPE_COLNAME       => array(WebsitetypeTableMap::COL_TYPE, ),
-        self::TYPE_FIELDNAME     => array('type', ),
-        self::TYPE_NUM           => array(0, )
+        self::TYPE_PHPNAME       => array('Id', 'Type', ),
+        self::TYPE_CAMELNAME     => array('id', 'type', ),
+        self::TYPE_COLNAME       => array(WebsitetypeTableMap::COL_ID, WebsitetypeTableMap::COL_TYPE, ),
+        self::TYPE_FIELDNAME     => array('id', 'type', ),
+        self::TYPE_NUM           => array(0, 1, )
     );
 
     /**
@@ -102,11 +107,11 @@ class WebsitetypeTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Type' => 0, ),
-        self::TYPE_CAMELNAME     => array('type' => 0, ),
-        self::TYPE_COLNAME       => array(WebsitetypeTableMap::COL_TYPE => 0, ),
-        self::TYPE_FIELDNAME     => array('type' => 0, ),
-        self::TYPE_NUM           => array(0, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Type' => 1, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'type' => 1, ),
+        self::TYPE_COLNAME       => array(WebsitetypeTableMap::COL_ID => 0, WebsitetypeTableMap::COL_TYPE => 1, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'type' => 1, ),
+        self::TYPE_NUM           => array(0, 1, )
     );
 
     /**
@@ -124,9 +129,10 @@ class WebsitetypeTableMap extends TableMap
         $this->setIdentifierQuoting(false);
         $this->setClassName('\\Websitetype');
         $this->setPackage('');
-        $this->setUseIdGenerator(false);
+        $this->setUseIdGenerator(true);
         // columns
-        $this->addPrimaryKey('type', 'Type', 'VARCHAR', true, 255, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('type', 'Type', 'VARCHAR', true, 255, null);
     } // initialize()
 
     /**
@@ -137,8 +143,8 @@ class WebsitetypeTableMap extends TableMap
         $this->addRelation('Website', '\\Website', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
-    0 => ':type',
-    1 => ':type',
+    0 => ':type_id',
+    1 => ':id',
   ),
 ), null, null, 'Websites', false);
     } // buildRelations()
@@ -159,11 +165,11 @@ class WebsitetypeTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Type', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Type', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Type', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Type', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Type', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Type', TableMap::TYPE_PHPNAME, $indexType)];
+        return null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
     }
 
     /**
@@ -180,10 +186,10 @@ class WebsitetypeTableMap extends TableMap
      */
     public static function getPrimaryKeyFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        return (string) $row[
+        return (int) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 0 + $offset
-                : self::translateFieldName('Type', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)
         ];
     }
     
@@ -284,8 +290,10 @@ class WebsitetypeTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
+            $criteria->addSelectColumn(WebsitetypeTableMap::COL_ID);
             $criteria->addSelectColumn(WebsitetypeTableMap::COL_TYPE);
         } else {
+            $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.type');
         }
     }
@@ -338,7 +346,7 @@ class WebsitetypeTableMap extends TableMap
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
             $criteria = new Criteria(WebsitetypeTableMap::DATABASE_NAME);
-            $criteria->add(WebsitetypeTableMap::COL_TYPE, (array) $values, Criteria::IN);
+            $criteria->add(WebsitetypeTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
         $query = WebsitetypeQuery::create()->mergeWith($criteria);
@@ -384,6 +392,10 @@ class WebsitetypeTableMap extends TableMap
             $criteria = clone $criteria; // rename for clarity
         } else {
             $criteria = $criteria->buildCriteria(); // build Criteria from Websitetype object
+        }
+
+        if ($criteria->containsKey(WebsitetypeTableMap::COL_ID) && $criteria->keyContainsValue(WebsitetypeTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.WebsitetypeTableMap::COL_ID.')');
         }
 
 

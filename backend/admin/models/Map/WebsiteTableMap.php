@@ -77,9 +77,9 @@ class WebsiteTableMap extends TableMap
     const COL_URL = 'website.url';
 
     /**
-     * the column name for the type field
+     * the column name for the type_id field
      */
-    const COL_TYPE = 'website.type';
+    const COL_TYPE_ID = 'website.type_id';
 
     /**
      * The default string format for model objects of the related table
@@ -93,10 +93,10 @@ class WebsiteTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Url', 'Type', ),
-        self::TYPE_CAMELNAME     => array('url', 'type', ),
-        self::TYPE_COLNAME       => array(WebsiteTableMap::COL_URL, WebsiteTableMap::COL_TYPE, ),
-        self::TYPE_FIELDNAME     => array('url', 'type', ),
+        self::TYPE_PHPNAME       => array('Url', 'TypeId', ),
+        self::TYPE_CAMELNAME     => array('url', 'typeId', ),
+        self::TYPE_COLNAME       => array(WebsiteTableMap::COL_URL, WebsiteTableMap::COL_TYPE_ID, ),
+        self::TYPE_FIELDNAME     => array('url', 'type_id', ),
         self::TYPE_NUM           => array(0, 1, )
     );
 
@@ -107,10 +107,10 @@ class WebsiteTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Url' => 0, 'Type' => 1, ),
-        self::TYPE_CAMELNAME     => array('url' => 0, 'type' => 1, ),
-        self::TYPE_COLNAME       => array(WebsiteTableMap::COL_URL => 0, WebsiteTableMap::COL_TYPE => 1, ),
-        self::TYPE_FIELDNAME     => array('url' => 0, 'type' => 1, ),
+        self::TYPE_PHPNAME       => array('Url' => 0, 'TypeId' => 1, ),
+        self::TYPE_CAMELNAME     => array('url' => 0, 'typeId' => 1, ),
+        self::TYPE_COLNAME       => array(WebsiteTableMap::COL_URL => 0, WebsiteTableMap::COL_TYPE_ID => 1, ),
+        self::TYPE_FIELDNAME     => array('url' => 0, 'type_id' => 1, ),
         self::TYPE_NUM           => array(0, 1, )
     );
 
@@ -132,7 +132,7 @@ class WebsiteTableMap extends TableMap
         $this->setUseIdGenerator(false);
         // columns
         $this->addPrimaryKey('url', 'Url', 'VARCHAR', true, 255, null);
-        $this->addForeignKey('type', 'Type', 'VARCHAR', 'websitetype', 'type', true, 255, null);
+        $this->addForeignKey('type_id', 'TypeId', 'INTEGER', 'websitetype', 'id', true, null, null);
     } // initialize()
 
     /**
@@ -143,8 +143,8 @@ class WebsiteTableMap extends TableMap
         $this->addRelation('Websitetype', '\\Websitetype', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
-    0 => ':type',
-    1 => ':type',
+    0 => ':type_id',
+    1 => ':id',
   ),
 ), null, null, null, false);
     } // buildRelations()
@@ -291,10 +291,10 @@ class WebsiteTableMap extends TableMap
     {
         if (null === $alias) {
             $criteria->addSelectColumn(WebsiteTableMap::COL_URL);
-            $criteria->addSelectColumn(WebsiteTableMap::COL_TYPE);
+            $criteria->addSelectColumn(WebsiteTableMap::COL_TYPE_ID);
         } else {
             $criteria->addSelectColumn($alias . '.url');
-            $criteria->addSelectColumn($alias . '.type');
+            $criteria->addSelectColumn($alias . '.type_id');
         }
     }
 

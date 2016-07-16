@@ -65,6 +65,13 @@ abstract class Websitetype implements ActiveRecordInterface
     protected $virtualColumns = array();
 
     /**
+     * The value for the id field.
+     * 
+     * @var        int
+     */
+    protected $id;
+
+    /**
      * The value for the type field.
      * 
      * @var        string
@@ -317,6 +324,16 @@ abstract class Websitetype implements ActiveRecordInterface
     }
 
     /**
+     * Get the [id] column value.
+     * 
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Get the [type] column value.
      * 
      * @return string
@@ -325,6 +342,26 @@ abstract class Websitetype implements ActiveRecordInterface
     {
         return $this->type;
     }
+
+    /**
+     * Set the value of [id] column.
+     * 
+     * @param int $v new value
+     * @return $this|\Websitetype The current object (for fluent API support)
+     */
+    public function setId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->id !== $v) {
+            $this->id = $v;
+            $this->modifiedColumns[WebsitetypeTableMap::COL_ID] = true;
+        }
+
+        return $this;
+    } // setId()
 
     /**
      * Set the value of [type] column.
@@ -382,7 +419,10 @@ abstract class Websitetype implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : WebsitetypeTableMap::translateFieldName('Type', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : WebsitetypeTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : WebsitetypeTableMap::translateFieldName('Type', TableMap::TYPE_PHPNAME, $indexType)];
             $this->type = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
@@ -392,7 +432,7 @@ abstract class Websitetype implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 1; // 1 = WebsitetypeTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 2; // 2 = WebsitetypeTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Websitetype'), 0, $e);
@@ -602,8 +642,15 @@ abstract class Websitetype implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
+        $this->modifiedColumns[WebsitetypeTableMap::COL_ID] = true;
+        if (null !== $this->id) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . WebsitetypeTableMap::COL_ID . ')');
+        }
 
          // check the columns in natural order for more readable SQL queries
+        if ($this->isColumnModified(WebsitetypeTableMap::COL_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'id';
+        }
         if ($this->isColumnModified(WebsitetypeTableMap::COL_TYPE)) {
             $modifiedColumns[':p' . $index++]  = 'type';
         }
@@ -618,6 +665,9 @@ abstract class Websitetype implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
+                    case 'id':                        
+                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
+                        break;
                     case 'type':                        
                         $stmt->bindValue($identifier, $this->type, PDO::PARAM_STR);
                         break;
@@ -628,6 +678,13 @@ abstract class Websitetype implements ActiveRecordInterface
             Propel::log($e->getMessage(), Propel::LOG_ERR);
             throw new PropelException(sprintf('Unable to execute INSERT statement [%s]', $sql), 0, $e);
         }
+
+        try {
+            $pk = $con->lastInsertId();
+        } catch (Exception $e) {
+            throw new PropelException('Unable to get autoincrement id.', 0, $e);
+        }
+        $this->setId($pk);
 
         $this->setNew(false);
     }
@@ -677,6 +734,9 @@ abstract class Websitetype implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
+                return $this->getId();
+                break;
+            case 1:
                 return $this->getType();
                 break;
             default:
@@ -709,7 +769,8 @@ abstract class Websitetype implements ActiveRecordInterface
         $alreadyDumpedObjects['Websitetype'][$this->hashCode()] = true;
         $keys = WebsitetypeTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getType(),
+            $keys[0] => $this->getId(),
+            $keys[1] => $this->getType(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -767,6 +828,9 @@ abstract class Websitetype implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
+                $this->setId($value);
+                break;
+            case 1:
                 $this->setType($value);
                 break;
         } // switch()
@@ -796,7 +860,10 @@ abstract class Websitetype implements ActiveRecordInterface
         $keys = WebsitetypeTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setType($arr[$keys[0]]);
+            $this->setId($arr[$keys[0]]);
+        }
+        if (array_key_exists($keys[1], $arr)) {
+            $this->setType($arr[$keys[1]]);
         }
     }
 
@@ -839,6 +906,9 @@ abstract class Websitetype implements ActiveRecordInterface
     {
         $criteria = new Criteria(WebsitetypeTableMap::DATABASE_NAME);
 
+        if ($this->isColumnModified(WebsitetypeTableMap::COL_ID)) {
+            $criteria->add(WebsitetypeTableMap::COL_ID, $this->id);
+        }
         if ($this->isColumnModified(WebsitetypeTableMap::COL_TYPE)) {
             $criteria->add(WebsitetypeTableMap::COL_TYPE, $this->type);
         }
@@ -859,7 +929,7 @@ abstract class Websitetype implements ActiveRecordInterface
     public function buildPkeyCriteria()
     {
         $criteria = ChildWebsitetypeQuery::create();
-        $criteria->add(WebsitetypeTableMap::COL_TYPE, $this->type);
+        $criteria->add(WebsitetypeTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -872,7 +942,7 @@ abstract class Websitetype implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getType();
+        $validPk = null !== $this->getId();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -888,22 +958,22 @@ abstract class Websitetype implements ActiveRecordInterface
         
     /**
      * Returns the primary key for this object (row).
-     * @return string
+     * @return int
      */
     public function getPrimaryKey()
     {
-        return $this->getType();
+        return $this->getId();
     }
 
     /**
-     * Generic method to set the primary key (type column).
+     * Generic method to set the primary key (id column).
      *
-     * @param       string $key Primary key.
+     * @param       int $key Primary key.
      * @return void
      */
     public function setPrimaryKey($key)
     {
-        $this->setType($key);
+        $this->setId($key);
     }
 
     /**
@@ -912,7 +982,7 @@ abstract class Websitetype implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getType();
+        return null === $this->getId();
     }
 
     /**
@@ -945,6 +1015,7 @@ abstract class Websitetype implements ActiveRecordInterface
 
         if ($makeNew) {
             $copyObj->setNew(true);
+            $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
         }
     }
 
@@ -1218,6 +1289,7 @@ abstract class Websitetype implements ActiveRecordInterface
      */
     public function clear()
     {
+        $this->id = null;
         $this->type = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();

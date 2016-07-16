@@ -107,6 +107,13 @@ abstract class Event implements ActiveRecordInterface
     protected $latitude;
 
     /**
+     * The value for the location_name field.
+     * 
+     * @var        string
+     */
+    protected $location_name;
+
+    /**
      * The value for the street_no field.
      * 
      * @var        string
@@ -472,6 +479,16 @@ abstract class Event implements ActiveRecordInterface
     }
 
     /**
+     * Get the [location_name] column value.
+     * 
+     * @return string
+     */
+    public function getLocationName()
+    {
+        return $this->location_name;
+    }
+
+    /**
      * Get the [street_no] column value.
      * 
      * @return string
@@ -652,6 +669,26 @@ abstract class Event implements ActiveRecordInterface
     } // setLatitude()
 
     /**
+     * Set the value of [location_name] column.
+     * 
+     * @param string $v new value
+     * @return $this|\Event The current object (for fluent API support)
+     */
+    public function setLocationName($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->location_name !== $v) {
+            $this->location_name = $v;
+            $this->modifiedColumns[EventTableMap::COL_LOCATION_NAME] = true;
+        }
+
+        return $this;
+    } // setLocationName()
+
+    /**
      * Set the value of [street_no] column.
      * 
      * @param string $v new value
@@ -822,25 +859,28 @@ abstract class Event implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : EventTableMap::translateFieldName('Latitude', TableMap::TYPE_PHPNAME, $indexType)];
             $this->latitude = (null !== $col) ? (double) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : EventTableMap::translateFieldName('StreetNo', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : EventTableMap::translateFieldName('LocationName', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->location_name = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : EventTableMap::translateFieldName('StreetNo', TableMap::TYPE_PHPNAME, $indexType)];
             $this->street_no = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : EventTableMap::translateFieldName('ZipCode', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : EventTableMap::translateFieldName('ZipCode', TableMap::TYPE_PHPNAME, $indexType)];
             $this->zip_code = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : EventTableMap::translateFieldName('City', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : EventTableMap::translateFieldName('City', TableMap::TYPE_PHPNAME, $indexType)];
             $this->city = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : EventTableMap::translateFieldName('Country', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : EventTableMap::translateFieldName('Country', TableMap::TYPE_PHPNAME, $indexType)];
             $this->country = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : EventTableMap::translateFieldName('Begin', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : EventTableMap::translateFieldName('Begin', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->begin = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : EventTableMap::translateFieldName('End', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : EventTableMap::translateFieldName('End', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -853,7 +893,7 @@ abstract class Event implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 11; // 11 = EventTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 12; // 12 = EventTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Event'), 0, $e);
@@ -1036,7 +1076,7 @@ abstract class Event implements ActiveRecordInterface
                         $entryPk = [];
 
                         $entryPk[0] = $this->getId();
-                        $entryPk[1] = $entry->getName();
+                        $entryPk[1] = $entry->getId();
                         $pks[] = $entryPk;
                     }
 
@@ -1133,6 +1173,9 @@ abstract class Event implements ActiveRecordInterface
         if ($this->isColumnModified(EventTableMap::COL_LATITUDE)) {
             $modifiedColumns[':p' . $index++]  = 'latitude';
         }
+        if ($this->isColumnModified(EventTableMap::COL_LOCATION_NAME)) {
+            $modifiedColumns[':p' . $index++]  = 'location_name';
+        }
         if ($this->isColumnModified(EventTableMap::COL_STREET_NO)) {
             $modifiedColumns[':p' . $index++]  = 'street_no';
         }
@@ -1176,6 +1219,9 @@ abstract class Event implements ActiveRecordInterface
                         break;
                     case 'latitude':                        
                         $stmt->bindValue($identifier, $this->latitude, PDO::PARAM_STR);
+                        break;
+                    case 'location_name':                        
+                        $stmt->bindValue($identifier, $this->location_name, PDO::PARAM_STR);
                         break;
                     case 'street_no':                        
                         $stmt->bindValue($identifier, $this->street_no, PDO::PARAM_STR);
@@ -1273,21 +1319,24 @@ abstract class Event implements ActiveRecordInterface
                 return $this->getLatitude();
                 break;
             case 5:
-                return $this->getStreetNo();
+                return $this->getLocationName();
                 break;
             case 6:
-                return $this->getZipCode();
+                return $this->getStreetNo();
                 break;
             case 7:
-                return $this->getCity();
+                return $this->getZipCode();
                 break;
             case 8:
-                return $this->getCountry();
+                return $this->getCity();
                 break;
             case 9:
-                return $this->getBegin();
+                return $this->getCountry();
                 break;
             case 10:
+                return $this->getBegin();
+                break;
+            case 11:
                 return $this->getEnd();
                 break;
             default:
@@ -1325,19 +1374,20 @@ abstract class Event implements ActiveRecordInterface
             $keys[2] => $this->getDescription(),
             $keys[3] => $this->getLongitude(),
             $keys[4] => $this->getLatitude(),
-            $keys[5] => $this->getStreetNo(),
-            $keys[6] => $this->getZipCode(),
-            $keys[7] => $this->getCity(),
-            $keys[8] => $this->getCountry(),
-            $keys[9] => $this->getBegin(),
-            $keys[10] => $this->getEnd(),
+            $keys[5] => $this->getLocationName(),
+            $keys[6] => $this->getStreetNo(),
+            $keys[7] => $this->getZipCode(),
+            $keys[8] => $this->getCity(),
+            $keys[9] => $this->getCountry(),
+            $keys[10] => $this->getBegin(),
+            $keys[11] => $this->getEnd(),
         );
-        if ($result[$keys[9]] instanceof \DateTime) {
-            $result[$keys[9]] = $result[$keys[9]]->format('c');
-        }
-        
         if ($result[$keys[10]] instanceof \DateTime) {
             $result[$keys[10]] = $result[$keys[10]]->format('c');
+        }
+        
+        if ($result[$keys[11]] instanceof \DateTime) {
+            $result[$keys[11]] = $result[$keys[11]]->format('c');
         }
         
         $virtualColumns = $this->virtualColumns;
@@ -1426,21 +1476,24 @@ abstract class Event implements ActiveRecordInterface
                 $this->setLatitude($value);
                 break;
             case 5:
-                $this->setStreetNo($value);
+                $this->setLocationName($value);
                 break;
             case 6:
-                $this->setZipCode($value);
+                $this->setStreetNo($value);
                 break;
             case 7:
-                $this->setCity($value);
+                $this->setZipCode($value);
                 break;
             case 8:
-                $this->setCountry($value);
+                $this->setCity($value);
                 break;
             case 9:
-                $this->setBegin($value);
+                $this->setCountry($value);
                 break;
             case 10:
+                $this->setBegin($value);
+                break;
+            case 11:
                 $this->setEnd($value);
                 break;
         } // switch()
@@ -1485,22 +1538,25 @@ abstract class Event implements ActiveRecordInterface
             $this->setLatitude($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setStreetNo($arr[$keys[5]]);
+            $this->setLocationName($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setZipCode($arr[$keys[6]]);
+            $this->setStreetNo($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setCity($arr[$keys[7]]);
+            $this->setZipCode($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setCountry($arr[$keys[8]]);
+            $this->setCity($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setBegin($arr[$keys[9]]);
+            $this->setCountry($arr[$keys[9]]);
         }
         if (array_key_exists($keys[10], $arr)) {
-            $this->setEnd($arr[$keys[10]]);
+            $this->setBegin($arr[$keys[10]]);
+        }
+        if (array_key_exists($keys[11], $arr)) {
+            $this->setEnd($arr[$keys[11]]);
         }
     }
 
@@ -1557,6 +1613,9 @@ abstract class Event implements ActiveRecordInterface
         }
         if ($this->isColumnModified(EventTableMap::COL_LATITUDE)) {
             $criteria->add(EventTableMap::COL_LATITUDE, $this->latitude);
+        }
+        if ($this->isColumnModified(EventTableMap::COL_LOCATION_NAME)) {
+            $criteria->add(EventTableMap::COL_LOCATION_NAME, $this->location_name);
         }
         if ($this->isColumnModified(EventTableMap::COL_STREET_NO)) {
             $criteria->add(EventTableMap::COL_STREET_NO, $this->street_no);
@@ -1666,6 +1725,7 @@ abstract class Event implements ActiveRecordInterface
         $copyObj->setDescription($this->getDescription());
         $copyObj->setLongitude($this->getLongitude());
         $copyObj->setLatitude($this->getLatitude());
+        $copyObj->setLocationName($this->getLocationName());
         $copyObj->setStreetNo($this->getStreetNo());
         $copyObj->setZipCode($this->getZipCode());
         $copyObj->setCity($this->getCity());
@@ -2497,6 +2557,7 @@ abstract class Event implements ActiveRecordInterface
         $this->description = null;
         $this->longitude = null;
         $this->latitude = null;
+        $this->location_name = null;
         $this->street_no = null;
         $this->zip_code = null;
         $this->city = null;

@@ -67,6 +67,13 @@ abstract class Category implements ActiveRecordInterface
     protected $virtualColumns = array();
 
     /**
+     * The value for the id field.
+     * 
+     * @var        int
+     */
+    protected $id;
+
+    /**
      * The value for the name field.
      * 
      * @var        string
@@ -335,6 +342,16 @@ abstract class Category implements ActiveRecordInterface
     }
 
     /**
+     * Get the [id] column value.
+     * 
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Get the [name] column value.
      * 
      * @return string
@@ -343,6 +360,26 @@ abstract class Category implements ActiveRecordInterface
     {
         return $this->name;
     }
+
+    /**
+     * Set the value of [id] column.
+     * 
+     * @param int $v new value
+     * @return $this|\Category The current object (for fluent API support)
+     */
+    public function setId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->id !== $v) {
+            $this->id = $v;
+            $this->modifiedColumns[CategoryTableMap::COL_ID] = true;
+        }
+
+        return $this;
+    } // setId()
 
     /**
      * Set the value of [name] column.
@@ -400,7 +437,10 @@ abstract class Category implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : CategoryTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : CategoryTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : CategoryTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
             $this->name = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
@@ -410,7 +450,7 @@ abstract class Category implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 1; // 1 = CategoryTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 2; // 2 = CategoryTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Category'), 0, $e);
@@ -590,7 +630,7 @@ abstract class Category implements ActiveRecordInterface
                     foreach ($this->eventsScheduledForDeletion as $entry) {
                         $entryPk = [];
 
-                        $entryPk[1] = $this->getName();
+                        $entryPk[1] = $this->getId();
                         $entryPk[0] = $entry->getId();
                         $pks[] = $entryPk;
                     }
@@ -650,8 +690,15 @@ abstract class Category implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
+        $this->modifiedColumns[CategoryTableMap::COL_ID] = true;
+        if (null !== $this->id) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . CategoryTableMap::COL_ID . ')');
+        }
 
          // check the columns in natural order for more readable SQL queries
+        if ($this->isColumnModified(CategoryTableMap::COL_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'id';
+        }
         if ($this->isColumnModified(CategoryTableMap::COL_NAME)) {
             $modifiedColumns[':p' . $index++]  = 'name';
         }
@@ -666,6 +713,9 @@ abstract class Category implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
+                    case 'id':                        
+                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
+                        break;
                     case 'name':                        
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
@@ -676,6 +726,13 @@ abstract class Category implements ActiveRecordInterface
             Propel::log($e->getMessage(), Propel::LOG_ERR);
             throw new PropelException(sprintf('Unable to execute INSERT statement [%s]', $sql), 0, $e);
         }
+
+        try {
+            $pk = $con->lastInsertId();
+        } catch (Exception $e) {
+            throw new PropelException('Unable to get autoincrement id.', 0, $e);
+        }
+        $this->setId($pk);
 
         $this->setNew(false);
     }
@@ -725,6 +782,9 @@ abstract class Category implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
+                return $this->getId();
+                break;
+            case 1:
                 return $this->getName();
                 break;
             default:
@@ -757,7 +817,8 @@ abstract class Category implements ActiveRecordInterface
         $alreadyDumpedObjects['Category'][$this->hashCode()] = true;
         $keys = CategoryTableMap::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getName(),
+            $keys[0] => $this->getId(),
+            $keys[1] => $this->getName(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -815,6 +876,9 @@ abstract class Category implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
+                $this->setId($value);
+                break;
+            case 1:
                 $this->setName($value);
                 break;
         } // switch()
@@ -844,7 +908,10 @@ abstract class Category implements ActiveRecordInterface
         $keys = CategoryTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setName($arr[$keys[0]]);
+            $this->setId($arr[$keys[0]]);
+        }
+        if (array_key_exists($keys[1], $arr)) {
+            $this->setName($arr[$keys[1]]);
         }
     }
 
@@ -887,6 +954,9 @@ abstract class Category implements ActiveRecordInterface
     {
         $criteria = new Criteria(CategoryTableMap::DATABASE_NAME);
 
+        if ($this->isColumnModified(CategoryTableMap::COL_ID)) {
+            $criteria->add(CategoryTableMap::COL_ID, $this->id);
+        }
         if ($this->isColumnModified(CategoryTableMap::COL_NAME)) {
             $criteria->add(CategoryTableMap::COL_NAME, $this->name);
         }
@@ -907,7 +977,7 @@ abstract class Category implements ActiveRecordInterface
     public function buildPkeyCriteria()
     {
         $criteria = ChildCategoryQuery::create();
-        $criteria->add(CategoryTableMap::COL_NAME, $this->name);
+        $criteria->add(CategoryTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -920,7 +990,7 @@ abstract class Category implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getName();
+        $validPk = null !== $this->getId();
 
         $validPrimaryKeyFKs = 0;
         $primaryKeyFKs = [];
@@ -936,22 +1006,22 @@ abstract class Category implements ActiveRecordInterface
         
     /**
      * Returns the primary key for this object (row).
-     * @return string
+     * @return int
      */
     public function getPrimaryKey()
     {
-        return $this->getName();
+        return $this->getId();
     }
 
     /**
-     * Generic method to set the primary key (name column).
+     * Generic method to set the primary key (id column).
      *
-     * @param       string $key Primary key.
+     * @param       int $key Primary key.
      * @return void
      */
     public function setPrimaryKey($key)
     {
-        $this->setName($key);
+        $this->setId($key);
     }
 
     /**
@@ -960,7 +1030,7 @@ abstract class Category implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return null === $this->getName();
+        return null === $this->getId();
     }
 
     /**
@@ -993,6 +1063,7 @@ abstract class Category implements ActiveRecordInterface
 
         if ($makeNew) {
             $copyObj->setNew(true);
+            $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
         }
     }
 
@@ -1537,6 +1608,7 @@ abstract class Category implements ActiveRecordInterface
      */
     public function clear()
     {
+        $this->id = null;
         $this->name = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();

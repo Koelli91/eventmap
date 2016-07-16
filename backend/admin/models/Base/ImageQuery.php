@@ -22,12 +22,12 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildImageQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildImageQuery orderByImage($order = Criteria::ASC) Order by the image column
- * @method     ChildImageQuery orderByType($order = Criteria::ASC) Order by the type column
+ * @method     ChildImageQuery orderByTypeId($order = Criteria::ASC) Order by the type_id column
  * @method     ChildImageQuery orderByEventId($order = Criteria::ASC) Order by the event_id column
  *
  * @method     ChildImageQuery groupById() Group by the id column
  * @method     ChildImageQuery groupByImage() Group by the image column
- * @method     ChildImageQuery groupByType() Group by the type column
+ * @method     ChildImageQuery groupByTypeId() Group by the type_id column
  * @method     ChildImageQuery groupByEventId() Group by the event_id column
  *
  * @method     ChildImageQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -65,7 +65,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildImage findOneById(int $id) Return the first ChildImage filtered by the id column
  * @method     ChildImage findOneByImage(resource $image) Return the first ChildImage filtered by the image column
- * @method     ChildImage findOneByType(string $type) Return the first ChildImage filtered by the type column
+ * @method     ChildImage findOneByTypeId(int $type_id) Return the first ChildImage filtered by the type_id column
  * @method     ChildImage findOneByEventId(int $event_id) Return the first ChildImage filtered by the event_id column *
 
  * @method     ChildImage requirePk($key, ConnectionInterface $con = null) Return the ChildImage by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -73,13 +73,13 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildImage requireOneById(int $id) Return the first ChildImage filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildImage requireOneByImage(resource $image) Return the first ChildImage filtered by the image column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildImage requireOneByType(string $type) Return the first ChildImage filtered by the type column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildImage requireOneByTypeId(int $type_id) Return the first ChildImage filtered by the type_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildImage requireOneByEventId(int $event_id) Return the first ChildImage filtered by the event_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildImage[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildImage objects based on current ModelCriteria
  * @method     ChildImage[]|ObjectCollection findById(int $id) Return ChildImage objects filtered by the id column
  * @method     ChildImage[]|ObjectCollection findByImage(resource $image) Return ChildImage objects filtered by the image column
- * @method     ChildImage[]|ObjectCollection findByType(string $type) Return ChildImage objects filtered by the type column
+ * @method     ChildImage[]|ObjectCollection findByTypeId(int $type_id) Return ChildImage objects filtered by the type_id column
  * @method     ChildImage[]|ObjectCollection findByEventId(int $event_id) Return ChildImage objects filtered by the event_id column
  * @method     ChildImage[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -179,7 +179,7 @@ abstract class ImageQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, image, type, event_id FROM image WHERE id = :p0';
+        $sql = 'SELECT id, image, type_id, event_id FROM image WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);            
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -325,29 +325,46 @@ abstract class ImageQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the type column
+     * Filter the query on the type_id column
      *
      * Example usage:
      * <code>
-     * $query->filterByType('fooValue');   // WHERE type = 'fooValue'
-     * $query->filterByType('%fooValue%'); // WHERE type LIKE '%fooValue%'
+     * $query->filterByTypeId(1234); // WHERE type_id = 1234
+     * $query->filterByTypeId(array(12, 34)); // WHERE type_id IN (12, 34)
+     * $query->filterByTypeId(array('min' => 12)); // WHERE type_id > 12
      * </code>
      *
-     * @param     string $type The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
+     * @see       filterByImagetype()
+     *
+     * @param     mixed $typeId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildImageQuery The current query, for fluid interface
      */
-    public function filterByType($type = null, $comparison = null)
+    public function filterByTypeId($typeId = null, $comparison = null)
     {
-        if (null === $comparison) {
-            if (is_array($type)) {
+        if (is_array($typeId)) {
+            $useMinMax = false;
+            if (isset($typeId['min'])) {
+                $this->addUsingAlias(ImageTableMap::COL_TYPE_ID, $typeId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($typeId['max'])) {
+                $this->addUsingAlias(ImageTableMap::COL_TYPE_ID, $typeId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
         }
 
-        return $this->addUsingAlias(ImageTableMap::COL_TYPE, $type, $comparison);
+        return $this->addUsingAlias(ImageTableMap::COL_TYPE_ID, $typeId, $comparison);
     }
 
     /**
@@ -407,14 +424,14 @@ abstract class ImageQuery extends ModelCriteria
     {
         if ($imagetype instanceof \Imagetype) {
             return $this
-                ->addUsingAlias(ImageTableMap::COL_TYPE, $imagetype->getType(), $comparison);
+                ->addUsingAlias(ImageTableMap::COL_TYPE_ID, $imagetype->getId(), $comparison);
         } elseif ($imagetype instanceof ObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(ImageTableMap::COL_TYPE, $imagetype->toKeyValue('PrimaryKey', 'Type'), $comparison);
+                ->addUsingAlias(ImageTableMap::COL_TYPE_ID, $imagetype->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
             throw new PropelException('filterByImagetype() only accepts arguments of type \Imagetype or Collection');
         }

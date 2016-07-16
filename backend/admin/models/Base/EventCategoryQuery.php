@@ -21,10 +21,10 @@ use Propel\Runtime\Exception\PropelException;
  * 
  *
  * @method     ChildEventCategoryQuery orderByEventId($order = Criteria::ASC) Order by the event_id column
- * @method     ChildEventCategoryQuery orderByCategoryName($order = Criteria::ASC) Order by the category_name column
+ * @method     ChildEventCategoryQuery orderByCategoryId($order = Criteria::ASC) Order by the category_id column
  *
  * @method     ChildEventCategoryQuery groupByEventId() Group by the event_id column
- * @method     ChildEventCategoryQuery groupByCategoryName() Group by the category_name column
+ * @method     ChildEventCategoryQuery groupByCategoryId() Group by the category_id column
  *
  * @method     ChildEventCategoryQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildEventCategoryQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -60,17 +60,17 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEventCategory findOneOrCreate(ConnectionInterface $con = null) Return the first ChildEventCategory matching the query, or a new ChildEventCategory object populated from the query conditions when no match is found
  *
  * @method     ChildEventCategory findOneByEventId(int $event_id) Return the first ChildEventCategory filtered by the event_id column
- * @method     ChildEventCategory findOneByCategoryName(string $category_name) Return the first ChildEventCategory filtered by the category_name column *
+ * @method     ChildEventCategory findOneByCategoryId(int $category_id) Return the first ChildEventCategory filtered by the category_id column *
 
  * @method     ChildEventCategory requirePk($key, ConnectionInterface $con = null) Return the ChildEventCategory by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildEventCategory requireOne(ConnectionInterface $con = null) Return the first ChildEventCategory matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildEventCategory requireOneByEventId(int $event_id) Return the first ChildEventCategory filtered by the event_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildEventCategory requireOneByCategoryName(string $category_name) Return the first ChildEventCategory filtered by the category_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildEventCategory requireOneByCategoryId(int $category_id) Return the first ChildEventCategory filtered by the category_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildEventCategory[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildEventCategory objects based on current ModelCriteria
  * @method     ChildEventCategory[]|ObjectCollection findByEventId(int $event_id) Return ChildEventCategory objects filtered by the event_id column
- * @method     ChildEventCategory[]|ObjectCollection findByCategoryName(string $category_name) Return ChildEventCategory objects filtered by the category_name column
+ * @method     ChildEventCategory[]|ObjectCollection findByCategoryId(int $category_id) Return ChildEventCategory objects filtered by the category_id column
  * @method     ChildEventCategory[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -123,7 +123,7 @@ abstract class EventCategoryQuery extends ModelCriteria
      * $obj = $c->findPk(array(12, 34), $con);
      * </code>
      *
-     * @param array[$event_id, $category_name] $key Primary key to use for the query
+     * @param array[$event_id, $category_id] $key Primary key to use for the query
      * @param ConnectionInterface $con an optional connection object
      *
      * @return ChildEventCategory|array|mixed the result, formatted by the current formatter
@@ -169,11 +169,11 @@ abstract class EventCategoryQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT event_id, category_name FROM event_category WHERE event_id = :p0 AND category_name = :p1';
+        $sql = 'SELECT event_id, category_id FROM event_category WHERE event_id = :p0 AND category_id = :p1';
         try {
             $stmt = $con->prepare($sql);            
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);            
-            $stmt->bindValue(':p1', $key[1], PDO::PARAM_STR);
+            $stmt->bindValue(':p1', $key[1], PDO::PARAM_INT);
             $stmt->execute();
         } catch (Exception $e) {
             Propel::log($e->getMessage(), Propel::LOG_ERR);
@@ -244,7 +244,7 @@ abstract class EventCategoryQuery extends ModelCriteria
     public function filterByPrimaryKey($key)
     {
         $this->addUsingAlias(EventCategoryTableMap::COL_EVENT_ID, $key[0], Criteria::EQUAL);
-        $this->addUsingAlias(EventCategoryTableMap::COL_CATEGORY_NAME, $key[1], Criteria::EQUAL);
+        $this->addUsingAlias(EventCategoryTableMap::COL_CATEGORY_ID, $key[1], Criteria::EQUAL);
 
         return $this;
     }
@@ -263,7 +263,7 @@ abstract class EventCategoryQuery extends ModelCriteria
         }
         foreach ($keys as $key) {
             $cton0 = $this->getNewCriterion(EventCategoryTableMap::COL_EVENT_ID, $key[0], Criteria::EQUAL);
-            $cton1 = $this->getNewCriterion(EventCategoryTableMap::COL_CATEGORY_NAME, $key[1], Criteria::EQUAL);
+            $cton1 = $this->getNewCriterion(EventCategoryTableMap::COL_CATEGORY_ID, $key[1], Criteria::EQUAL);
             $cton0->addAnd($cton1);
             $this->addOr($cton0);
         }
@@ -315,29 +315,46 @@ abstract class EventCategoryQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the category_name column
+     * Filter the query on the category_id column
      *
      * Example usage:
      * <code>
-     * $query->filterByCategoryName('fooValue');   // WHERE category_name = 'fooValue'
-     * $query->filterByCategoryName('%fooValue%'); // WHERE category_name LIKE '%fooValue%'
+     * $query->filterByCategoryId(1234); // WHERE category_id = 1234
+     * $query->filterByCategoryId(array(12, 34)); // WHERE category_id IN (12, 34)
+     * $query->filterByCategoryId(array('min' => 12)); // WHERE category_id > 12
      * </code>
      *
-     * @param     string $categoryName The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
+     * @see       filterByCategory()
+     *
+     * @param     mixed $categoryId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildEventCategoryQuery The current query, for fluid interface
      */
-    public function filterByCategoryName($categoryName = null, $comparison = null)
+    public function filterByCategoryId($categoryId = null, $comparison = null)
     {
-        if (null === $comparison) {
-            if (is_array($categoryName)) {
+        if (is_array($categoryId)) {
+            $useMinMax = false;
+            if (isset($categoryId['min'])) {
+                $this->addUsingAlias(EventCategoryTableMap::COL_CATEGORY_ID, $categoryId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($categoryId['max'])) {
+                $this->addUsingAlias(EventCategoryTableMap::COL_CATEGORY_ID, $categoryId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
         }
 
-        return $this->addUsingAlias(EventCategoryTableMap::COL_CATEGORY_NAME, $categoryName, $comparison);
+        return $this->addUsingAlias(EventCategoryTableMap::COL_CATEGORY_ID, $categoryId, $comparison);
     }
 
     /**
@@ -431,14 +448,14 @@ abstract class EventCategoryQuery extends ModelCriteria
     {
         if ($category instanceof \Category) {
             return $this
-                ->addUsingAlias(EventCategoryTableMap::COL_CATEGORY_NAME, $category->getName(), $comparison);
+                ->addUsingAlias(EventCategoryTableMap::COL_CATEGORY_ID, $category->getId(), $comparison);
         } elseif ($category instanceof ObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(EventCategoryTableMap::COL_CATEGORY_NAME, $category->toKeyValue('PrimaryKey', 'Name'), $comparison);
+                ->addUsingAlias(EventCategoryTableMap::COL_CATEGORY_ID, $category->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
             throw new PropelException('filterByCategory() only accepts arguments of type \Category or Collection');
         }
@@ -505,7 +522,7 @@ abstract class EventCategoryQuery extends ModelCriteria
     {
         if ($eventCategory) {
             $this->addCond('pruneCond0', $this->getAliasedColName(EventCategoryTableMap::COL_EVENT_ID), $eventCategory->getEventId(), Criteria::NOT_EQUAL);
-            $this->addCond('pruneCond1', $this->getAliasedColName(EventCategoryTableMap::COL_CATEGORY_NAME), $eventCategory->getCategoryName(), Criteria::NOT_EQUAL);
+            $this->addCond('pruneCond1', $this->getAliasedColName(EventCategoryTableMap::COL_CATEGORY_ID), $eventCategory->getCategoryId(), Criteria::NOT_EQUAL);
             $this->combine(array('pruneCond0', 'pruneCond1'), Criteria::LOGICAL_OR);
         }
 

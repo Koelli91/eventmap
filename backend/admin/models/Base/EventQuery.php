@@ -25,6 +25,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEventQuery orderByDescription($order = Criteria::ASC) Order by the description column
  * @method     ChildEventQuery orderByLongitude($order = Criteria::ASC) Order by the longitude column
  * @method     ChildEventQuery orderByLatitude($order = Criteria::ASC) Order by the latitude column
+ * @method     ChildEventQuery orderByLocationName($order = Criteria::ASC) Order by the location_name column
  * @method     ChildEventQuery orderByStreetNo($order = Criteria::ASC) Order by the street_no column
  * @method     ChildEventQuery orderByZipCode($order = Criteria::ASC) Order by the zip_code column
  * @method     ChildEventQuery orderByCity($order = Criteria::ASC) Order by the city column
@@ -37,6 +38,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEventQuery groupByDescription() Group by the description column
  * @method     ChildEventQuery groupByLongitude() Group by the longitude column
  * @method     ChildEventQuery groupByLatitude() Group by the latitude column
+ * @method     ChildEventQuery groupByLocationName() Group by the location_name column
  * @method     ChildEventQuery groupByStreetNo() Group by the street_no column
  * @method     ChildEventQuery groupByZipCode() Group by the zip_code column
  * @method     ChildEventQuery groupByCity() Group by the city column
@@ -82,6 +84,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEvent findOneByDescription(string $description) Return the first ChildEvent filtered by the description column
  * @method     ChildEvent findOneByLongitude(double $longitude) Return the first ChildEvent filtered by the longitude column
  * @method     ChildEvent findOneByLatitude(double $latitude) Return the first ChildEvent filtered by the latitude column
+ * @method     ChildEvent findOneByLocationName(string $location_name) Return the first ChildEvent filtered by the location_name column
  * @method     ChildEvent findOneByStreetNo(string $street_no) Return the first ChildEvent filtered by the street_no column
  * @method     ChildEvent findOneByZipCode(string $zip_code) Return the first ChildEvent filtered by the zip_code column
  * @method     ChildEvent findOneByCity(string $city) Return the first ChildEvent filtered by the city column
@@ -97,6 +100,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEvent requireOneByDescription(string $description) Return the first ChildEvent filtered by the description column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildEvent requireOneByLongitude(double $longitude) Return the first ChildEvent filtered by the longitude column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildEvent requireOneByLatitude(double $latitude) Return the first ChildEvent filtered by the latitude column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildEvent requireOneByLocationName(string $location_name) Return the first ChildEvent filtered by the location_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildEvent requireOneByStreetNo(string $street_no) Return the first ChildEvent filtered by the street_no column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildEvent requireOneByZipCode(string $zip_code) Return the first ChildEvent filtered by the zip_code column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildEvent requireOneByCity(string $city) Return the first ChildEvent filtered by the city column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -110,6 +114,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEvent[]|ObjectCollection findByDescription(string $description) Return ChildEvent objects filtered by the description column
  * @method     ChildEvent[]|ObjectCollection findByLongitude(double $longitude) Return ChildEvent objects filtered by the longitude column
  * @method     ChildEvent[]|ObjectCollection findByLatitude(double $latitude) Return ChildEvent objects filtered by the latitude column
+ * @method     ChildEvent[]|ObjectCollection findByLocationName(string $location_name) Return ChildEvent objects filtered by the location_name column
  * @method     ChildEvent[]|ObjectCollection findByStreetNo(string $street_no) Return ChildEvent objects filtered by the street_no column
  * @method     ChildEvent[]|ObjectCollection findByZipCode(string $zip_code) Return ChildEvent objects filtered by the zip_code column
  * @method     ChildEvent[]|ObjectCollection findByCity(string $city) Return ChildEvent objects filtered by the city column
@@ -214,7 +219,7 @@ abstract class EventQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, name, description, longitude, latitude, street_no, zip_code, city, country, begin, end FROM event WHERE id = :p0';
+        $sql = 'SELECT id, name, description, longitude, latitude, location_name, street_no, zip_code, city, country, begin, end FROM event WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);            
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -477,6 +482,32 @@ abstract class EventQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(EventTableMap::COL_LATITUDE, $latitude, $comparison);
+    }
+
+    /**
+     * Filter the query on the location_name column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByLocationName('fooValue');   // WHERE location_name = 'fooValue'
+     * $query->filterByLocationName('%fooValue%'); // WHERE location_name LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $locationName The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildEventQuery The current query, for fluid interface
+     */
+    public function filterByLocationName($locationName = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($locationName)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(EventTableMap::COL_LOCATION_NAME, $locationName, $comparison);
     }
 
     /**

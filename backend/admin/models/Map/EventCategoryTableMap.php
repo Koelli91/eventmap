@@ -77,9 +77,9 @@ class EventCategoryTableMap extends TableMap
     const COL_EVENT_ID = 'event_category.event_id';
 
     /**
-     * the column name for the category_name field
+     * the column name for the category_id field
      */
-    const COL_CATEGORY_NAME = 'event_category.category_name';
+    const COL_CATEGORY_ID = 'event_category.category_id';
 
     /**
      * The default string format for model objects of the related table
@@ -93,10 +93,10 @@ class EventCategoryTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('EventId', 'CategoryName', ),
-        self::TYPE_CAMELNAME     => array('eventId', 'categoryName', ),
-        self::TYPE_COLNAME       => array(EventCategoryTableMap::COL_EVENT_ID, EventCategoryTableMap::COL_CATEGORY_NAME, ),
-        self::TYPE_FIELDNAME     => array('event_id', 'category_name', ),
+        self::TYPE_PHPNAME       => array('EventId', 'CategoryId', ),
+        self::TYPE_CAMELNAME     => array('eventId', 'categoryId', ),
+        self::TYPE_COLNAME       => array(EventCategoryTableMap::COL_EVENT_ID, EventCategoryTableMap::COL_CATEGORY_ID, ),
+        self::TYPE_FIELDNAME     => array('event_id', 'category_id', ),
         self::TYPE_NUM           => array(0, 1, )
     );
 
@@ -107,10 +107,10 @@ class EventCategoryTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('EventId' => 0, 'CategoryName' => 1, ),
-        self::TYPE_CAMELNAME     => array('eventId' => 0, 'categoryName' => 1, ),
-        self::TYPE_COLNAME       => array(EventCategoryTableMap::COL_EVENT_ID => 0, EventCategoryTableMap::COL_CATEGORY_NAME => 1, ),
-        self::TYPE_FIELDNAME     => array('event_id' => 0, 'category_name' => 1, ),
+        self::TYPE_PHPNAME       => array('EventId' => 0, 'CategoryId' => 1, ),
+        self::TYPE_CAMELNAME     => array('eventId' => 0, 'categoryId' => 1, ),
+        self::TYPE_COLNAME       => array(EventCategoryTableMap::COL_EVENT_ID => 0, EventCategoryTableMap::COL_CATEGORY_ID => 1, ),
+        self::TYPE_FIELDNAME     => array('event_id' => 0, 'category_id' => 1, ),
         self::TYPE_NUM           => array(0, 1, )
     );
 
@@ -133,7 +133,7 @@ class EventCategoryTableMap extends TableMap
         $this->setIsCrossRef(true);
         // columns
         $this->addForeignPrimaryKey('event_id', 'EventId', 'INTEGER' , 'event', 'id', true, null, null);
-        $this->addForeignPrimaryKey('category_name', 'CategoryName', 'VARCHAR' , 'category', 'name', true, 255, null);
+        $this->addForeignPrimaryKey('category_id', 'CategoryId', 'INTEGER' , 'category', 'id', true, null, null);
     } // initialize()
 
     /**
@@ -151,8 +151,8 @@ class EventCategoryTableMap extends TableMap
         $this->addRelation('Category', '\\Category', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
-    0 => ':category_name',
-    1 => ':name',
+    0 => ':category_id',
+    1 => ':id',
   ),
 ), null, null, null, false);
     } // buildRelations()
@@ -172,7 +172,7 @@ class EventCategoryTableMap extends TableMap
     {
         if (Propel::isInstancePoolingEnabled()) {
             if (null === $key) {
-                $key = serialize([(null === $obj->getEventId() || is_scalar($obj->getEventId()) || is_callable([$obj->getEventId(), '__toString']) ? (string) $obj->getEventId() : $obj->getEventId()), (null === $obj->getCategoryName() || is_scalar($obj->getCategoryName()) || is_callable([$obj->getCategoryName(), '__toString']) ? (string) $obj->getCategoryName() : $obj->getCategoryName())]);
+                $key = serialize([(null === $obj->getEventId() || is_scalar($obj->getEventId()) || is_callable([$obj->getEventId(), '__toString']) ? (string) $obj->getEventId() : $obj->getEventId()), (null === $obj->getCategoryId() || is_scalar($obj->getCategoryId()) || is_callable([$obj->getCategoryId(), '__toString']) ? (string) $obj->getCategoryId() : $obj->getCategoryId())]);
             } // if key === null
             self::$instances[$key] = $obj;
         }
@@ -192,7 +192,7 @@ class EventCategoryTableMap extends TableMap
     {
         if (Propel::isInstancePoolingEnabled() && null !== $value) {
             if (is_object($value) && $value instanceof \EventCategory) {
-                $key = serialize([(null === $value->getEventId() || is_scalar($value->getEventId()) || is_callable([$value->getEventId(), '__toString']) ? (string) $value->getEventId() : $value->getEventId()), (null === $value->getCategoryName() || is_scalar($value->getCategoryName()) || is_callable([$value->getCategoryName(), '__toString']) ? (string) $value->getCategoryName() : $value->getCategoryName())]);
+                $key = serialize([(null === $value->getEventId() || is_scalar($value->getEventId()) || is_callable([$value->getEventId(), '__toString']) ? (string) $value->getEventId() : $value->getEventId()), (null === $value->getCategoryId() || is_scalar($value->getCategoryId()) || is_callable([$value->getCategoryId(), '__toString']) ? (string) $value->getCategoryId() : $value->getCategoryId())]);
 
             } elseif (is_array($value) && count($value) === 2) {
                 // assume we've been passed a primary key";
@@ -226,11 +226,11 @@ class EventCategoryTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('EventId', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('CategoryName', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('EventId', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('CategoryId', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('EventId', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('EventId', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('EventId', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('EventId', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('EventId', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('CategoryName', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('CategoryName', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('CategoryName', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('CategoryName', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('CategoryName', TableMap::TYPE_PHPNAME, $indexType)])]);
+        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('EventId', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('EventId', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('EventId', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('EventId', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('EventId', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('CategoryId', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('CategoryId', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('CategoryId', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('CategoryId', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('CategoryId', TableMap::TYPE_PHPNAME, $indexType)])]);
     }
 
     /**
@@ -254,10 +254,10 @@ class EventCategoryTableMap extends TableMap
                 ? 0 + $offset
                 : self::translateFieldName('EventId', TableMap::TYPE_PHPNAME, $indexType)
         ];
-        $pks[] = (string) $row[
+        $pks[] = (int) $row[
             $indexType == TableMap::TYPE_NUM
                 ? 1 + $offset
-                : self::translateFieldName('CategoryName', TableMap::TYPE_PHPNAME, $indexType)
+                : self::translateFieldName('CategoryId', TableMap::TYPE_PHPNAME, $indexType)
         ];
 
         return $pks;
@@ -361,10 +361,10 @@ class EventCategoryTableMap extends TableMap
     {
         if (null === $alias) {
             $criteria->addSelectColumn(EventCategoryTableMap::COL_EVENT_ID);
-            $criteria->addSelectColumn(EventCategoryTableMap::COL_CATEGORY_NAME);
+            $criteria->addSelectColumn(EventCategoryTableMap::COL_CATEGORY_ID);
         } else {
             $criteria->addSelectColumn($alias . '.event_id');
-            $criteria->addSelectColumn($alias . '.category_name');
+            $criteria->addSelectColumn($alias . '.category_id');
         }
     }
 
@@ -424,7 +424,7 @@ class EventCategoryTableMap extends TableMap
             }
             foreach ($values as $value) {
                 $criterion = $criteria->getNewCriterion(EventCategoryTableMap::COL_EVENT_ID, $value[0]);
-                $criterion->addAnd($criteria->getNewCriterion(EventCategoryTableMap::COL_CATEGORY_NAME, $value[1]));
+                $criterion->addAnd($criteria->getNewCriterion(EventCategoryTableMap::COL_CATEGORY_ID, $value[1]));
                 $criteria->addOr($criterion);
             }
         }

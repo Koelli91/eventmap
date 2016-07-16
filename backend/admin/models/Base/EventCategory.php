@@ -71,11 +71,11 @@ abstract class EventCategory implements ActiveRecordInterface
     protected $event_id;
 
     /**
-     * The value for the category_name field.
+     * The value for the category_id field.
      * 
-     * @var        string
+     * @var        int
      */
-    protected $category_name;
+    protected $category_id;
 
     /**
      * @var        ChildEvent
@@ -331,13 +331,13 @@ abstract class EventCategory implements ActiveRecordInterface
     }
 
     /**
-     * Get the [category_name] column value.
+     * Get the [category_id] column value.
      * 
-     * @return string
+     * @return int
      */
-    public function getCategoryName()
+    public function getCategoryId()
     {
-        return $this->category_name;
+        return $this->category_id;
     }
 
     /**
@@ -365,28 +365,28 @@ abstract class EventCategory implements ActiveRecordInterface
     } // setEventId()
 
     /**
-     * Set the value of [category_name] column.
+     * Set the value of [category_id] column.
      * 
-     * @param string $v new value
+     * @param int $v new value
      * @return $this|\EventCategory The current object (for fluent API support)
      */
-    public function setCategoryName($v)
+    public function setCategoryId($v)
     {
         if ($v !== null) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
-        if ($this->category_name !== $v) {
-            $this->category_name = $v;
-            $this->modifiedColumns[EventCategoryTableMap::COL_CATEGORY_NAME] = true;
+        if ($this->category_id !== $v) {
+            $this->category_id = $v;
+            $this->modifiedColumns[EventCategoryTableMap::COL_CATEGORY_ID] = true;
         }
 
-        if ($this->aCategory !== null && $this->aCategory->getName() !== $v) {
+        if ($this->aCategory !== null && $this->aCategory->getId() !== $v) {
             $this->aCategory = null;
         }
 
         return $this;
-    } // setCategoryName()
+    } // setCategoryId()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -427,8 +427,8 @@ abstract class EventCategory implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : EventCategoryTableMap::translateFieldName('EventId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->event_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : EventCategoryTableMap::translateFieldName('CategoryName', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->category_name = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : EventCategoryTableMap::translateFieldName('CategoryId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->category_id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -462,7 +462,7 @@ abstract class EventCategory implements ActiveRecordInterface
         if ($this->aEvent !== null && $this->event_id !== $this->aEvent->getId()) {
             $this->aEvent = null;
         }
-        if ($this->aCategory !== null && $this->category_name !== $this->aCategory->getName()) {
+        if ($this->aCategory !== null && $this->category_id !== $this->aCategory->getId()) {
             $this->aCategory = null;
         }
     } // ensureConsistency
@@ -660,8 +660,8 @@ abstract class EventCategory implements ActiveRecordInterface
         if ($this->isColumnModified(EventCategoryTableMap::COL_EVENT_ID)) {
             $modifiedColumns[':p' . $index++]  = 'event_id';
         }
-        if ($this->isColumnModified(EventCategoryTableMap::COL_CATEGORY_NAME)) {
-            $modifiedColumns[':p' . $index++]  = 'category_name';
+        if ($this->isColumnModified(EventCategoryTableMap::COL_CATEGORY_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'category_id';
         }
 
         $sql = sprintf(
@@ -677,8 +677,8 @@ abstract class EventCategory implements ActiveRecordInterface
                     case 'event_id':                        
                         $stmt->bindValue($identifier, $this->event_id, PDO::PARAM_INT);
                         break;
-                    case 'category_name':                        
-                        $stmt->bindValue($identifier, $this->category_name, PDO::PARAM_STR);
+                    case 'category_id':                        
+                        $stmt->bindValue($identifier, $this->category_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -739,7 +739,7 @@ abstract class EventCategory implements ActiveRecordInterface
                 return $this->getEventId();
                 break;
             case 1:
-                return $this->getCategoryName();
+                return $this->getCategoryId();
                 break;
             default:
                 return null;
@@ -772,7 +772,7 @@ abstract class EventCategory implements ActiveRecordInterface
         $keys = EventCategoryTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getEventId(),
-            $keys[1] => $this->getCategoryName(),
+            $keys[1] => $this->getCategoryId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -848,7 +848,7 @@ abstract class EventCategory implements ActiveRecordInterface
                 $this->setEventId($value);
                 break;
             case 1:
-                $this->setCategoryName($value);
+                $this->setCategoryId($value);
                 break;
         } // switch()
 
@@ -880,7 +880,7 @@ abstract class EventCategory implements ActiveRecordInterface
             $this->setEventId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setCategoryName($arr[$keys[1]]);
+            $this->setCategoryId($arr[$keys[1]]);
         }
     }
 
@@ -926,8 +926,8 @@ abstract class EventCategory implements ActiveRecordInterface
         if ($this->isColumnModified(EventCategoryTableMap::COL_EVENT_ID)) {
             $criteria->add(EventCategoryTableMap::COL_EVENT_ID, $this->event_id);
         }
-        if ($this->isColumnModified(EventCategoryTableMap::COL_CATEGORY_NAME)) {
-            $criteria->add(EventCategoryTableMap::COL_CATEGORY_NAME, $this->category_name);
+        if ($this->isColumnModified(EventCategoryTableMap::COL_CATEGORY_ID)) {
+            $criteria->add(EventCategoryTableMap::COL_CATEGORY_ID, $this->category_id);
         }
 
         return $criteria;
@@ -947,7 +947,7 @@ abstract class EventCategory implements ActiveRecordInterface
     {
         $criteria = ChildEventCategoryQuery::create();
         $criteria->add(EventCategoryTableMap::COL_EVENT_ID, $this->event_id);
-        $criteria->add(EventCategoryTableMap::COL_CATEGORY_NAME, $this->category_name);
+        $criteria->add(EventCategoryTableMap::COL_CATEGORY_ID, $this->category_id);
 
         return $criteria;
     }
@@ -961,7 +961,7 @@ abstract class EventCategory implements ActiveRecordInterface
     public function hashCode()
     {
         $validPk = null !== $this->getEventId() &&
-            null !== $this->getCategoryName();
+            null !== $this->getCategoryId();
 
         $validPrimaryKeyFKs = 2;
         $primaryKeyFKs = [];
@@ -973,7 +973,7 @@ abstract class EventCategory implements ActiveRecordInterface
             $validPrimaryKeyFKs = false;
         }
 
-        //relation event_category_fk_a0d3c0 to table category
+        //relation event_category_fk_904832 to table category
         if ($this->aCategory && $hash = spl_object_hash($this->aCategory)) {
             $primaryKeyFKs[] = $hash;
         } else {
@@ -998,7 +998,7 @@ abstract class EventCategory implements ActiveRecordInterface
     {
         $pks = array();
         $pks[0] = $this->getEventId();
-        $pks[1] = $this->getCategoryName();
+        $pks[1] = $this->getCategoryId();
 
         return $pks;
     }
@@ -1012,7 +1012,7 @@ abstract class EventCategory implements ActiveRecordInterface
     public function setPrimaryKey($keys)
     {
         $this->setEventId($keys[0]);
-        $this->setCategoryName($keys[1]);
+        $this->setCategoryId($keys[1]);
     }
 
     /**
@@ -1021,7 +1021,7 @@ abstract class EventCategory implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull()
     {
-        return (null === $this->getEventId()) && (null === $this->getCategoryName());
+        return (null === $this->getEventId()) && (null === $this->getCategoryId());
     }
 
     /**
@@ -1038,7 +1038,7 @@ abstract class EventCategory implements ActiveRecordInterface
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setEventId($this->getEventId());
-        $copyObj->setCategoryName($this->getCategoryName());
+        $copyObj->setCategoryId($this->getCategoryId());
         if ($makeNew) {
             $copyObj->setNew(true);
         }
@@ -1127,9 +1127,9 @@ abstract class EventCategory implements ActiveRecordInterface
     public function setCategory(ChildCategory $v = null)
     {
         if ($v === null) {
-            $this->setCategoryName(NULL);
+            $this->setCategoryId(NULL);
         } else {
-            $this->setCategoryName($v->getName());
+            $this->setCategoryId($v->getId());
         }
 
         $this->aCategory = $v;
@@ -1154,8 +1154,8 @@ abstract class EventCategory implements ActiveRecordInterface
      */
     public function getCategory(ConnectionInterface $con = null)
     {
-        if ($this->aCategory === null && (($this->category_name !== "" && $this->category_name !== null))) {
-            $this->aCategory = ChildCategoryQuery::create()->findPk($this->category_name, $con);
+        if ($this->aCategory === null && ($this->category_id !== null)) {
+            $this->aCategory = ChildCategoryQuery::create()->findPk($this->category_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
@@ -1182,7 +1182,7 @@ abstract class EventCategory implements ActiveRecordInterface
             $this->aCategory->removeEventCategory($this);
         }
         $this->event_id = null;
-        $this->category_name = null;
+        $this->category_id = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();
