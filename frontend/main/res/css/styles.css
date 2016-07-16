@@ -1,0 +1,21 @@
+.eventnav {
+    background-color: #666;
+    color: lightgrey;
+    border: 0px;
+    border-radius: 0px;
+}
+
+.eventinput {
+    width: auto;
+}
+
+.logo {
+    margin-top: -8px;
+    float: left;
+}
+
+.navbar-form {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-top: 0px;
+}
