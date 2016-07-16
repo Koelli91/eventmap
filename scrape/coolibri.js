@@ -10,7 +10,7 @@ Coolibri.prototype.scrape_event_page = function(html, url) {
       "lat": 0,
       "lon": 0,
       "street": "",
-      "plz": 0,
+      "zip": 0,
       "city": "",
       "country": "",
       "name": ""
@@ -39,7 +39,7 @@ Coolibri.prototype.scrape_event_page = function(html, url) {
   data['website'] = { "general":url}
   data['location']['lat'] = $('.details > span meta[itemprop=latitude]').attr('content')
   data['location']['lon'] = $('.details > span meta[itemprop=longitude]').attr('content')
-  data['location']['plz'] = $('.address > div > span[itemprop=postalCode]').text()
+  data['location']['zip'] = $('.address > div > span[itemprop=postalCode]').text()
   data['location']['city'] = $('.address > div > span[itemprop=addressLocality]').text()
   data['location']['street'] = $('.address > div[itemprop=streetAddress]').text()
   data['location']['name'] = $('meta[property="og:location"]').attr('content')

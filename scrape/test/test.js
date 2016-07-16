@@ -11,7 +11,7 @@ describe('Scrape single event page', function () {
       'lat': "51.42108",
       'lon': "7.57947",
       'street': "Bürenbrucherweg 19",
-      'plz': "58239",
+      'zip': "58239",
       'city': 'Schwerte',
       'country': 'DE',
       'Yoga Vidya Zentrum'
