@@ -1,0 +1,16 @@
+{
+  "name": "event-scrape",
+  "version": "0.0.1",
+  "description": "Scrapes current events from the web",
+  "main": "server.js",
+  "author": "Mirko314",
+  "test": "test/test.js",
+  "dependencies": {
+    "async": "^2.0.0",
+    "chai": "^3.5.0",
+    "cheerio": "latest",
+    "express": "latest",
+    "mocha": "^2.5.3",
+    "request": "latest"
+  }
+}

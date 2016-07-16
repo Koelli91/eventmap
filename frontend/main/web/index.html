@@ -22,30 +22,53 @@
           </div>
         </div>
       </nav>
-      <div class="container search-block">
-        <div class="row">
-          <div class="col-mde-12 index-text text-center">Veranstaltungen in deiner Nähe</div>
+      <form class="" action="map.html" method="get" id="search">
+        <input name="lat" type="hidden" value="" id="lat">
+        <input name="lng" type="hidden" value="" id="lng">
+        <div class="container search-block">
+          <div class="row">
+            <div class="col-mde-12 index-text text-center">Veranstaltungen in deiner Nähe</div>
+          </div>
+          <div class="row">
+            <div class="col-md-3 col-md-offset-2">
+              <input name="city" id="city" placeholder="Ort" class="form-control index-control custom-input-index">
+            </div>
+            <div class="col-md-3">
+              <select name="category" class="form-control index-control custom-input-index">
+                <option selected="">Alle</option>
+                <option>Konzerte</option>
+                <option>Party</option>
+                <option>Comedy & Co.</option>
+                <option>Musical & Show</option>
+                <option>Theater & Tanz</option>
+                <option>Oper & Klassik</option>
+                <option>Vortrag & Lesung</option>
+                <option>Für Kinder</option>
+                <option>Und Sonst</option>
+                <option>Ausstellungen</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <button type="submit" value="submit" class="btn custom-btn index-control custom-btn-index">Suchen</button>
+            </div>
+          </div>
         </div>
-        <div class="row">
-          <div class="col-md-3 col-md-offset-2">
-            <input placeholder="Stadt" class="form-control index-control custom-input-index">
-          </div>
-          <div class="col-md-3">
-            <select class="form-control index-control custom-input-index">
-              <option selected="">All</option>
-              <option>Festivals</option>
-              <option>Party</option>
-              <option>Konzerte</option>
-            </select>
-          </div>
-          <div class="col-md-3">
-            <button class="btn custom-btn index-control custom-btn-index">Suchen</button>
-          </div>
-        </div>
-      </div>
+      </form>
     </div>
     <div class="map"></div>
+    <script src="http://maps.googleapis.com/maps/api/js?libraries=places"></script>
+    <script src="../res/js/maps.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="../res/js/bootstrap.min.js"></script>
+    <script src="../res/js/jquery.geocomplete.min.js"></script>
+    <script>
+      	$("#city").geocomplete({ details: "form" });
+        $("#search").submit(function (event) {
+          if( $("#lng").val() == "" || $("#lat").val() == ""){
+            alert("Bitte Ort aus Liste auswählen")
+            return false
+          }
+        })
+    </script>
   </body>
 </html>

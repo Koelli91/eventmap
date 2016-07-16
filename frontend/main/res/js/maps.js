@@ -79,6 +79,7 @@ var map;
 var markers = new Array(sample_data.length);
 
 function initialize() {
+    initSearchForm()
     var latlng = new google.maps.LatLng(51.494229755747405, 7.4204922026910936);
     var mapOptions = {
         zoom: 8,
@@ -129,6 +130,20 @@ function parseDay(time) {
     var day = time.substr(8, 2);
     var date = day + "." + month + "." + year;
     return date;
+}
+function loadEvents(config) {
+  $.get("api/v1/events", config, function (data) {
+
+  })
+}
+function initSearchForm() {
+  $("#city").geocomplete({ details: "form" });
+  $("#search").submit(function (event) {
+    if( $("#lng").val() == "" || $("#lat").val() == ""){
+      alert("Bitte Ort aus Liste auswählen")
+      return false
+    }
+  })
 }
 
 function addElement(data, i) {
