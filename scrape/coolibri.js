@@ -50,9 +50,11 @@ Coolibri.prototype.list_events = function (html, url) {
     event_list.push("http://www.coolibri.de" + match[1])
   }
   var next = $('.b.forward >a').attr("href")
+  if(next == undefined )
+    console.error();
   var ret = {
     "events": event_list,
-    "nextpage": next == undefined ? "undefined" : "http://www.coolibri.de" + next
+    "nextpage": next == undefined ? undefined : "http://www.coolibri.de" + next
   }
   return ret;
 }
@@ -64,14 +66,14 @@ Coolibri.prototype.scrape_all = function (first_url)  {
     function (callback) {
       console.log("Starting crawling events");
       async.whilst(
-        function () { return current_url !== 'undefined'},
+        function () { return current_url !== undefined},
         function (callback_w) {
           request(current_url, function (error, response, body) {
-            console.log("getting" + current_url);
-            current_url = "undefined"
+            console.log("GETting: " + current_url);
             if (!error && response.statusCode == 200) {
               var ev = Coolibri.prototype.list_events(body, current_url)
               event_urls = event_urls.concat(ev['events'])
+              console.log(ev["nextpage"]);
               current_url = ev["nextpage"]
               callback_w()
             }
@@ -84,27 +86,30 @@ Coolibri.prototype.scrape_all = function (first_url)  {
       )
     },
     function (callback_s) {
-      console.log(event_urls);
-      async.each(event_urls,
+      console.log("scraping " + event_urls.length + " URLs");
+      var counter = 0
+      async.mapSeries(event_urls,
         function (url, callback) {
           request(url, function (error, response, body) {
             if (error || response.statusCode != 200) {
               console.error(error);
+              callback()
+            }else {
+              if(body == undefined)
+                console.error("Body:" + body + " URL " + url + "----------------");
+              var event_data = Coolibri.prototype.scrape_event_page(body, url)
+              data.push(event_data)
+              counter++;
+              console.log("Finished " + counter + " of " + event_urls.length);
+              callback()
             }
-            if(body == undefined)
-              console.error("Body:" + body + " URL " + url + "----------------");
-            var event_data = Coolibri.prototype.scrape_event_page(body, url)
-            data.push(event_data)
-            callback()
           })
         },
         function (err) {
-          console.log(data)
           fs.writeFile("data/events.json", JSON.stringify(data), function(err) {
               if(err) {
                   return console.log(err);
               }
-
               console.log("The file was saved!");
               callback_s()
           });
