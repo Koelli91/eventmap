@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>eventmap</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../res/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../res/css/styles.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="overlay">
+      <nav class="eventnav navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false" class="navbar-toggle collapsed"><span class="sr-only">Navigation ein-/ausblenden</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><span class="logo nav navbar-nav"><a href="map.html" class="navbar-brand"><img src="../res/img/logo_white.png"></a></span>
+          </div>
+          <div id="bs-example-navbar-collapse-1" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="imprint.html">Impressum</a></li>
+              <li><a href="about.html">Über Uns</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div class="container search-block">
+        <div class="row">
+          <div class="col-mde-12 index-text text-center">Veranstaltungen in deiner Nähe</div>
+        </div>
+        <div class="row">
+          <div class="col-md-3 col-md-offset-2">
+            <input placeholder="Stadt" class="form-control index-control custom-input-index">
+          </div>
+          <div class="col-md-3">
+            <select class="form-control index-control custom-input-index">
+              <option selected="">All</option>
+              <option>Festivals</option>
+              <option>Party</option>
+              <option>Konzerte</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <button class="btn custom-btn index-control custom-btn-index">Suchen</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="map"></div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="../res/js/bootstrap.min.js"></script>
+  </body>
+</html>
