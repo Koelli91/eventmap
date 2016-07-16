@@ -95,7 +95,7 @@ function initialize() {
         var marker = new google.maps.Marker({
             id: "marker_" + i,
             position: new google.maps.LatLng(sample_data[i].location.lat, sample_data[i].location.lon),
-            icon: '../res/img/marker_red.png'
+            icon: 'res/img/marker_red.png'
         });
 
         markers[i] = marker;
