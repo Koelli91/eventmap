@@ -13,7 +13,8 @@ Coolibri.prototype.scrape_event_page = function(html, url) {
       'street': '',
       'plz': 0,
       'city': '',
-      'country': ''
+      'country': '',
+      'name': ''
     },
     'name': '',
     'description': '',

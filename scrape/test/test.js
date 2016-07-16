@@ -13,7 +13,8 @@ describe('Scrape single event page', function () {
       'street': "Bürenbrucherweg 19",
       'plz': "58239",
       'city': 'Schwerte',
-      'country': 'DE'
+      'country': 'DE',
+      'Yoga Vidya Zentrum'
     },
     'name': "Adam Bauer & The Love Keys",
     'description': "Meditationsmusik",
