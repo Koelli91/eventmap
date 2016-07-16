@@ -4,25 +4,24 @@ var request = require('request')
 var async = require("async")
 var fs = require('fs');
 
-
 Coolibri.prototype.scrape_event_page = function(html, url) {
   var data = {
-    'location': {
-      'lat': 0,
-      'lon': 0,
-      'street': '',
-      'plz': 0,
-      'city': '',
-      'country': '',
-      'name': ''
+    "location": {
+      "lat": 0,
+      "lon": 0,
+      "street": "",
+      "plz": 0,
+      "city": "",
+      "country": "",
+      "name": ""
     },
-    'name': '',
-    'description': '',
-    'category': '',
-    'time_start': 0,
-    'time_end': 0,
-    'photo': [],
-    'website': ''
+    "name": "",
+    "description": "",
+    "category": "",
+    "time_start": 0,
+    "time_end": 0,
+    "photo": [],
+    "website": ""
   }
   var $ = cheerio.load(html);
   data['name'] = $('.details > h1.d > span.name').text()
