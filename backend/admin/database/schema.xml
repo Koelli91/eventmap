@@ -1,0 +1,64 @@
+<database name="default" defaultIdMethod="native"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://xsd.propelorm.org/1.6/database.xsd"
+          namespace=""
+        >
+    <table name="event">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="name" type="varchar" size="255" required="true"/>
+        <column name="description" type="varchar" size="1000" required="true"/>
+        <column name="longitude" type="float" required="true"/>
+        <column name="latitude" type="float" required="true"/>
+        <column name="street_no" type="varchar" size="255"/>
+        <column name="zip_code" type="varchar" size="5"/>
+        <column name="city" type="varchar" size="255"/>
+        <column name="country" type="varchar" size="255"/>
+        <column name="begin" type="timestamp" required="true"/>
+        <column name="end" type="timestamp"/>
+
+    </table>
+
+    <table name="category">
+        <column name="name" type="varchar" size="255" primaryKey="true"/>
+    </table>
+
+    <table name="event_category" isCrossRef="true">
+        <column name="event_id" type="integer" primaryKey="true"/>
+        <column name="category_name" type="varchar" size="255" primaryKey="true"/>
+        <foreign-key foreignTable="event">
+            <reference local="event_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="category">
+            <reference local="category_name" foreign="name"/>
+        </foreign-key>
+    </table>
+
+    <table name="image">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="image" type="blob" required="true"/>
+        <column name="type" type="varchar" size="255" required="true"/>
+        <column name="event_id" type="integer" required="true"/>
+        <foreign-key foreignTable="imagetype">
+            <reference local="type" foreign="type"/>
+        </foreign-key>
+        <foreign-key foreignTable="event">
+            <reference local="event_id" foreign="id"/>
+        </foreign-key>
+    </table>
+
+    <table name="imagetype">
+        <column name="type" type="varchar" size="255" primaryKey="true"/>
+    </table>
+
+    <table name="website">
+        <column name="url" type="varchar" size="255" primaryKey="true"/>
+        <column name="type" type="varchar" size="255" required="true"/>
+        <foreign-key foreignTable="websitetype">
+            <reference local="type" foreign="type"/>
+        </foreign-key>
+    </table>
+
+    <table name="websitetype">
+        <column name="type" type="varchar" size="255" primaryKey="true"/>
+    </table>
+</database>
