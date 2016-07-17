@@ -109,12 +109,14 @@ function initSearchForm() {
     $("#radius").val(getUrlParameter("radius"))
   }
   if(getUrlParameter("category") != undefined){
-    $("#category").val(decodeURIComponent(getUrlParameter("category").replace(/\+/g, '%20')))
+    $("#category").val(decodeURIComponent(getUrlParameter("category").replace(/\+/g, ' ')))
   }
   if(getUrlParameter("city") != undefined){
-    $("#city").val(decodeURIComponent(getUrlParameter("city").replace(/\+/g, '%20')))
+    $("#city").val(decodeURIComponent(getUrlParameter("city").replace(/\+/g, ' ')))
   }
   $("#city").geocomplete({ details: "form" });
+}
+function search
   $("#search").submit(function (event) {
     if( $("#lng").val() == "" || $("#lat").val() == ""){
       alert("Bitte Ort aus Liste auswählen")
@@ -157,7 +159,7 @@ function addElement(data) {
         "\<div class=\"termin\">" + parseDay(data.begin) + ", " +
         "\<span class=\"event-time\">" + parseTime(data.begin)  + " - " + parseTime(data.end) + "\</span></div>" +
         "\</div>" +
-        "\<div class=\"description\"><div class=\"event-location\">" + data.street_no + "\<br>" + data.zip_code + " " + data.city + "\<br>" + data.country + "\</div><br>" + "\<strong>Beschreibung</strong>\<p>" + data.description + "\</p><a class=\"website_link\" href=\"" + data.website + "/\">Zur Website</a>\</div>" +
+        "\<div class=\"description\"><div class=\"event-location\">" + data.street_no + "\<br>" + data.zip_code + " " + data.city + "\<br>" + data.country + "\</div><br>" + "\<strong>Beschreibung</strong>\<p>" + data.description + "\</p><a class=\"website_link\" href=\"" + data.website + "\">Zur Website</a>\</div>" +
         "\<div class=\"material-icons more-button\">keyboard_arrow_down</div>" +
         "\</div>" +
         "\</li>";
