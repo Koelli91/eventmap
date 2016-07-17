@@ -1,6 +1,7 @@
 /**
  * Created by Johannes Teklote on 16.07.2016.
  */
+ var circ;
 var sample_data = [{
     "location": {
         "lat": "51.49108",
@@ -75,6 +76,7 @@ var sample_data = [{
     }];
 
 var map;
+var selfLoad = false;
 
 var prev;
 function initialize() {
@@ -107,6 +109,8 @@ function initialize() {
             prev = this;
         });
     }
+
+    $("#search").submit()
 }
 google.maps.event.addDomListener(window, 'load', initialize);
 
@@ -141,21 +145,29 @@ function loadEvents() {
   })
 }
 function initSearchForm() {
-
+  var counter = 0;
   if(getUrlParameter("lng") != undefined){
     $("#lng").val(getUrlParameter("lng"))
+    counter++
   }
   if(getUrlParameter("lat") != undefined){
     $("#lat").val(getUrlParameter("lat"))
+    counter++
   }
   if(getUrlParameter("radius") != undefined){
     $("#radius").val(getUrlParameter("radius"))
+    counter++
   }
   if(getUrlParameter("category") != undefined){
     $("#category").val(decodeURIComponent(getUrlParameter("category").replace(/\+/g, '%20')))
+    counter++
   }
   if(getUrlParameter("city") != undefined){
     $("#city").val(decodeURIComponent(getUrlParameter("city").replace(/\+/g, '%20')))
+    counter++
+  }
+  if (counter==5) {
+    selfLoad = true;
   }
 
   $("#city").geocomplete({ details: "form" });
@@ -166,7 +178,10 @@ function initSearchForm() {
       return false
     }else {
       var latlng = { lat: parseFloat($("#lat").val()), lng: parseFloat($("#lng").val())}
-      var circ = new google.maps.Circle({
+      if (circ != undefined) {
+        circ.setMap(null);
+      }
+      circ = new google.maps.Circle({
         map: map,
         center: latlng,
         radius: parseInt($("#radius").val() ) * 1000,
