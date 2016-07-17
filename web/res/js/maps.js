@@ -2,7 +2,6 @@
  * Created by Johannes Teklote on 16.07.2016.
  */
 var event_data;
-initSearchForm();
 $.ajax({
     "method":"GET",
     "url":"http://localhost:8000/api/v1/events?lat=51.494229755747405&lon=7.4204922026910936&radius=250",
