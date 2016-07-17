@@ -2,6 +2,7 @@
  * Created by Johannes Teklote on 16.07.2016.
  */
 var event_data;
+initSearchForm();
 $.ajax({
     "method":"GET",
     "url":"http://localhost:8000/api/v1/events?lat=51.494229755747405&lon=7.4204922026910936&radius=250",
@@ -59,7 +60,6 @@ function initialize() {
             prev = this;
         });
     }
-    initSearchForm();
 }
 
 function parseTime(time) {
@@ -116,7 +116,7 @@ function initSearchForm() {
   }
   $("#city").geocomplete({ details: "form" });
 }
-function search
+function search(){
   $("#search").submit(function (event) {
     if( $("#lng").val() == "" || $("#lat").val() == ""){
       alert("Bitte Ort aus Liste auswählen")
