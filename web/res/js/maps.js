@@ -115,6 +115,8 @@ function initSearchForm() {
     $("#city").val(decodeURIComponent(getUrlParameter("city").replace(/\+/g, '%20')))
   }
   $("#city").geocomplete({ details: "form" });
+}
+function search
   $("#search").submit(function (event) {
     if( $("#lng").val() == "" || $("#lat").val() == ""){
       alert("Bitte Ort aus Liste auswählen")
