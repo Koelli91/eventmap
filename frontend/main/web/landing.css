@@ -1,0 +1,30 @@
+body, html {
+  height: 100%;
+  width: 100%; }
+
+.map {
+  height: 100%;
+  width: 100%;
+  background: url(../res/img/map.png); }
+
+.overlay {
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  position: absolute; }
+
+.search-block {
+  position: relative;
+  top: 40vh; }
+
+.custom-btn {
+  background: #8ff69c; }
+
+.custom-input-index {
+  color: black; }
+
+@media(max-width: 991px) {
+  .custom-btn-index {
+    width: 100%; } }
+.index-control {
+  margin: 10px; }

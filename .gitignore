@@ -1,6 +1,10 @@
 .idea/
 eventmap.iml
+<<<<<<< HEAD
 composer.lock
 vendor
 .sass-cache
 config.codekit
+=======
+scrape/node_modules/
+>>>>>>> refs/remotes/origin/mirko
