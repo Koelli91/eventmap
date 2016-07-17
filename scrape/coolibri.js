@@ -112,7 +112,7 @@ Coolibri.prototype.scrape_all = function (first_url)  {
         },
         function (err) {
             var options = {
-              uri: 'http://localhost:8000/api/v1/new',
+              uri: 'http://localhost:8000/api/v1/events/new',
               method: 'POST',
               json: JSON.stringify(data)
             };

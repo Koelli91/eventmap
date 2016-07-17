@@ -6,3 +6,4 @@ vendor
 config.codekit
 scrape/node_modules/
 api/database/propel.json.dist
+api/logs
