@@ -11,10 +11,11 @@ $(function () {
       "lng": $('#lng').val(),
       "category": $('#category').val(),
     }
+    var url = "http://localhost:8000/api/v1/events?lat=" + search_data["lat"] + "&lon="+ search_data["lng"] +"&radius=" + search_data["radius"] + "&category:" + search_data["category"]
     var event_data;
     $.ajax({
         "method": "GET",
-        "url": "http://localhost:8000/api/v1/events?lat=" + search_data["lat"] + "&lon="+ search_data["lon"] +"&radius=" + search_data["radius"] + "&category:" + search_data["category"],
+        "url": url,
         "returnType": "JSON",
         "cache": false
     }).done(function (data) {
