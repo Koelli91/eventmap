@@ -146,6 +146,7 @@ function loadEvents() {
   })
 }
 function initSearchForm() {
+
   if(getUrlParameter("lng") != undefined){
     $("#lng").val(getUrlParameter("lng"))
   }
