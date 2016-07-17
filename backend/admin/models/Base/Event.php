@@ -8,14 +8,11 @@ use \Event as ChildEvent;
 use \EventCategory as ChildEventCategory;
 use \EventCategoryQuery as ChildEventCategoryQuery;
 use \EventQuery as ChildEventQuery;
-use \Image as ChildImage;
-use \ImageQuery as ChildImageQuery;
 use \DateTime;
 use \Exception;
 use \PDO;
 use Map\EventCategoryTableMap;
 use Map\EventTableMap;
-use Map\ImageTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -107,6 +104,27 @@ abstract class Event implements ActiveRecordInterface
     protected $latitude;
 
     /**
+     * The value for the koordx field.
+     * 
+     * @var        double
+     */
+    protected $koordx;
+
+    /**
+     * The value for the koordy field.
+     * 
+     * @var        double
+     */
+    protected $koordy;
+
+    /**
+     * The value for the koordz field.
+     * 
+     * @var        double
+     */
+    protected $koordz;
+
+    /**
      * The value for the location_name field.
      * 
      * @var        string
@@ -156,16 +174,24 @@ abstract class Event implements ActiveRecordInterface
     protected $end;
 
     /**
+     * The value for the image field.
+     * 
+     * @var        string
+     */
+    protected $image;
+
+    /**
+     * The value for the website field.
+     * 
+     * @var        string
+     */
+    protected $website;
+
+    /**
      * @var        ObjectCollection|ChildEventCategory[] Collection to store aggregation of ChildEventCategory objects.
      */
     protected $collEventCategories;
     protected $collEventCategoriesPartial;
-
-    /**
-     * @var        ObjectCollection|ChildImage[] Collection to store aggregation of ChildImage objects.
-     */
-    protected $collImages;
-    protected $collImagesPartial;
 
     /**
      * @var        ObjectCollection|ChildCategory[] Cross Collection to store aggregation of ChildCategory objects.
@@ -196,12 +222,6 @@ abstract class Event implements ActiveRecordInterface
      * @var ObjectCollection|ChildEventCategory[]
      */
     protected $eventCategoriesScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildImage[]
-     */
-    protected $imagesScheduledForDeletion = null;
 
     /**
      * Initializes internal state of Base\Event object.
@@ -479,6 +499,36 @@ abstract class Event implements ActiveRecordInterface
     }
 
     /**
+     * Get the [koordx] column value.
+     * 
+     * @return double
+     */
+    public function getKoordx()
+    {
+        return $this->koordx;
+    }
+
+    /**
+     * Get the [koordy] column value.
+     * 
+     * @return double
+     */
+    public function getKoordy()
+    {
+        return $this->koordy;
+    }
+
+    /**
+     * Get the [koordz] column value.
+     * 
+     * @return double
+     */
+    public function getKoordz()
+    {
+        return $this->koordz;
+    }
+
+    /**
      * Get the [location_name] column value.
      * 
      * @return string
@@ -566,6 +616,26 @@ abstract class Event implements ActiveRecordInterface
         } else {
             return $this->end instanceof \DateTimeInterface ? $this->end->format($format) : null;
         }
+    }
+
+    /**
+     * Get the [image] column value.
+     * 
+     * @return string
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * Get the [website] column value.
+     * 
+     * @return string
+     */
+    public function getWebsite()
+    {
+        return $this->website;
     }
 
     /**
@@ -667,6 +737,66 @@ abstract class Event implements ActiveRecordInterface
 
         return $this;
     } // setLatitude()
+
+    /**
+     * Set the value of [koordx] column.
+     * 
+     * @param double $v new value
+     * @return $this|\Event The current object (for fluent API support)
+     */
+    public function setKoordx($v)
+    {
+        if ($v !== null) {
+            $v = (double) $v;
+        }
+
+        if ($this->koordx !== $v) {
+            $this->koordx = $v;
+            $this->modifiedColumns[EventTableMap::COL_KOORDX] = true;
+        }
+
+        return $this;
+    } // setKoordx()
+
+    /**
+     * Set the value of [koordy] column.
+     * 
+     * @param double $v new value
+     * @return $this|\Event The current object (for fluent API support)
+     */
+    public function setKoordy($v)
+    {
+        if ($v !== null) {
+            $v = (double) $v;
+        }
+
+        if ($this->koordy !== $v) {
+            $this->koordy = $v;
+            $this->modifiedColumns[EventTableMap::COL_KOORDY] = true;
+        }
+
+        return $this;
+    } // setKoordy()
+
+    /**
+     * Set the value of [koordz] column.
+     * 
+     * @param double $v new value
+     * @return $this|\Event The current object (for fluent API support)
+     */
+    public function setKoordz($v)
+    {
+        if ($v !== null) {
+            $v = (double) $v;
+        }
+
+        if ($this->koordz !== $v) {
+            $this->koordz = $v;
+            $this->modifiedColumns[EventTableMap::COL_KOORDZ] = true;
+        }
+
+        return $this;
+    } // setKoordz()
 
     /**
      * Set the value of [location_name] column.
@@ -809,6 +939,46 @@ abstract class Event implements ActiveRecordInterface
     } // setEnd()
 
     /**
+     * Set the value of [image] column.
+     * 
+     * @param string $v new value
+     * @return $this|\Event The current object (for fluent API support)
+     */
+    public function setImage($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->image !== $v) {
+            $this->image = $v;
+            $this->modifiedColumns[EventTableMap::COL_IMAGE] = true;
+        }
+
+        return $this;
+    } // setImage()
+
+    /**
+     * Set the value of [website] column.
+     * 
+     * @param string $v new value
+     * @return $this|\Event The current object (for fluent API support)
+     */
+    public function setWebsite($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->website !== $v) {
+            $this->website = $v;
+            $this->modifiedColumns[EventTableMap::COL_WEBSITE] = true;
+        }
+
+        return $this;
+    } // setWebsite()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -859,32 +1029,47 @@ abstract class Event implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : EventTableMap::translateFieldName('Latitude', TableMap::TYPE_PHPNAME, $indexType)];
             $this->latitude = (null !== $col) ? (double) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : EventTableMap::translateFieldName('LocationName', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : EventTableMap::translateFieldName('Koordx', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->koordx = (null !== $col) ? (double) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : EventTableMap::translateFieldName('Koordy', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->koordy = (null !== $col) ? (double) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : EventTableMap::translateFieldName('Koordz', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->koordz = (null !== $col) ? (double) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : EventTableMap::translateFieldName('LocationName', TableMap::TYPE_PHPNAME, $indexType)];
             $this->location_name = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : EventTableMap::translateFieldName('StreetNo', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : EventTableMap::translateFieldName('StreetNo', TableMap::TYPE_PHPNAME, $indexType)];
             $this->street_no = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : EventTableMap::translateFieldName('ZipCode', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : EventTableMap::translateFieldName('ZipCode', TableMap::TYPE_PHPNAME, $indexType)];
             $this->zip_code = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : EventTableMap::translateFieldName('City', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : EventTableMap::translateFieldName('City', TableMap::TYPE_PHPNAME, $indexType)];
             $this->city = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : EventTableMap::translateFieldName('Country', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : EventTableMap::translateFieldName('Country', TableMap::TYPE_PHPNAME, $indexType)];
             $this->country = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : EventTableMap::translateFieldName('Begin', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 13 + $startcol : EventTableMap::translateFieldName('Begin', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->begin = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : EventTableMap::translateFieldName('End', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 14 + $startcol : EventTableMap::translateFieldName('End', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->end = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 15 + $startcol : EventTableMap::translateFieldName('Image', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->image = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 16 + $startcol : EventTableMap::translateFieldName('Website', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->website = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -893,7 +1078,7 @@ abstract class Event implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 12; // 12 = EventTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 17; // 17 = EventTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Event'), 0, $e);
@@ -955,8 +1140,6 @@ abstract class Event implements ActiveRecordInterface
         if ($deep) {  // also de-associate any related objects?
 
             $this->collEventCategories = null;
-
-            $this->collImages = null;
 
             $this->collCategories = null;
         } // if (deep)
@@ -1115,23 +1298,6 @@ abstract class Event implements ActiveRecordInterface
                 }
             }
 
-            if ($this->imagesScheduledForDeletion !== null) {
-                if (!$this->imagesScheduledForDeletion->isEmpty()) {
-                    \ImageQuery::create()
-                        ->filterByPrimaryKeys($this->imagesScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->imagesScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collImages !== null) {
-                foreach ($this->collImages as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
             $this->alreadyInSave = false;
 
         }
@@ -1173,6 +1339,15 @@ abstract class Event implements ActiveRecordInterface
         if ($this->isColumnModified(EventTableMap::COL_LATITUDE)) {
             $modifiedColumns[':p' . $index++]  = 'latitude';
         }
+        if ($this->isColumnModified(EventTableMap::COL_KOORDX)) {
+            $modifiedColumns[':p' . $index++]  = 'koordX';
+        }
+        if ($this->isColumnModified(EventTableMap::COL_KOORDY)) {
+            $modifiedColumns[':p' . $index++]  = 'koordY';
+        }
+        if ($this->isColumnModified(EventTableMap::COL_KOORDZ)) {
+            $modifiedColumns[':p' . $index++]  = 'koordZ';
+        }
         if ($this->isColumnModified(EventTableMap::COL_LOCATION_NAME)) {
             $modifiedColumns[':p' . $index++]  = 'location_name';
         }
@@ -1193,6 +1368,12 @@ abstract class Event implements ActiveRecordInterface
         }
         if ($this->isColumnModified(EventTableMap::COL_END)) {
             $modifiedColumns[':p' . $index++]  = 'end';
+        }
+        if ($this->isColumnModified(EventTableMap::COL_IMAGE)) {
+            $modifiedColumns[':p' . $index++]  = 'image';
+        }
+        if ($this->isColumnModified(EventTableMap::COL_WEBSITE)) {
+            $modifiedColumns[':p' . $index++]  = 'website';
         }
 
         $sql = sprintf(
@@ -1220,6 +1401,15 @@ abstract class Event implements ActiveRecordInterface
                     case 'latitude':                        
                         $stmt->bindValue($identifier, $this->latitude, PDO::PARAM_STR);
                         break;
+                    case 'koordX':                        
+                        $stmt->bindValue($identifier, $this->koordx, PDO::PARAM_STR);
+                        break;
+                    case 'koordY':                        
+                        $stmt->bindValue($identifier, $this->koordy, PDO::PARAM_STR);
+                        break;
+                    case 'koordZ':                        
+                        $stmt->bindValue($identifier, $this->koordz, PDO::PARAM_STR);
+                        break;
                     case 'location_name':                        
                         $stmt->bindValue($identifier, $this->location_name, PDO::PARAM_STR);
                         break;
@@ -1240,6 +1430,12 @@ abstract class Event implements ActiveRecordInterface
                         break;
                     case 'end':                        
                         $stmt->bindValue($identifier, $this->end ? $this->end->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+                        break;
+                    case 'image':                        
+                        $stmt->bindValue($identifier, $this->image, PDO::PARAM_STR);
+                        break;
+                    case 'website':                        
+                        $stmt->bindValue($identifier, $this->website, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -1319,25 +1515,40 @@ abstract class Event implements ActiveRecordInterface
                 return $this->getLatitude();
                 break;
             case 5:
-                return $this->getLocationName();
+                return $this->getKoordx();
                 break;
             case 6:
-                return $this->getStreetNo();
+                return $this->getKoordy();
                 break;
             case 7:
-                return $this->getZipCode();
+                return $this->getKoordz();
                 break;
             case 8:
-                return $this->getCity();
+                return $this->getLocationName();
                 break;
             case 9:
-                return $this->getCountry();
+                return $this->getStreetNo();
                 break;
             case 10:
-                return $this->getBegin();
+                return $this->getZipCode();
                 break;
             case 11:
+                return $this->getCity();
+                break;
+            case 12:
+                return $this->getCountry();
+                break;
+            case 13:
+                return $this->getBegin();
+                break;
+            case 14:
                 return $this->getEnd();
+                break;
+            case 15:
+                return $this->getImage();
+                break;
+            case 16:
+                return $this->getWebsite();
                 break;
             default:
                 return null;
@@ -1374,20 +1585,25 @@ abstract class Event implements ActiveRecordInterface
             $keys[2] => $this->getDescription(),
             $keys[3] => $this->getLongitude(),
             $keys[4] => $this->getLatitude(),
-            $keys[5] => $this->getLocationName(),
-            $keys[6] => $this->getStreetNo(),
-            $keys[7] => $this->getZipCode(),
-            $keys[8] => $this->getCity(),
-            $keys[9] => $this->getCountry(),
-            $keys[10] => $this->getBegin(),
-            $keys[11] => $this->getEnd(),
+            $keys[5] => $this->getKoordx(),
+            $keys[6] => $this->getKoordy(),
+            $keys[7] => $this->getKoordz(),
+            $keys[8] => $this->getLocationName(),
+            $keys[9] => $this->getStreetNo(),
+            $keys[10] => $this->getZipCode(),
+            $keys[11] => $this->getCity(),
+            $keys[12] => $this->getCountry(),
+            $keys[13] => $this->getBegin(),
+            $keys[14] => $this->getEnd(),
+            $keys[15] => $this->getImage(),
+            $keys[16] => $this->getWebsite(),
         );
-        if ($result[$keys[10]] instanceof \DateTime) {
-            $result[$keys[10]] = $result[$keys[10]]->format('c');
+        if ($result[$keys[13]] instanceof \DateTime) {
+            $result[$keys[13]] = $result[$keys[13]]->format('c');
         }
         
-        if ($result[$keys[11]] instanceof \DateTime) {
-            $result[$keys[11]] = $result[$keys[11]]->format('c');
+        if ($result[$keys[14]] instanceof \DateTime) {
+            $result[$keys[14]] = $result[$keys[14]]->format('c');
         }
         
         $virtualColumns = $this->virtualColumns;
@@ -1410,21 +1626,6 @@ abstract class Event implements ActiveRecordInterface
                 }
         
                 $result[$key] = $this->collEventCategories->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->collImages) {
-                
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'images';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'images';
-                        break;
-                    default:
-                        $key = 'Images';
-                }
-        
-                $result[$key] = $this->collImages->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1476,25 +1677,40 @@ abstract class Event implements ActiveRecordInterface
                 $this->setLatitude($value);
                 break;
             case 5:
-                $this->setLocationName($value);
+                $this->setKoordx($value);
                 break;
             case 6:
-                $this->setStreetNo($value);
+                $this->setKoordy($value);
                 break;
             case 7:
-                $this->setZipCode($value);
+                $this->setKoordz($value);
                 break;
             case 8:
-                $this->setCity($value);
+                $this->setLocationName($value);
                 break;
             case 9:
-                $this->setCountry($value);
+                $this->setStreetNo($value);
                 break;
             case 10:
-                $this->setBegin($value);
+                $this->setZipCode($value);
                 break;
             case 11:
+                $this->setCity($value);
+                break;
+            case 12:
+                $this->setCountry($value);
+                break;
+            case 13:
+                $this->setBegin($value);
+                break;
+            case 14:
                 $this->setEnd($value);
+                break;
+            case 15:
+                $this->setImage($value);
+                break;
+            case 16:
+                $this->setWebsite($value);
                 break;
         } // switch()
 
@@ -1538,25 +1754,40 @@ abstract class Event implements ActiveRecordInterface
             $this->setLatitude($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setLocationName($arr[$keys[5]]);
+            $this->setKoordx($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setStreetNo($arr[$keys[6]]);
+            $this->setKoordy($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setZipCode($arr[$keys[7]]);
+            $this->setKoordz($arr[$keys[7]]);
         }
         if (array_key_exists($keys[8], $arr)) {
-            $this->setCity($arr[$keys[8]]);
+            $this->setLocationName($arr[$keys[8]]);
         }
         if (array_key_exists($keys[9], $arr)) {
-            $this->setCountry($arr[$keys[9]]);
+            $this->setStreetNo($arr[$keys[9]]);
         }
         if (array_key_exists($keys[10], $arr)) {
-            $this->setBegin($arr[$keys[10]]);
+            $this->setZipCode($arr[$keys[10]]);
         }
         if (array_key_exists($keys[11], $arr)) {
-            $this->setEnd($arr[$keys[11]]);
+            $this->setCity($arr[$keys[11]]);
+        }
+        if (array_key_exists($keys[12], $arr)) {
+            $this->setCountry($arr[$keys[12]]);
+        }
+        if (array_key_exists($keys[13], $arr)) {
+            $this->setBegin($arr[$keys[13]]);
+        }
+        if (array_key_exists($keys[14], $arr)) {
+            $this->setEnd($arr[$keys[14]]);
+        }
+        if (array_key_exists($keys[15], $arr)) {
+            $this->setImage($arr[$keys[15]]);
+        }
+        if (array_key_exists($keys[16], $arr)) {
+            $this->setWebsite($arr[$keys[16]]);
         }
     }
 
@@ -1614,6 +1845,15 @@ abstract class Event implements ActiveRecordInterface
         if ($this->isColumnModified(EventTableMap::COL_LATITUDE)) {
             $criteria->add(EventTableMap::COL_LATITUDE, $this->latitude);
         }
+        if ($this->isColumnModified(EventTableMap::COL_KOORDX)) {
+            $criteria->add(EventTableMap::COL_KOORDX, $this->koordx);
+        }
+        if ($this->isColumnModified(EventTableMap::COL_KOORDY)) {
+            $criteria->add(EventTableMap::COL_KOORDY, $this->koordy);
+        }
+        if ($this->isColumnModified(EventTableMap::COL_KOORDZ)) {
+            $criteria->add(EventTableMap::COL_KOORDZ, $this->koordz);
+        }
         if ($this->isColumnModified(EventTableMap::COL_LOCATION_NAME)) {
             $criteria->add(EventTableMap::COL_LOCATION_NAME, $this->location_name);
         }
@@ -1634,6 +1874,12 @@ abstract class Event implements ActiveRecordInterface
         }
         if ($this->isColumnModified(EventTableMap::COL_END)) {
             $criteria->add(EventTableMap::COL_END, $this->end);
+        }
+        if ($this->isColumnModified(EventTableMap::COL_IMAGE)) {
+            $criteria->add(EventTableMap::COL_IMAGE, $this->image);
+        }
+        if ($this->isColumnModified(EventTableMap::COL_WEBSITE)) {
+            $criteria->add(EventTableMap::COL_WEBSITE, $this->website);
         }
 
         return $criteria;
@@ -1725,6 +1971,9 @@ abstract class Event implements ActiveRecordInterface
         $copyObj->setDescription($this->getDescription());
         $copyObj->setLongitude($this->getLongitude());
         $copyObj->setLatitude($this->getLatitude());
+        $copyObj->setKoordx($this->getKoordx());
+        $copyObj->setKoordy($this->getKoordy());
+        $copyObj->setKoordz($this->getKoordz());
         $copyObj->setLocationName($this->getLocationName());
         $copyObj->setStreetNo($this->getStreetNo());
         $copyObj->setZipCode($this->getZipCode());
@@ -1732,6 +1981,8 @@ abstract class Event implements ActiveRecordInterface
         $copyObj->setCountry($this->getCountry());
         $copyObj->setBegin($this->getBegin());
         $copyObj->setEnd($this->getEnd());
+        $copyObj->setImage($this->getImage());
+        $copyObj->setWebsite($this->getWebsite());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1741,12 +1992,6 @@ abstract class Event implements ActiveRecordInterface
             foreach ($this->getEventCategories() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addEventCategory($relObj->copy($deepCopy));
-                }
-            }
-
-            foreach ($this->getImages() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addImage($relObj->copy($deepCopy));
                 }
             }
 
@@ -1793,9 +2038,6 @@ abstract class Event implements ActiveRecordInterface
     {
         if ('EventCategory' == $relationName) {
             return $this->initEventCategories();
-        }
-        if ('Image' == $relationName) {
-            return $this->initImages();
         }
     }
 
@@ -2053,256 +2295,6 @@ abstract class Event implements ActiveRecordInterface
     }
 
     /**
-     * Clears out the collImages collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return void
-     * @see        addImages()
-     */
-    public function clearImages()
-    {
-        $this->collImages = null; // important to set this to NULL since that means it is uninitialized
-    }
-
-    /**
-     * Reset is the collImages collection loaded partially.
-     */
-    public function resetPartialImages($v = true)
-    {
-        $this->collImagesPartial = $v;
-    }
-
-    /**
-     * Initializes the collImages collection.
-     *
-     * By default this just sets the collImages collection to an empty array (like clearcollImages());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initImages($overrideExisting = true)
-    {
-        if (null !== $this->collImages && !$overrideExisting) {
-            return;
-        }
-
-        $collectionClassName = ImageTableMap::getTableMap()->getCollectionClassName();
-
-        $this->collImages = new $collectionClassName;
-        $this->collImages->setModel('\Image');
-    }
-
-    /**
-     * Gets an array of ChildImage objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildEvent is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildImage[] List of ChildImage objects
-     * @throws PropelException
-     */
-    public function getImages(Criteria $criteria = null, ConnectionInterface $con = null)
-    {
-        $partial = $this->collImagesPartial && !$this->isNew();
-        if (null === $this->collImages || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collImages) {
-                // return empty collection
-                $this->initImages();
-            } else {
-                $collImages = ChildImageQuery::create(null, $criteria)
-                    ->filterByEvent($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collImagesPartial && count($collImages)) {
-                        $this->initImages(false);
-
-                        foreach ($collImages as $obj) {
-                            if (false == $this->collImages->contains($obj)) {
-                                $this->collImages->append($obj);
-                            }
-                        }
-
-                        $this->collImagesPartial = true;
-                    }
-
-                    return $collImages;
-                }
-
-                if ($partial && $this->collImages) {
-                    foreach ($this->collImages as $obj) {
-                        if ($obj->isNew()) {
-                            $collImages[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collImages = $collImages;
-                $this->collImagesPartial = false;
-            }
-        }
-
-        return $this->collImages;
-    }
-
-    /**
-     * Sets a collection of ChildImage objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param      Collection $images A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildEvent The current object (for fluent API support)
-     */
-    public function setImages(Collection $images, ConnectionInterface $con = null)
-    {
-        /** @var ChildImage[] $imagesToDelete */
-        $imagesToDelete = $this->getImages(new Criteria(), $con)->diff($images);
-
-        
-        $this->imagesScheduledForDeletion = $imagesToDelete;
-
-        foreach ($imagesToDelete as $imageRemoved) {
-            $imageRemoved->setEvent(null);
-        }
-
-        $this->collImages = null;
-        foreach ($images as $image) {
-            $this->addImage($image);
-        }
-
-        $this->collImages = $images;
-        $this->collImagesPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related Image objects.
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related Image objects.
-     * @throws PropelException
-     */
-    public function countImages(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
-    {
-        $partial = $this->collImagesPartial && !$this->isNew();
-        if (null === $this->collImages || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collImages) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getImages());
-            }
-
-            $query = ChildImageQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByEvent($this)
-                ->count($con);
-        }
-
-        return count($this->collImages);
-    }
-
-    /**
-     * Method called to associate a ChildImage object to this object
-     * through the ChildImage foreign key attribute.
-     *
-     * @param  ChildImage $l ChildImage
-     * @return $this|\Event The current object (for fluent API support)
-     */
-    public function addImage(ChildImage $l)
-    {
-        if ($this->collImages === null) {
-            $this->initImages();
-            $this->collImagesPartial = true;
-        }
-
-        if (!$this->collImages->contains($l)) {
-            $this->doAddImage($l);
-
-            if ($this->imagesScheduledForDeletion and $this->imagesScheduledForDeletion->contains($l)) {
-                $this->imagesScheduledForDeletion->remove($this->imagesScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildImage $image The ChildImage object to add.
-     */
-    protected function doAddImage(ChildImage $image)
-    {
-        $this->collImages[]= $image;
-        $image->setEvent($this);
-    }
-
-    /**
-     * @param  ChildImage $image The ChildImage object to remove.
-     * @return $this|ChildEvent The current object (for fluent API support)
-     */
-    public function removeImage(ChildImage $image)
-    {
-        if ($this->getImages()->contains($image)) {
-            $pos = $this->collImages->search($image);
-            $this->collImages->remove($pos);
-            if (null === $this->imagesScheduledForDeletion) {
-                $this->imagesScheduledForDeletion = clone $this->collImages;
-                $this->imagesScheduledForDeletion->clear();
-            }
-            $this->imagesScheduledForDeletion[]= clone $image;
-            $image->setEvent(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Event is new, it will return
-     * an empty collection; or if this Event has previously
-     * been saved, it will retrieve related Images from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Event.
-     *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
-     * @param      string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildImage[] List of ChildImage objects
-     */
-    public function getImagesJoinImagetype(Criteria $criteria = null, ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildImageQuery::create(null, $criteria);
-        $query->joinWith('Imagetype', $joinBehavior);
-
-        return $this->getImages($query, $con);
-    }
-
-    /**
      * Clears out the collCategories collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
@@ -2557,6 +2549,9 @@ abstract class Event implements ActiveRecordInterface
         $this->description = null;
         $this->longitude = null;
         $this->latitude = null;
+        $this->koordx = null;
+        $this->koordy = null;
+        $this->koordz = null;
         $this->location_name = null;
         $this->street_no = null;
         $this->zip_code = null;
@@ -2564,6 +2559,8 @@ abstract class Event implements ActiveRecordInterface
         $this->country = null;
         $this->begin = null;
         $this->end = null;
+        $this->image = null;
+        $this->website = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();
@@ -2587,11 +2584,6 @@ abstract class Event implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collImages) {
-                foreach ($this->collImages as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
             if ($this->collCategories) {
                 foreach ($this->collCategories as $o) {
                     $o->clearAllReferences($deep);
@@ -2600,7 +2592,6 @@ abstract class Event implements ActiveRecordInterface
         } // if ($deep)
 
         $this->collEventCategories = null;
-        $this->collImages = null;
         $this->collCategories = null;
     }
 

@@ -71,11 +71,11 @@ abstract class Image implements ActiveRecordInterface
     protected $id;
 
     /**
-     * The value for the image field.
+     * The value for the image_url field.
      * 
-     * @var        resource
+     * @var        string
      */
-    protected $image;
+    protected $image_url;
 
     /**
      * The value for the type_id field.
@@ -345,13 +345,13 @@ abstract class Image implements ActiveRecordInterface
     }
 
     /**
-     * Get the [image] column value.
+     * Get the [image_url] column value.
      * 
-     * @return resource
+     * @return string
      */
-    public function getImage()
+    public function getImageUrl()
     {
-        return $this->image;
+        return $this->image_url;
     }
 
     /**
@@ -395,27 +395,24 @@ abstract class Image implements ActiveRecordInterface
     } // setId()
 
     /**
-     * Set the value of [image] column.
+     * Set the value of [image_url] column.
      * 
-     * @param resource $v new value
+     * @param string $v new value
      * @return $this|\Image The current object (for fluent API support)
      */
-    public function setImage($v)
+    public function setImageUrl($v)
     {
-        // Because BLOB columns are streams in PDO we have to assume that they are
-        // always modified when a new value is passed in.  For example, the contents
-        // of the stream itself may have changed externally.
-        if (!is_resource($v) && $v !== null) {
-            $this->image = fopen('php://memory', 'r+');
-            fwrite($this->image, $v);
-            rewind($this->image);
-        } else { // it's already a stream
-            $this->image = $v;
+        if ($v !== null) {
+            $v = (string) $v;
         }
-        $this->modifiedColumns[ImageTableMap::COL_IMAGE] = true;
+
+        if ($this->image_url !== $v) {
+            $this->image_url = $v;
+            $this->modifiedColumns[ImageTableMap::COL_IMAGE_URL] = true;
+        }
 
         return $this;
-    } // setImage()
+    } // setImageUrl()
 
     /**
      * Set the value of [type_id] column.
@@ -504,14 +501,8 @@ abstract class Image implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : ImageTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ImageTableMap::translateFieldName('Image', TableMap::TYPE_PHPNAME, $indexType)];
-            if (null !== $col) {
-                $this->image = fopen('php://memory', 'r+');
-                fwrite($this->image, $col);
-                rewind($this->image);
-            } else {
-                $this->image = null;
-            }
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ImageTableMap::translateFieldName('ImageUrl', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->image_url = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ImageTableMap::translateFieldName('TypeId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->type_id = (null !== $col) ? (int) $col : null;
@@ -721,11 +712,6 @@ abstract class Image implements ActiveRecordInterface
                 } else {
                     $affectedRows += $this->doUpdate($con);
                 }
-                // Rewind the image LOB column, since PDO does not rewind after inserting value.
-                if ($this->image !== null && is_resource($this->image)) {
-                    rewind($this->image);
-                }
-
                 $this->resetModified();
             }
 
@@ -758,8 +744,8 @@ abstract class Image implements ActiveRecordInterface
         if ($this->isColumnModified(ImageTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(ImageTableMap::COL_IMAGE)) {
-            $modifiedColumns[':p' . $index++]  = 'image';
+        if ($this->isColumnModified(ImageTableMap::COL_IMAGE_URL)) {
+            $modifiedColumns[':p' . $index++]  = 'image_url';
         }
         if ($this->isColumnModified(ImageTableMap::COL_TYPE_ID)) {
             $modifiedColumns[':p' . $index++]  = 'type_id';
@@ -781,11 +767,8 @@ abstract class Image implements ActiveRecordInterface
                     case 'id':                        
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'image':                        
-                        if (is_resource($this->image)) {
-                            rewind($this->image);
-                        }
-                        $stmt->bindValue($identifier, $this->image, PDO::PARAM_LOB);
+                    case 'image_url':                        
+                        $stmt->bindValue($identifier, $this->image_url, PDO::PARAM_STR);
                         break;
                     case 'type_id':                        
                         $stmt->bindValue($identifier, $this->type_id, PDO::PARAM_INT);
@@ -859,7 +842,7 @@ abstract class Image implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getImage();
+                return $this->getImageUrl();
                 break;
             case 2:
                 return $this->getTypeId();
@@ -898,7 +881,7 @@ abstract class Image implements ActiveRecordInterface
         $keys = ImageTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getImage(),
+            $keys[1] => $this->getImageUrl(),
             $keys[2] => $this->getTypeId(),
             $keys[3] => $this->getEventId(),
         );
@@ -976,7 +959,7 @@ abstract class Image implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setImage($value);
+                $this->setImageUrl($value);
                 break;
             case 2:
                 $this->setTypeId($value);
@@ -1014,7 +997,7 @@ abstract class Image implements ActiveRecordInterface
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setImage($arr[$keys[1]]);
+            $this->setImageUrl($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
             $this->setTypeId($arr[$keys[2]]);
@@ -1066,8 +1049,8 @@ abstract class Image implements ActiveRecordInterface
         if ($this->isColumnModified(ImageTableMap::COL_ID)) {
             $criteria->add(ImageTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(ImageTableMap::COL_IMAGE)) {
-            $criteria->add(ImageTableMap::COL_IMAGE, $this->image);
+        if ($this->isColumnModified(ImageTableMap::COL_IMAGE_URL)) {
+            $criteria->add(ImageTableMap::COL_IMAGE_URL, $this->image_url);
         }
         if ($this->isColumnModified(ImageTableMap::COL_TYPE_ID)) {
             $criteria->add(ImageTableMap::COL_TYPE_ID, $this->type_id);
@@ -1161,7 +1144,7 @@ abstract class Image implements ActiveRecordInterface
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setImage($this->getImage());
+        $copyObj->setImageUrl($this->getImageUrl());
         $copyObj->setTypeId($this->getTypeId());
         $copyObj->setEventId($this->getEventId());
         if ($makeNew) {
@@ -1308,7 +1291,7 @@ abstract class Image implements ActiveRecordInterface
             $this->aEvent->removeImage($this);
         }
         $this->id = null;
-        $this->image = null;
+        $this->image_url = null;
         $this->type_id = null;
         $this->event_id = null;
         $this->alreadyInSave = false;

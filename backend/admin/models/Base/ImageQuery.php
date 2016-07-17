@@ -21,12 +21,12 @@ use Propel\Runtime\Exception\PropelException;
  * 
  *
  * @method     ChildImageQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     ChildImageQuery orderByImage($order = Criteria::ASC) Order by the image column
+ * @method     ChildImageQuery orderByImageUrl($order = Criteria::ASC) Order by the image_url column
  * @method     ChildImageQuery orderByTypeId($order = Criteria::ASC) Order by the type_id column
  * @method     ChildImageQuery orderByEventId($order = Criteria::ASC) Order by the event_id column
  *
  * @method     ChildImageQuery groupById() Group by the id column
- * @method     ChildImageQuery groupByImage() Group by the image column
+ * @method     ChildImageQuery groupByImageUrl() Group by the image_url column
  * @method     ChildImageQuery groupByTypeId() Group by the type_id column
  * @method     ChildImageQuery groupByEventId() Group by the event_id column
  *
@@ -64,7 +64,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildImage findOneOrCreate(ConnectionInterface $con = null) Return the first ChildImage matching the query, or a new ChildImage object populated from the query conditions when no match is found
  *
  * @method     ChildImage findOneById(int $id) Return the first ChildImage filtered by the id column
- * @method     ChildImage findOneByImage(resource $image) Return the first ChildImage filtered by the image column
+ * @method     ChildImage findOneByImageUrl(string $image_url) Return the first ChildImage filtered by the image_url column
  * @method     ChildImage findOneByTypeId(int $type_id) Return the first ChildImage filtered by the type_id column
  * @method     ChildImage findOneByEventId(int $event_id) Return the first ChildImage filtered by the event_id column *
 
@@ -72,13 +72,13 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildImage requireOne(ConnectionInterface $con = null) Return the first ChildImage matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildImage requireOneById(int $id) Return the first ChildImage filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildImage requireOneByImage(resource $image) Return the first ChildImage filtered by the image column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildImage requireOneByImageUrl(string $image_url) Return the first ChildImage filtered by the image_url column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildImage requireOneByTypeId(int $type_id) Return the first ChildImage filtered by the type_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildImage requireOneByEventId(int $event_id) Return the first ChildImage filtered by the event_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildImage[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildImage objects based on current ModelCriteria
  * @method     ChildImage[]|ObjectCollection findById(int $id) Return ChildImage objects filtered by the id column
- * @method     ChildImage[]|ObjectCollection findByImage(resource $image) Return ChildImage objects filtered by the image column
+ * @method     ChildImage[]|ObjectCollection findByImageUrl(string $image_url) Return ChildImage objects filtered by the image_url column
  * @method     ChildImage[]|ObjectCollection findByTypeId(int $type_id) Return ChildImage objects filtered by the type_id column
  * @method     ChildImage[]|ObjectCollection findByEventId(int $event_id) Return ChildImage objects filtered by the event_id column
  * @method     ChildImage[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
@@ -179,7 +179,7 @@ abstract class ImageQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, image, type_id, event_id FROM image WHERE id = :p0';
+        $sql = 'SELECT id, image_url, type_id, event_id FROM image WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);            
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -311,17 +311,29 @@ abstract class ImageQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the image column
+     * Filter the query on the image_url column
      *
-     * @param     mixed $image The value to use as filter
+     * Example usage:
+     * <code>
+     * $query->filterByImageUrl('fooValue');   // WHERE image_url = 'fooValue'
+     * $query->filterByImageUrl('%fooValue%'); // WHERE image_url LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $imageUrl The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this|ChildImageQuery The current query, for fluid interface
      */
-    public function filterByImage($image = null, $comparison = null)
+    public function filterByImageUrl($imageUrl = null, $comparison = null)
     {
+        if (null === $comparison) {
+            if (is_array($imageUrl)) {
+                $comparison = Criteria::IN;
+            }
+        }
 
-        return $this->addUsingAlias(ImageTableMap::COL_IMAGE, $image, $comparison);
+        return $this->addUsingAlias(ImageTableMap::COL_IMAGE_URL, $imageUrl, $comparison);
     }
 
     /**

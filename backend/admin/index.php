@@ -1,6 +1,8 @@
 <?php
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use \Propel\Runtime\Propel;
+use \Propel\Runtime\Formatter\ObjectFormatter;
 
 // setup the autoloading
 require_once '../../vendor/autoload.php';
@@ -46,27 +48,102 @@ $app->group('/api', function () {
         // Events group
         $this->group('/events', function () {
 
-            // creates a new event
-            $this->post('/new', function (Request $request, Response $response, $args) {
-                $data = $request->getParam('event');
-
-                /*$category_name = filter_var($request->getParam('category_name'), FILTER_SANITIZE_STRING);
+            $this->get('', function(Request $request, Response $response, $args) {
+                $queryParams = $request->getQueryParams();
+                $lon = isset($queryParams['lon']) ? $queryParams['lon'] : '';
+                $lat = isset($queryParams['lat']) ? $queryParams['lat'] : '';
+                $radius = isset($queryParams['radius']) ? $queryParams['radius'] : '';
+                $category = isset($queryParams['category']) ? $queryParams['category'] : '';
 
                 $data = array();
                 $errors = array();
 
-                if (true === add_category($category_name)) {
-                    $data['success'] = true;
-                    $data['message'] = "Kategorie '$category_name' erfolgreich hinzugefügt.";
-                    $data['category'] = get_category_by_name($category_name)->toArray();
-                } else {
-                    $errors['category'] = "Kategorie bereits vorhanden.";
-                }
+                if (empty($lat))
+                    $errors['latitude'] = 'Breitengrad (latitude) fehlt oder ist leer.';
+                if (empty($lon))
+                    $errors['longitude'] = 'Längengrad (longitude) fehlt oder ist leer.';
+                if (empty($radius))
+                    $errors['radius'] = 'Umkreis fehlt.';
+                if (empty($category))
+                    $errors['category'] = 'Kategorie fehlt.';
 
                 if (!empty($errors)) {
                     $data['success'] = false;
                     $data['errors'] = $errors;
-                }*/
+                } else {
+                    // Gradmaß in Bogenmaß umwandeln
+                    $lambda = $lon * pi() / 180;
+                    $phi = $lat * pi() / 180;
+                    // Erdradius in km
+                    $erdradius = 6371;
+                    // Ermittlung des Ursprungsorts
+                    $ursprungX = $erdradius * cos($phi) * cos($lambda);
+                    $ursprungY = $erdradius * cos($phi) * sin($lambda);
+                    $ursprungZ = $erdradius * sin($phi);
+
+                    // Events innerhalb des Bereichs aus DB abfragen
+                    $con = Propel::getWriteConnection(\Map\EventTableMap::DATABASE_NAME);
+                    $sql = "SELECT event.id,event.name,event.description,event.longitude,event.latitude,
+                              event.koordX, event.koordY, event.koordZ,
+                              event.location_name,event.street_no,event.zip_code,event.city,event.country,
+                              event.begin,event.end,event.image,event.website,category.name AS category,
+                              POWER(" . $ursprungX . " - event.koordX, 2)
+                              + POWER(" . $ursprungY . " - event.koordY, 2)
+                              + POWER(" . $ursprungZ . " - event.koordZ, 2) AS tmp_calc
+                            FROM event
+                            INNER JOIN event_category ON event.id = event_category.event_id
+                            INNER JOIN category ON category.id = event_category.category_id
+                            WHERE
+                                POWER(" . $ursprungX . " - event.koordX, 2)
+                              + POWER(" . $ursprungY . " - event.koordY, 2)
+                              + POWER(" . $ursprungZ . " - event.koordZ, 2)
+                            <= " . pow(2 * $erdradius * sin($radius / (2 * $erdradius)), 2) . "
+                            ORDER BY event.begin ASC, tmp_calc ASC";
+                    $stmt = $con->prepare($sql);
+                    $stmt->execute();
+                    /*$formatter = new ObjectFormatter();
+                    $formatter->setClass('\Event');
+                    $events = $formatter->format($con->getDataFetcher($stmt));*/
+                    $events = $stmt->fetchAll(2);
+                }
+
+                $response->getBody()->write(json_encode($events, JSON_PRETTY_PRINT));
+                return $response;
+            });
+
+            // creates a new event
+            $this->post('/new', function (Request $request, Response $response, $args) {
+                $parsedData = $request->getParsedBody();
+                $multiple_events = false;
+                if ( isset($parsedData['events']) && is_array($parsedData['events']) ) {
+                    $multiple_events = true;
+                }
+
+                $event = $multiple_events ? $parsedData['events'] : $parsedData;
+
+                $data = array();
+                $errors = array();
+
+                $i = 0;
+                if ($multiple_events) {
+                    foreach ($event as $e) {
+                        $errs = add_event($e);
+                        if (!empty($errs))
+                            $errors["$i"] = $errs;
+                        $i++;
+                    }
+                } else {
+                    $errors = add_event($event);
+                }
+
+                if (!empty($errors)) {
+                    $data['success'] = false;
+                    $data['multiple_events'] = $multiple_events;
+                    $data['errors'] = $errors;
+                } else {
+                    $data['success'] = true;
+                    $data['message'] = "Event(s) erfolgreich hinzugefügt.";
+                }
 
                 $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
                 return $response;

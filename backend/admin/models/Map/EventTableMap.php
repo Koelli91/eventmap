@@ -59,7 +59,7 @@ class EventTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 12;
+    const NUM_COLUMNS = 17;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class EventTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 12;
+    const NUM_HYDRATE_COLUMNS = 17;
 
     /**
      * the column name for the id field
@@ -95,6 +95,21 @@ class EventTableMap extends TableMap
      * the column name for the latitude field
      */
     const COL_LATITUDE = 'event.latitude';
+
+    /**
+     * the column name for the koordX field
+     */
+    const COL_KOORDX = 'event.koordX';
+
+    /**
+     * the column name for the koordY field
+     */
+    const COL_KOORDY = 'event.koordY';
+
+    /**
+     * the column name for the koordZ field
+     */
+    const COL_KOORDZ = 'event.koordZ';
 
     /**
      * the column name for the location_name field
@@ -132,6 +147,16 @@ class EventTableMap extends TableMap
     const COL_END = 'event.end';
 
     /**
+     * the column name for the image field
+     */
+    const COL_IMAGE = 'event.image';
+
+    /**
+     * the column name for the website field
+     */
+    const COL_WEBSITE = 'event.website';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -143,11 +168,11 @@ class EventTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Name', 'Description', 'Longitude', 'Latitude', 'LocationName', 'StreetNo', 'ZipCode', 'City', 'Country', 'Begin', 'End', ),
-        self::TYPE_CAMELNAME     => array('id', 'name', 'description', 'longitude', 'latitude', 'locationName', 'streetNo', 'zipCode', 'city', 'country', 'begin', 'end', ),
-        self::TYPE_COLNAME       => array(EventTableMap::COL_ID, EventTableMap::COL_NAME, EventTableMap::COL_DESCRIPTION, EventTableMap::COL_LONGITUDE, EventTableMap::COL_LATITUDE, EventTableMap::COL_LOCATION_NAME, EventTableMap::COL_STREET_NO, EventTableMap::COL_ZIP_CODE, EventTableMap::COL_CITY, EventTableMap::COL_COUNTRY, EventTableMap::COL_BEGIN, EventTableMap::COL_END, ),
-        self::TYPE_FIELDNAME     => array('id', 'name', 'description', 'longitude', 'latitude', 'location_name', 'street_no', 'zip_code', 'city', 'country', 'begin', 'end', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
+        self::TYPE_PHPNAME       => array('Id', 'Name', 'Description', 'Longitude', 'Latitude', 'Koordx', 'Koordy', 'Koordz', 'LocationName', 'StreetNo', 'ZipCode', 'City', 'Country', 'Begin', 'End', 'Image', 'Website', ),
+        self::TYPE_CAMELNAME     => array('id', 'name', 'description', 'longitude', 'latitude', 'koordx', 'koordy', 'koordz', 'locationName', 'streetNo', 'zipCode', 'city', 'country', 'begin', 'end', 'image', 'website', ),
+        self::TYPE_COLNAME       => array(EventTableMap::COL_ID, EventTableMap::COL_NAME, EventTableMap::COL_DESCRIPTION, EventTableMap::COL_LONGITUDE, EventTableMap::COL_LATITUDE, EventTableMap::COL_KOORDX, EventTableMap::COL_KOORDY, EventTableMap::COL_KOORDZ, EventTableMap::COL_LOCATION_NAME, EventTableMap::COL_STREET_NO, EventTableMap::COL_ZIP_CODE, EventTableMap::COL_CITY, EventTableMap::COL_COUNTRY, EventTableMap::COL_BEGIN, EventTableMap::COL_END, EventTableMap::COL_IMAGE, EventTableMap::COL_WEBSITE, ),
+        self::TYPE_FIELDNAME     => array('id', 'name', 'description', 'longitude', 'latitude', 'koordX', 'koordY', 'koordZ', 'location_name', 'street_no', 'zip_code', 'city', 'country', 'begin', 'end', 'image', 'website', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, )
     );
 
     /**
@@ -157,11 +182,11 @@ class EventTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Name' => 1, 'Description' => 2, 'Longitude' => 3, 'Latitude' => 4, 'LocationName' => 5, 'StreetNo' => 6, 'ZipCode' => 7, 'City' => 8, 'Country' => 9, 'Begin' => 10, 'End' => 11, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'name' => 1, 'description' => 2, 'longitude' => 3, 'latitude' => 4, 'locationName' => 5, 'streetNo' => 6, 'zipCode' => 7, 'city' => 8, 'country' => 9, 'begin' => 10, 'end' => 11, ),
-        self::TYPE_COLNAME       => array(EventTableMap::COL_ID => 0, EventTableMap::COL_NAME => 1, EventTableMap::COL_DESCRIPTION => 2, EventTableMap::COL_LONGITUDE => 3, EventTableMap::COL_LATITUDE => 4, EventTableMap::COL_LOCATION_NAME => 5, EventTableMap::COL_STREET_NO => 6, EventTableMap::COL_ZIP_CODE => 7, EventTableMap::COL_CITY => 8, EventTableMap::COL_COUNTRY => 9, EventTableMap::COL_BEGIN => 10, EventTableMap::COL_END => 11, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'name' => 1, 'description' => 2, 'longitude' => 3, 'latitude' => 4, 'location_name' => 5, 'street_no' => 6, 'zip_code' => 7, 'city' => 8, 'country' => 9, 'begin' => 10, 'end' => 11, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Name' => 1, 'Description' => 2, 'Longitude' => 3, 'Latitude' => 4, 'Koordx' => 5, 'Koordy' => 6, 'Koordz' => 7, 'LocationName' => 8, 'StreetNo' => 9, 'ZipCode' => 10, 'City' => 11, 'Country' => 12, 'Begin' => 13, 'End' => 14, 'Image' => 15, 'Website' => 16, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'name' => 1, 'description' => 2, 'longitude' => 3, 'latitude' => 4, 'koordx' => 5, 'koordy' => 6, 'koordz' => 7, 'locationName' => 8, 'streetNo' => 9, 'zipCode' => 10, 'city' => 11, 'country' => 12, 'begin' => 13, 'end' => 14, 'image' => 15, 'website' => 16, ),
+        self::TYPE_COLNAME       => array(EventTableMap::COL_ID => 0, EventTableMap::COL_NAME => 1, EventTableMap::COL_DESCRIPTION => 2, EventTableMap::COL_LONGITUDE => 3, EventTableMap::COL_LATITUDE => 4, EventTableMap::COL_KOORDX => 5, EventTableMap::COL_KOORDY => 6, EventTableMap::COL_KOORDZ => 7, EventTableMap::COL_LOCATION_NAME => 8, EventTableMap::COL_STREET_NO => 9, EventTableMap::COL_ZIP_CODE => 10, EventTableMap::COL_CITY => 11, EventTableMap::COL_COUNTRY => 12, EventTableMap::COL_BEGIN => 13, EventTableMap::COL_END => 14, EventTableMap::COL_IMAGE => 15, EventTableMap::COL_WEBSITE => 16, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'name' => 1, 'description' => 2, 'longitude' => 3, 'latitude' => 4, 'koordX' => 5, 'koordY' => 6, 'koordZ' => 7, 'location_name' => 8, 'street_no' => 9, 'zip_code' => 10, 'city' => 11, 'country' => 12, 'begin' => 13, 'end' => 14, 'image' => 15, 'website' => 16, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, )
     );
 
     /**
@@ -184,8 +209,11 @@ class EventTableMap extends TableMap
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('name', 'Name', 'VARCHAR', true, 255, null);
         $this->addColumn('description', 'Description', 'VARCHAR', true, 1000, null);
-        $this->addColumn('longitude', 'Longitude', 'FLOAT', true, null, null);
-        $this->addColumn('latitude', 'Latitude', 'FLOAT', true, null, null);
+        $this->addColumn('longitude', 'Longitude', 'DOUBLE', true, null, null);
+        $this->addColumn('latitude', 'Latitude', 'DOUBLE', true, null, null);
+        $this->addColumn('koordX', 'Koordx', 'DOUBLE', true, null, null);
+        $this->addColumn('koordY', 'Koordy', 'DOUBLE', true, null, null);
+        $this->addColumn('koordZ', 'Koordz', 'DOUBLE', true, null, null);
         $this->addColumn('location_name', 'LocationName', 'VARCHAR', false, 255, null);
         $this->addColumn('street_no', 'StreetNo', 'VARCHAR', false, 255, null);
         $this->addColumn('zip_code', 'ZipCode', 'VARCHAR', false, 5, null);
@@ -193,6 +221,8 @@ class EventTableMap extends TableMap
         $this->addColumn('country', 'Country', 'VARCHAR', false, 255, null);
         $this->addColumn('begin', 'Begin', 'TIMESTAMP', true, null, null);
         $this->addColumn('end', 'End', 'TIMESTAMP', false, null, null);
+        $this->addColumn('image', 'Image', 'VARCHAR', false, 255, null);
+        $this->addColumn('website', 'Website', 'VARCHAR', false, 255, null);
     } // initialize()
 
     /**
@@ -207,13 +237,6 @@ class EventTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, 'EventCategories', false);
-        $this->addRelation('Image', '\\Image', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':event_id',
-    1 => ':id',
-  ),
-), null, null, 'Images', false);
         $this->addRelation('Category', '\\Category', RelationMap::MANY_TO_MANY, array(), null, null, 'Categories');
     } // buildRelations()
 
@@ -363,6 +386,9 @@ class EventTableMap extends TableMap
             $criteria->addSelectColumn(EventTableMap::COL_DESCRIPTION);
             $criteria->addSelectColumn(EventTableMap::COL_LONGITUDE);
             $criteria->addSelectColumn(EventTableMap::COL_LATITUDE);
+            $criteria->addSelectColumn(EventTableMap::COL_KOORDX);
+            $criteria->addSelectColumn(EventTableMap::COL_KOORDY);
+            $criteria->addSelectColumn(EventTableMap::COL_KOORDZ);
             $criteria->addSelectColumn(EventTableMap::COL_LOCATION_NAME);
             $criteria->addSelectColumn(EventTableMap::COL_STREET_NO);
             $criteria->addSelectColumn(EventTableMap::COL_ZIP_CODE);
@@ -370,12 +396,17 @@ class EventTableMap extends TableMap
             $criteria->addSelectColumn(EventTableMap::COL_COUNTRY);
             $criteria->addSelectColumn(EventTableMap::COL_BEGIN);
             $criteria->addSelectColumn(EventTableMap::COL_END);
+            $criteria->addSelectColumn(EventTableMap::COL_IMAGE);
+            $criteria->addSelectColumn(EventTableMap::COL_WEBSITE);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.description');
             $criteria->addSelectColumn($alias . '.longitude');
             $criteria->addSelectColumn($alias . '.latitude');
+            $criteria->addSelectColumn($alias . '.koordX');
+            $criteria->addSelectColumn($alias . '.koordY');
+            $criteria->addSelectColumn($alias . '.koordZ');
             $criteria->addSelectColumn($alias . '.location_name');
             $criteria->addSelectColumn($alias . '.street_no');
             $criteria->addSelectColumn($alias . '.zip_code');
@@ -383,6 +414,8 @@ class EventTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.country');
             $criteria->addSelectColumn($alias . '.begin');
             $criteria->addSelectColumn($alias . '.end');
+            $criteria->addSelectColumn($alias . '.image');
+            $criteria->addSelectColumn($alias . '.website');
         }
     }
 

@@ -25,6 +25,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEventQuery orderByDescription($order = Criteria::ASC) Order by the description column
  * @method     ChildEventQuery orderByLongitude($order = Criteria::ASC) Order by the longitude column
  * @method     ChildEventQuery orderByLatitude($order = Criteria::ASC) Order by the latitude column
+ * @method     ChildEventQuery orderByKoordx($order = Criteria::ASC) Order by the koordX column
+ * @method     ChildEventQuery orderByKoordy($order = Criteria::ASC) Order by the koordY column
+ * @method     ChildEventQuery orderByKoordz($order = Criteria::ASC) Order by the koordZ column
  * @method     ChildEventQuery orderByLocationName($order = Criteria::ASC) Order by the location_name column
  * @method     ChildEventQuery orderByStreetNo($order = Criteria::ASC) Order by the street_no column
  * @method     ChildEventQuery orderByZipCode($order = Criteria::ASC) Order by the zip_code column
@@ -32,12 +35,17 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEventQuery orderByCountry($order = Criteria::ASC) Order by the country column
  * @method     ChildEventQuery orderByBegin($order = Criteria::ASC) Order by the begin column
  * @method     ChildEventQuery orderByEnd($order = Criteria::ASC) Order by the end column
+ * @method     ChildEventQuery orderByImage($order = Criteria::ASC) Order by the image column
+ * @method     ChildEventQuery orderByWebsite($order = Criteria::ASC) Order by the website column
  *
  * @method     ChildEventQuery groupById() Group by the id column
  * @method     ChildEventQuery groupByName() Group by the name column
  * @method     ChildEventQuery groupByDescription() Group by the description column
  * @method     ChildEventQuery groupByLongitude() Group by the longitude column
  * @method     ChildEventQuery groupByLatitude() Group by the latitude column
+ * @method     ChildEventQuery groupByKoordx() Group by the koordX column
+ * @method     ChildEventQuery groupByKoordy() Group by the koordY column
+ * @method     ChildEventQuery groupByKoordz() Group by the koordZ column
  * @method     ChildEventQuery groupByLocationName() Group by the location_name column
  * @method     ChildEventQuery groupByStreetNo() Group by the street_no column
  * @method     ChildEventQuery groupByZipCode() Group by the zip_code column
@@ -45,6 +53,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEventQuery groupByCountry() Group by the country column
  * @method     ChildEventQuery groupByBegin() Group by the begin column
  * @method     ChildEventQuery groupByEnd() Group by the end column
+ * @method     ChildEventQuery groupByImage() Group by the image column
+ * @method     ChildEventQuery groupByWebsite() Group by the website column
  *
  * @method     ChildEventQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildEventQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -64,17 +74,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEventQuery rightJoinWithEventCategory() Adds a RIGHT JOIN clause and with to the query using the EventCategory relation
  * @method     ChildEventQuery innerJoinWithEventCategory() Adds a INNER JOIN clause and with to the query using the EventCategory relation
  *
- * @method     ChildEventQuery leftJoinImage($relationAlias = null) Adds a LEFT JOIN clause to the query using the Image relation
- * @method     ChildEventQuery rightJoinImage($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Image relation
- * @method     ChildEventQuery innerJoinImage($relationAlias = null) Adds a INNER JOIN clause to the query using the Image relation
- *
- * @method     ChildEventQuery joinWithImage($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the Image relation
- *
- * @method     ChildEventQuery leftJoinWithImage() Adds a LEFT JOIN clause and with to the query using the Image relation
- * @method     ChildEventQuery rightJoinWithImage() Adds a RIGHT JOIN clause and with to the query using the Image relation
- * @method     ChildEventQuery innerJoinWithImage() Adds a INNER JOIN clause and with to the query using the Image relation
- *
- * @method     \EventCategoryQuery|\ImageQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \EventCategoryQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildEvent findOne(ConnectionInterface $con = null) Return the first ChildEvent matching the query
  * @method     ChildEvent findOneOrCreate(ConnectionInterface $con = null) Return the first ChildEvent matching the query, or a new ChildEvent object populated from the query conditions when no match is found
@@ -84,13 +84,18 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEvent findOneByDescription(string $description) Return the first ChildEvent filtered by the description column
  * @method     ChildEvent findOneByLongitude(double $longitude) Return the first ChildEvent filtered by the longitude column
  * @method     ChildEvent findOneByLatitude(double $latitude) Return the first ChildEvent filtered by the latitude column
+ * @method     ChildEvent findOneByKoordx(double $koordX) Return the first ChildEvent filtered by the koordX column
+ * @method     ChildEvent findOneByKoordy(double $koordY) Return the first ChildEvent filtered by the koordY column
+ * @method     ChildEvent findOneByKoordz(double $koordZ) Return the first ChildEvent filtered by the koordZ column
  * @method     ChildEvent findOneByLocationName(string $location_name) Return the first ChildEvent filtered by the location_name column
  * @method     ChildEvent findOneByStreetNo(string $street_no) Return the first ChildEvent filtered by the street_no column
  * @method     ChildEvent findOneByZipCode(string $zip_code) Return the first ChildEvent filtered by the zip_code column
  * @method     ChildEvent findOneByCity(string $city) Return the first ChildEvent filtered by the city column
  * @method     ChildEvent findOneByCountry(string $country) Return the first ChildEvent filtered by the country column
  * @method     ChildEvent findOneByBegin(string $begin) Return the first ChildEvent filtered by the begin column
- * @method     ChildEvent findOneByEnd(string $end) Return the first ChildEvent filtered by the end column *
+ * @method     ChildEvent findOneByEnd(string $end) Return the first ChildEvent filtered by the end column
+ * @method     ChildEvent findOneByImage(string $image) Return the first ChildEvent filtered by the image column
+ * @method     ChildEvent findOneByWebsite(string $website) Return the first ChildEvent filtered by the website column *
 
  * @method     ChildEvent requirePk($key, ConnectionInterface $con = null) Return the ChildEvent by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildEvent requireOne(ConnectionInterface $con = null) Return the first ChildEvent matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -100,6 +105,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEvent requireOneByDescription(string $description) Return the first ChildEvent filtered by the description column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildEvent requireOneByLongitude(double $longitude) Return the first ChildEvent filtered by the longitude column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildEvent requireOneByLatitude(double $latitude) Return the first ChildEvent filtered by the latitude column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildEvent requireOneByKoordx(double $koordX) Return the first ChildEvent filtered by the koordX column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildEvent requireOneByKoordy(double $koordY) Return the first ChildEvent filtered by the koordY column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildEvent requireOneByKoordz(double $koordZ) Return the first ChildEvent filtered by the koordZ column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildEvent requireOneByLocationName(string $location_name) Return the first ChildEvent filtered by the location_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildEvent requireOneByStreetNo(string $street_no) Return the first ChildEvent filtered by the street_no column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildEvent requireOneByZipCode(string $zip_code) Return the first ChildEvent filtered by the zip_code column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -107,6 +115,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEvent requireOneByCountry(string $country) Return the first ChildEvent filtered by the country column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildEvent requireOneByBegin(string $begin) Return the first ChildEvent filtered by the begin column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildEvent requireOneByEnd(string $end) Return the first ChildEvent filtered by the end column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildEvent requireOneByImage(string $image) Return the first ChildEvent filtered by the image column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildEvent requireOneByWebsite(string $website) Return the first ChildEvent filtered by the website column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildEvent[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildEvent objects based on current ModelCriteria
  * @method     ChildEvent[]|ObjectCollection findById(int $id) Return ChildEvent objects filtered by the id column
@@ -114,6 +124,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEvent[]|ObjectCollection findByDescription(string $description) Return ChildEvent objects filtered by the description column
  * @method     ChildEvent[]|ObjectCollection findByLongitude(double $longitude) Return ChildEvent objects filtered by the longitude column
  * @method     ChildEvent[]|ObjectCollection findByLatitude(double $latitude) Return ChildEvent objects filtered by the latitude column
+ * @method     ChildEvent[]|ObjectCollection findByKoordx(double $koordX) Return ChildEvent objects filtered by the koordX column
+ * @method     ChildEvent[]|ObjectCollection findByKoordy(double $koordY) Return ChildEvent objects filtered by the koordY column
+ * @method     ChildEvent[]|ObjectCollection findByKoordz(double $koordZ) Return ChildEvent objects filtered by the koordZ column
  * @method     ChildEvent[]|ObjectCollection findByLocationName(string $location_name) Return ChildEvent objects filtered by the location_name column
  * @method     ChildEvent[]|ObjectCollection findByStreetNo(string $street_no) Return ChildEvent objects filtered by the street_no column
  * @method     ChildEvent[]|ObjectCollection findByZipCode(string $zip_code) Return ChildEvent objects filtered by the zip_code column
@@ -121,6 +134,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildEvent[]|ObjectCollection findByCountry(string $country) Return ChildEvent objects filtered by the country column
  * @method     ChildEvent[]|ObjectCollection findByBegin(string $begin) Return ChildEvent objects filtered by the begin column
  * @method     ChildEvent[]|ObjectCollection findByEnd(string $end) Return ChildEvent objects filtered by the end column
+ * @method     ChildEvent[]|ObjectCollection findByImage(string $image) Return ChildEvent objects filtered by the image column
+ * @method     ChildEvent[]|ObjectCollection findByWebsite(string $website) Return ChildEvent objects filtered by the website column
  * @method     ChildEvent[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -219,7 +234,7 @@ abstract class EventQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, name, description, longitude, latitude, location_name, street_no, zip_code, city, country, begin, end FROM event WHERE id = :p0';
+        $sql = 'SELECT id, name, description, longitude, latitude, koordX, koordY, koordZ, location_name, street_no, zip_code, city, country, begin, end, image, website FROM event WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);            
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -485,6 +500,129 @@ abstract class EventQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the koordX column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByKoordx(1234); // WHERE koordX = 1234
+     * $query->filterByKoordx(array(12, 34)); // WHERE koordX IN (12, 34)
+     * $query->filterByKoordx(array('min' => 12)); // WHERE koordX > 12
+     * </code>
+     *
+     * @param     mixed $koordx The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildEventQuery The current query, for fluid interface
+     */
+    public function filterByKoordx($koordx = null, $comparison = null)
+    {
+        if (is_array($koordx)) {
+            $useMinMax = false;
+            if (isset($koordx['min'])) {
+                $this->addUsingAlias(EventTableMap::COL_KOORDX, $koordx['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($koordx['max'])) {
+                $this->addUsingAlias(EventTableMap::COL_KOORDX, $koordx['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(EventTableMap::COL_KOORDX, $koordx, $comparison);
+    }
+
+    /**
+     * Filter the query on the koordY column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByKoordy(1234); // WHERE koordY = 1234
+     * $query->filterByKoordy(array(12, 34)); // WHERE koordY IN (12, 34)
+     * $query->filterByKoordy(array('min' => 12)); // WHERE koordY > 12
+     * </code>
+     *
+     * @param     mixed $koordy The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildEventQuery The current query, for fluid interface
+     */
+    public function filterByKoordy($koordy = null, $comparison = null)
+    {
+        if (is_array($koordy)) {
+            $useMinMax = false;
+            if (isset($koordy['min'])) {
+                $this->addUsingAlias(EventTableMap::COL_KOORDY, $koordy['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($koordy['max'])) {
+                $this->addUsingAlias(EventTableMap::COL_KOORDY, $koordy['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(EventTableMap::COL_KOORDY, $koordy, $comparison);
+    }
+
+    /**
+     * Filter the query on the koordZ column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByKoordz(1234); // WHERE koordZ = 1234
+     * $query->filterByKoordz(array(12, 34)); // WHERE koordZ IN (12, 34)
+     * $query->filterByKoordz(array('min' => 12)); // WHERE koordZ > 12
+     * </code>
+     *
+     * @param     mixed $koordz The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildEventQuery The current query, for fluid interface
+     */
+    public function filterByKoordz($koordz = null, $comparison = null)
+    {
+        if (is_array($koordz)) {
+            $useMinMax = false;
+            if (isset($koordz['min'])) {
+                $this->addUsingAlias(EventTableMap::COL_KOORDZ, $koordz['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($koordz['max'])) {
+                $this->addUsingAlias(EventTableMap::COL_KOORDZ, $koordz['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(EventTableMap::COL_KOORDZ, $koordz, $comparison);
+    }
+
+    /**
      * Filter the query on the location_name column
      *
      * Example usage:
@@ -701,6 +839,58 @@ abstract class EventQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the image column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByImage('fooValue');   // WHERE image = 'fooValue'
+     * $query->filterByImage('%fooValue%'); // WHERE image LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $image The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildEventQuery The current query, for fluid interface
+     */
+    public function filterByImage($image = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($image)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(EventTableMap::COL_IMAGE, $image, $comparison);
+    }
+
+    /**
+     * Filter the query on the website column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByWebsite('fooValue');   // WHERE website = 'fooValue'
+     * $query->filterByWebsite('%fooValue%'); // WHERE website LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $website The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildEventQuery The current query, for fluid interface
+     */
+    public function filterByWebsite($website = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($website)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(EventTableMap::COL_WEBSITE, $website, $comparison);
+    }
+
+    /**
      * Filter the query by a related \EventCategory object
      *
      * @param \EventCategory|ObjectCollection $eventCategory the related object to use as filter
@@ -771,79 +961,6 @@ abstract class EventQuery extends ModelCriteria
         return $this
             ->joinEventCategory($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'EventCategory', '\EventCategoryQuery');
-    }
-
-    /**
-     * Filter the query by a related \Image object
-     *
-     * @param \Image|ObjectCollection $image the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ChildEventQuery The current query, for fluid interface
-     */
-    public function filterByImage($image, $comparison = null)
-    {
-        if ($image instanceof \Image) {
-            return $this
-                ->addUsingAlias(EventTableMap::COL_ID, $image->getEventId(), $comparison);
-        } elseif ($image instanceof ObjectCollection) {
-            return $this
-                ->useImageQuery()
-                ->filterByPrimaryKeys($image->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByImage() only accepts arguments of type \Image or Collection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the Image relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return $this|ChildEventQuery The current query, for fluid interface
-     */
-    public function joinImage($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Image');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'Image');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the Image relation Image object
-     *
-     * @see useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return \ImageQuery A secondary query class using the current class as primary query
-     */
-    public function useImageQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinImage($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Image', '\ImageQuery');
     }
 
     /**

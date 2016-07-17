@@ -14,8 +14,11 @@ CREATE TABLE `event`
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
     `description` VARCHAR(1000) NOT NULL,
-    `longitude` FLOAT NOT NULL,
-    `latitude` FLOAT NOT NULL,
+    `longitude` DOUBLE NOT NULL,
+    `latitude` DOUBLE NOT NULL,
+    `koordX` DOUBLE NOT NULL,
+    `koordY` DOUBLE NOT NULL,
+    `koordZ` DOUBLE NOT NULL,
     `location_name` VARCHAR(255),
     `street_no` VARCHAR(255),
     `zip_code` VARCHAR(5),
@@ -23,6 +26,8 @@ CREATE TABLE `event`
     `country` VARCHAR(255),
     `begin` DATETIME NOT NULL,
     `end` DATETIME,
+    `image` VARCHAR(255),
+    `website` VARCHAR(255),
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
@@ -57,72 +62,6 @@ CREATE TABLE `event_category`
     CONSTRAINT `event_category_fk_904832`
         FOREIGN KEY (`category_id`)
         REFERENCES `category` (`id`)
-) ENGINE=InnoDB;
-
--- ---------------------------------------------------------------------
--- image
--- ---------------------------------------------------------------------
-
-DROP TABLE IF EXISTS `image`;
-
-CREATE TABLE `image`
-(
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `image` BLOB NOT NULL,
-    `type_id` INTEGER NOT NULL,
-    `event_id` INTEGER NOT NULL,
-    PRIMARY KEY (`id`),
-    INDEX `image_fi_f35f5f` (`type_id`),
-    INDEX `image_fi_b54508` (`event_id`),
-    CONSTRAINT `image_fk_f35f5f`
-        FOREIGN KEY (`type_id`)
-        REFERENCES `imagetype` (`id`),
-    CONSTRAINT `image_fk_b54508`
-        FOREIGN KEY (`event_id`)
-        REFERENCES `event` (`id`)
-) ENGINE=InnoDB;
-
--- ---------------------------------------------------------------------
--- imagetype
--- ---------------------------------------------------------------------
-
-DROP TABLE IF EXISTS `imagetype`;
-
-CREATE TABLE `imagetype`
-(
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `type` VARCHAR(255) NOT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB;
-
--- ---------------------------------------------------------------------
--- website
--- ---------------------------------------------------------------------
-
-DROP TABLE IF EXISTS `website`;
-
-CREATE TABLE `website`
-(
-    `url` VARCHAR(255) NOT NULL,
-    `type_id` INTEGER NOT NULL,
-    PRIMARY KEY (`url`),
-    INDEX `website_fi_99cc5c` (`type_id`),
-    CONSTRAINT `website_fk_99cc5c`
-        FOREIGN KEY (`type_id`)
-        REFERENCES `websitetype` (`id`)
-) ENGINE=InnoDB;
-
--- ---------------------------------------------------------------------
--- websitetype
--- ---------------------------------------------------------------------
-
-DROP TABLE IF EXISTS `websitetype`;
-
-CREATE TABLE `websitetype`
-(
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `type` VARCHAR(255) NOT NULL,
-    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
 # This restores the fkey checks, after having unset them earlier
