@@ -5,7 +5,7 @@ use \Propel\Runtime\Propel;
 use \Propel\Runtime\Formatter\ObjectFormatter;
 
 // setup the autoloading
-require_once '../../vendor/autoload.php';
+require_once 'vendor/autoload.php';
 
 // setup Propel
 require_once 'database/generated-conf/config.php';

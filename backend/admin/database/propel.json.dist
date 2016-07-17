@@ -1,8 +1,0 @@
-{
-    "propel": {
-        "paths": {
-            "schemaDir": "C:\\Users\\kevin\\Documents\\GitHub\\eventmap\\backend\\admin\\database",
-            "phpDir": "C:\\Users\\kevin\\Documents\\GitHub\\eventmap\\backend\\admin\\models"
-        }
-    }
-}

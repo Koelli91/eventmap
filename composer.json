@@ -6,6 +6,6 @@
     "monolog/monolog": "*"
   },
   "autoload": {
-    "classmap": ["backend/admin/models/"]
+    "classmap": ["models/"]
   }
 }
