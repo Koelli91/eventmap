@@ -2,3 +2,5 @@
 eventmap.iml
 composer.lock
 vendor
+.sass-cache
+config.codekit
