@@ -39,7 +39,7 @@ $(function () {
     var prev;
 
     function initialize() {
-        var latlng = new google.maps.LatLng(51.494229755747405, 7.4204922026910936);
+        var latlng = new google.maps.LatLng(parseFloat($('#lat').val()), parseFloat($('#lng').val()));
         var mapOptions = {
             zoom: 11,
             center: latlng,
