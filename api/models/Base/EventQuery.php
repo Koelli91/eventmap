@@ -18,7 +18,7 @@ use Propel\Runtime\Exception\PropelException;
 /**
  * Base class that represents a query for the 'event' table.
  *
- * 
+ *
  *
  * @method     ChildEventQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildEventQuery orderByName($order = Criteria::ASC) Order by the name column
@@ -236,7 +236,7 @@ abstract class EventQuery extends ModelCriteria
     {
         $sql = 'SELECT id, name, description, longitude, latitude, koordX, koordY, koordZ, location_name, street_no, zip_code, city, country, begin, end, image, website FROM event WHERE id = :p0';
         try {
-            $stmt = $con->prepare($sql);            
+            $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
             $stmt->execute();
         } catch (Exception $e) {
@@ -1047,9 +1047,9 @@ abstract class EventQuery extends ModelCriteria
         // for more than one table or we could emulating ON DELETE CASCADE, etc.
         return $con->transaction(function () use ($con, $criteria) {
             $affectedRows = 0; // initialize var to track total num of affected rows
-            
+
             EventTableMap::removeInstanceFromPool($criteria);
-        
+
             $affectedRows += ModelCriteria::delete($con);
             EventTableMap::clearRelatedInstancePool();
 

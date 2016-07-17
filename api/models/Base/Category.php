@@ -28,11 +28,11 @@ use Propel\Runtime\Parser\AbstractParser;
 /**
  * Base class that represents a row from the 'category' table.
  *
- * 
+ *
  *
  * @package    propel.generator..Base
  */
-abstract class Category implements ActiveRecordInterface 
+abstract class Category implements ActiveRecordInterface
 {
     /**
      * TableMap class name
@@ -68,14 +68,14 @@ abstract class Category implements ActiveRecordInterface
 
     /**
      * The value for the id field.
-     * 
+     *
      * @var        int
      */
     protected $id;
 
     /**
      * The value for the name field.
-     * 
+     *
      * @var        string
      */
     protected $name;
@@ -333,17 +333,17 @@ abstract class Category implements ActiveRecordInterface
         $cls = new \ReflectionClass($this);
         $propertyNames = [];
         $serializableProperties = array_diff($cls->getProperties(), $cls->getProperties(\ReflectionProperty::IS_STATIC));
-        
+
         foreach($serializableProperties as $property) {
             $propertyNames[] = $property->getName();
         }
-        
+
         return $propertyNames;
     }
 
     /**
      * Get the [id] column value.
-     * 
+     *
      * @return int
      */
     public function getId()
@@ -353,7 +353,7 @@ abstract class Category implements ActiveRecordInterface
 
     /**
      * Get the [name] column value.
-     * 
+     *
      * @return string
      */
     public function getName()
@@ -363,7 +363,7 @@ abstract class Category implements ActiveRecordInterface
 
     /**
      * Set the value of [id] column.
-     * 
+     *
      * @param int $v new value
      * @return $this|\Category The current object (for fluent API support)
      */
@@ -383,7 +383,7 @@ abstract class Category implements ActiveRecordInterface
 
     /**
      * Set the value of [name] column.
-     * 
+     *
      * @param string $v new value
      * @return $this|\Category The current object (for fluent API support)
      */
@@ -713,10 +713,10 @@ abstract class Category implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'id':                        
+                    case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'name':                        
+                    case 'name':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
                 }
@@ -824,10 +824,10 @@ abstract class Category implements ActiveRecordInterface
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
-        
+
         if ($includeForeignObjects) {
             if (null !== $this->collEventCategories) {
-                
+
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
                         $key = 'eventCategories';
@@ -838,7 +838,7 @@ abstract class Category implements ActiveRecordInterface
                     default:
                         $key = 'EventCategories';
                 }
-        
+
                 $result[$key] = $this->collEventCategories->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
@@ -1003,7 +1003,7 @@ abstract class Category implements ActiveRecordInterface
 
         return spl_object_hash($this);
     }
-        
+
     /**
      * Returns the primary key for this object (row).
      * @return int
@@ -1224,7 +1224,7 @@ abstract class Category implements ActiveRecordInterface
         /** @var ChildEventCategory[] $eventCategoriesToDelete */
         $eventCategoriesToDelete = $this->getEventCategories(new Criteria(), $con)->diff($eventCategories);
 
-        
+
         //since at least one column in the foreign key is at the same time a PK
         //we can not just set a PK to NULL in the lines below. We have to store
         //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
@@ -1522,7 +1522,7 @@ abstract class Category implements ActiveRecordInterface
     /**
      * Associate a ChildEvent to this object
      * through the event_category cross reference table.
-     * 
+     *
      * @param ChildEvent $event
      * @return ChildCategory The current object (for fluent API support)
      */
@@ -1542,7 +1542,7 @@ abstract class Category implements ActiveRecordInterface
     }
 
     /**
-     * 
+     *
      * @param ChildEvent $event
      */
     protected function doAddEvent(ChildEvent $event)
@@ -1569,7 +1569,7 @@ abstract class Category implements ActiveRecordInterface
     /**
      * Remove event of this object
      * through the event_category cross reference table.
-     * 
+     *
      * @param ChildEvent $event
      * @return ChildCategory The current object (for fluent API support)
      */
@@ -1588,7 +1588,7 @@ abstract class Category implements ActiveRecordInterface
             $eventCategory->clear();
 
             $this->collEvents->remove($this->collEvents->search($event));
-            
+
             if (null === $this->eventsScheduledForDeletion) {
                 $this->eventsScheduledForDeletion = clone $this->collEvents;
                 $this->eventsScheduledForDeletion->clear();

@@ -30,11 +30,11 @@ use Propel\Runtime\Util\PropelDateTime;
 /**
  * Base class that represents a row from the 'event' table.
  *
- * 
+ *
  *
  * @package    propel.generator..Base
  */
-abstract class Event implements ActiveRecordInterface 
+abstract class Event implements ActiveRecordInterface
 {
     /**
      * TableMap class name
@@ -70,119 +70,119 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * The value for the id field.
-     * 
+     *
      * @var        int
      */
     protected $id;
 
     /**
      * The value for the name field.
-     * 
+     *
      * @var        string
      */
     protected $name;
 
     /**
      * The value for the description field.
-     * 
+     *
      * @var        string
      */
     protected $description;
 
     /**
      * The value for the longitude field.
-     * 
+     *
      * @var        double
      */
     protected $longitude;
 
     /**
      * The value for the latitude field.
-     * 
+     *
      * @var        double
      */
     protected $latitude;
 
     /**
      * The value for the koordx field.
-     * 
+     *
      * @var        double
      */
     protected $koordx;
 
     /**
      * The value for the koordy field.
-     * 
+     *
      * @var        double
      */
     protected $koordy;
 
     /**
      * The value for the koordz field.
-     * 
+     *
      * @var        double
      */
     protected $koordz;
 
     /**
      * The value for the location_name field.
-     * 
+     *
      * @var        string
      */
     protected $location_name;
 
     /**
      * The value for the street_no field.
-     * 
+     *
      * @var        string
      */
     protected $street_no;
 
     /**
      * The value for the zip_code field.
-     * 
+     *
      * @var        string
      */
     protected $zip_code;
 
     /**
      * The value for the city field.
-     * 
+     *
      * @var        string
      */
     protected $city;
 
     /**
      * The value for the country field.
-     * 
+     *
      * @var        string
      */
     protected $country;
 
     /**
      * The value for the begin field.
-     * 
+     *
      * @var        DateTime
      */
     protected $begin;
 
     /**
      * The value for the end field.
-     * 
+     *
      * @var        DateTime
      */
     protected $end;
 
     /**
      * The value for the image field.
-     * 
+     *
      * @var        string
      */
     protected $image;
 
     /**
      * The value for the website field.
-     * 
+     *
      * @var        string
      */
     protected $website;
@@ -440,17 +440,17 @@ abstract class Event implements ActiveRecordInterface
         $cls = new \ReflectionClass($this);
         $propertyNames = [];
         $serializableProperties = array_diff($cls->getProperties(), $cls->getProperties(\ReflectionProperty::IS_STATIC));
-        
+
         foreach($serializableProperties as $property) {
             $propertyNames[] = $property->getName();
         }
-        
+
         return $propertyNames;
     }
 
     /**
      * Get the [id] column value.
-     * 
+     *
      * @return int
      */
     public function getId()
@@ -460,7 +460,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Get the [name] column value.
-     * 
+     *
      * @return string
      */
     public function getName()
@@ -470,7 +470,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Get the [description] column value.
-     * 
+     *
      * @return string
      */
     public function getDescription()
@@ -480,7 +480,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Get the [longitude] column value.
-     * 
+     *
      * @return double
      */
     public function getLongitude()
@@ -490,7 +490,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Get the [latitude] column value.
-     * 
+     *
      * @return double
      */
     public function getLatitude()
@@ -500,7 +500,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Get the [koordx] column value.
-     * 
+     *
      * @return double
      */
     public function getKoordx()
@@ -510,7 +510,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Get the [koordy] column value.
-     * 
+     *
      * @return double
      */
     public function getKoordy()
@@ -520,7 +520,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Get the [koordz] column value.
-     * 
+     *
      * @return double
      */
     public function getKoordz()
@@ -530,7 +530,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Get the [location_name] column value.
-     * 
+     *
      * @return string
      */
     public function getLocationName()
@@ -540,7 +540,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Get the [street_no] column value.
-     * 
+     *
      * @return string
      */
     public function getStreetNo()
@@ -550,7 +550,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Get the [zip_code] column value.
-     * 
+     *
      * @return string
      */
     public function getZipCode()
@@ -560,7 +560,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Get the [city] column value.
-     * 
+     *
      * @return string
      */
     public function getCity()
@@ -570,7 +570,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Get the [country] column value.
-     * 
+     *
      * @return string
      */
     public function getCountry()
@@ -580,7 +580,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Get the [optionally formatted] temporal [begin] column value.
-     * 
+     *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
      *                            If format is NULL, then the raw DateTime object will be returned.
@@ -600,7 +600,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Get the [optionally formatted] temporal [end] column value.
-     * 
+     *
      *
      * @param      string $format The date/time format string (either date()-style or strftime()-style).
      *                            If format is NULL, then the raw DateTime object will be returned.
@@ -620,7 +620,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Get the [image] column value.
-     * 
+     *
      * @return string
      */
     public function getImage()
@@ -630,7 +630,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Get the [website] column value.
-     * 
+     *
      * @return string
      */
     public function getWebsite()
@@ -640,7 +640,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Set the value of [id] column.
-     * 
+     *
      * @param int $v new value
      * @return $this|\Event The current object (for fluent API support)
      */
@@ -660,7 +660,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Set the value of [name] column.
-     * 
+     *
      * @param string $v new value
      * @return $this|\Event The current object (for fluent API support)
      */
@@ -680,7 +680,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Set the value of [description] column.
-     * 
+     *
      * @param string $v new value
      * @return $this|\Event The current object (for fluent API support)
      */
@@ -700,7 +700,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Set the value of [longitude] column.
-     * 
+     *
      * @param double $v new value
      * @return $this|\Event The current object (for fluent API support)
      */
@@ -720,7 +720,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Set the value of [latitude] column.
-     * 
+     *
      * @param double $v new value
      * @return $this|\Event The current object (for fluent API support)
      */
@@ -740,7 +740,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Set the value of [koordx] column.
-     * 
+     *
      * @param double $v new value
      * @return $this|\Event The current object (for fluent API support)
      */
@@ -760,7 +760,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Set the value of [koordy] column.
-     * 
+     *
      * @param double $v new value
      * @return $this|\Event The current object (for fluent API support)
      */
@@ -780,7 +780,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Set the value of [koordz] column.
-     * 
+     *
      * @param double $v new value
      * @return $this|\Event The current object (for fluent API support)
      */
@@ -800,7 +800,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Set the value of [location_name] column.
-     * 
+     *
      * @param string $v new value
      * @return $this|\Event The current object (for fluent API support)
      */
@@ -820,7 +820,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Set the value of [street_no] column.
-     * 
+     *
      * @param string $v new value
      * @return $this|\Event The current object (for fluent API support)
      */
@@ -840,7 +840,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Set the value of [zip_code] column.
-     * 
+     *
      * @param string $v new value
      * @return $this|\Event The current object (for fluent API support)
      */
@@ -860,7 +860,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Set the value of [city] column.
-     * 
+     *
      * @param string $v new value
      * @return $this|\Event The current object (for fluent API support)
      */
@@ -880,7 +880,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Set the value of [country] column.
-     * 
+     *
      * @param string $v new value
      * @return $this|\Event The current object (for fluent API support)
      */
@@ -900,7 +900,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Sets the value of [begin] column to a normalized version of the date/time value specified.
-     * 
+     *
      * @param  mixed $v string, integer (timestamp), or \DateTimeInterface value.
      *               Empty strings are treated as NULL.
      * @return $this|\Event The current object (for fluent API support)
@@ -920,7 +920,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Sets the value of [end] column to a normalized version of the date/time value specified.
-     * 
+     *
      * @param  mixed $v string, integer (timestamp), or \DateTimeInterface value.
      *               Empty strings are treated as NULL.
      * @return $this|\Event The current object (for fluent API support)
@@ -940,7 +940,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Set the value of [image] column.
-     * 
+     *
      * @param string $v new value
      * @return $this|\Event The current object (for fluent API support)
      */
@@ -960,7 +960,7 @@ abstract class Event implements ActiveRecordInterface
 
     /**
      * Set the value of [website] column.
-     * 
+     *
      * @param string $v new value
      * @return $this|\Event The current object (for fluent API support)
      */
@@ -1386,55 +1386,55 @@ abstract class Event implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'id':                        
+                    case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'name':                        
+                    case 'name':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
-                    case 'description':                        
+                    case 'description':
                         $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
                         break;
-                    case 'longitude':                        
+                    case 'longitude':
                         $stmt->bindValue($identifier, $this->longitude, PDO::PARAM_STR);
                         break;
-                    case 'latitude':                        
+                    case 'latitude':
                         $stmt->bindValue($identifier, $this->latitude, PDO::PARAM_STR);
                         break;
-                    case 'koordX':                        
+                    case 'koordX':
                         $stmt->bindValue($identifier, $this->koordx, PDO::PARAM_STR);
                         break;
-                    case 'koordY':                        
+                    case 'koordY':
                         $stmt->bindValue($identifier, $this->koordy, PDO::PARAM_STR);
                         break;
-                    case 'koordZ':                        
+                    case 'koordZ':
                         $stmt->bindValue($identifier, $this->koordz, PDO::PARAM_STR);
                         break;
-                    case 'location_name':                        
+                    case 'location_name':
                         $stmt->bindValue($identifier, $this->location_name, PDO::PARAM_STR);
                         break;
-                    case 'street_no':                        
+                    case 'street_no':
                         $stmt->bindValue($identifier, $this->street_no, PDO::PARAM_STR);
                         break;
-                    case 'zip_code':                        
+                    case 'zip_code':
                         $stmt->bindValue($identifier, $this->zip_code, PDO::PARAM_STR);
                         break;
-                    case 'city':                        
+                    case 'city':
                         $stmt->bindValue($identifier, $this->city, PDO::PARAM_STR);
                         break;
-                    case 'country':                        
+                    case 'country':
                         $stmt->bindValue($identifier, $this->country, PDO::PARAM_STR);
                         break;
-                    case 'begin':                        
+                    case 'begin':
                         $stmt->bindValue($identifier, $this->begin ? $this->begin->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
                         break;
-                    case 'end':                        
+                    case 'end':
                         $stmt->bindValue($identifier, $this->end ? $this->end->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
                         break;
-                    case 'image':                        
+                    case 'image':
                         $stmt->bindValue($identifier, $this->image, PDO::PARAM_STR);
                         break;
-                    case 'website':                        
+                    case 'website':
                         $stmt->bindValue($identifier, $this->website, PDO::PARAM_STR);
                         break;
                 }
@@ -1601,19 +1601,19 @@ abstract class Event implements ActiveRecordInterface
         if ($result[$keys[13]] instanceof \DateTime) {
             $result[$keys[13]] = $result[$keys[13]]->format('c');
         }
-        
+
         if ($result[$keys[14]] instanceof \DateTime) {
             $result[$keys[14]] = $result[$keys[14]]->format('c');
         }
-        
+
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
-        
+
         if ($includeForeignObjects) {
             if (null !== $this->collEventCategories) {
-                
+
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
                         $key = 'eventCategories';
@@ -1624,7 +1624,7 @@ abstract class Event implements ActiveRecordInterface
                     default:
                         $key = 'EventCategories';
                 }
-        
+
                 $result[$key] = $this->collEventCategories->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
@@ -1924,7 +1924,7 @@ abstract class Event implements ActiveRecordInterface
 
         return spl_object_hash($this);
     }
-        
+
     /**
      * Returns the primary key for this object (row).
      * @return int
@@ -2160,7 +2160,7 @@ abstract class Event implements ActiveRecordInterface
         /** @var ChildEventCategory[] $eventCategoriesToDelete */
         $eventCategoriesToDelete = $this->getEventCategories(new Criteria(), $con)->diff($eventCategories);
 
-        
+
         //since at least one column in the foreign key is at the same time a PK
         //we can not just set a PK to NULL in the lines below. We have to store
         //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
@@ -2458,7 +2458,7 @@ abstract class Event implements ActiveRecordInterface
     /**
      * Associate a ChildCategory to this object
      * through the event_category cross reference table.
-     * 
+     *
      * @param ChildCategory $category
      * @return ChildEvent The current object (for fluent API support)
      */
@@ -2478,7 +2478,7 @@ abstract class Event implements ActiveRecordInterface
     }
 
     /**
-     * 
+     *
      * @param ChildCategory $category
      */
     protected function doAddCategory(ChildCategory $category)
@@ -2505,7 +2505,7 @@ abstract class Event implements ActiveRecordInterface
     /**
      * Remove category of this object
      * through the event_category cross reference table.
-     * 
+     *
      * @param ChildCategory $category
      * @return ChildEvent The current object (for fluent API support)
      */
@@ -2524,7 +2524,7 @@ abstract class Event implements ActiveRecordInterface
             $eventCategory->clear();
 
             $this->collCategories->remove($this->collCategories->search($category));
-            
+
             if (null === $this->categoriesScheduledForDeletion) {
                 $this->categoriesScheduledForDeletion = clone $this->collCategories;
                 $this->categoriesScheduledForDeletion->clear();

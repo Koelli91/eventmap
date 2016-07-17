@@ -18,7 +18,7 @@ use Propel\Runtime\Exception\PropelException;
 /**
  * Base class that represents a query for the 'category' table.
  *
- * 
+ *
  *
  * @method     ChildCategoryQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildCategoryQuery orderByName($order = Criteria::ASC) Order by the name column
@@ -161,7 +161,7 @@ abstract class CategoryQuery extends ModelCriteria
     {
         $sql = 'SELECT id, name FROM category WHERE id = :p0';
         try {
-            $stmt = $con->prepare($sql);            
+            $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
             $stmt->execute();
         } catch (Exception $e) {
@@ -473,9 +473,9 @@ abstract class CategoryQuery extends ModelCriteria
         // for more than one table or we could emulating ON DELETE CASCADE, etc.
         return $con->transaction(function () use ($con, $criteria) {
             $affectedRows = 0; // initialize var to track total num of affected rows
-            
+
             CategoryTableMap::removeInstanceFromPool($criteria);
-        
+
             $affectedRows += ModelCriteria::delete($con);
             CategoryTableMap::clearRelatedInstancePool();
 
