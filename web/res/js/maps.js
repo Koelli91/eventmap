@@ -98,6 +98,7 @@ function loadEvents() {
   })
 }
 function initSearchForm() {
+  $("#city").geocomplete({ details: "form" });
   if(getUrlParameter("lng") != undefined){
     $("#lng").val(getUrlParameter("lng"))
   }
@@ -113,7 +114,6 @@ function initSearchForm() {
   if(getUrlParameter("city") != undefined){
     $("#city").val(decodeURIComponent(getUrlParameter("city").replace(/\+/g, ' ')))
   }
-  $("#city").geocomplete({ details: "form" });
 }
 function search(){
   $("#search").submit(function (event) {
@@ -121,16 +121,6 @@ function search(){
       alert("Bitte Ort aus Liste auswählen")
       return false
     }else {
-      var latlng = { lat: parseFloat($("#lat").val()), lng: parseFloat($("#lng").val())}
-      var circ = new google.maps.Circle({
-        map: map,
-        center: latlng,
-        radius: parseInt($("#radius").val() ) * 1000,
-        fillColor: '#EEEEEE',
-        strokeColor: '#555555'
-      });
-      map.setCenter(latlng)
-      map.fitBounds(circ.getBounds());
       loadEvents();
       return false
     }
