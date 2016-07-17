@@ -5,10 +5,16 @@ $(function () {
 
     initSearchForm();
 
+    var search_data = {
+      "radius": $('#radius').val(),
+      "lat": $('#lat').val(),
+      "lng": $('#lng').val(),
+      "category": $('#category').val(),
+    }
     var event_data;
     $.ajax({
         "method": "GET",
-        "url": "http://localhost:8000/api/v1/events?lat=51.494229755747405&lon=7.4204922026910936&radius=250",
+        "url": "http://localhost:8000/api/v1/events?lat=" + search_data["lat"] + "&lon="+ search_data["lon"] +"&radius=" + search_data["radius"] + "&category:" + search_data["category"],
         "returnType": "JSON",
         "cache": false
     }).done(function (data) {
