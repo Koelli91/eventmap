@@ -16,7 +16,7 @@ $app = new \Slim\App();
 $container = $app->getContainer();
 
 // Add logger for Slim
-$container['logger'] = function($c) {
+$container['logger'] = function ($c) {
     $logger = new \Monolog\Logger('slim_logger');
     $file_handler = new \Monolog\Handler\StreamHandler("../logs/slim.log");
     $logger->pushHandler($file_handler);
@@ -33,6 +33,12 @@ $jsonHelpers = new \JsonHelpers\JsonHelpers($container);
 $jsonHelpers->registerResponseView();
 $jsonHelpers->registerErrorHandlers();
 
+$app->get('/', function (Request $request, Response $response) {
+    $page = file_get_contents('web/index.html');
+    $response->getBody()->write($page);
+    return $response;
+});
+
 // API group
 $app->group('/api', function () {
 
@@ -48,7 +54,7 @@ $app->group('/api', function () {
         // Events group
         $this->group('/events', function () {
 
-            $this->get('', function(Request $request, Response $response, $args) {
+            $this->get('', function (Request $request, Response $response, $args) {
                 $queryParams = $request->getQueryParams();
                 $lon = isset($queryParams['lon']) ? $queryParams['lon'] : '';
                 $lat = isset($queryParams['lat']) ? $queryParams['lat'] : '';
@@ -115,7 +121,7 @@ $app->group('/api', function () {
             $this->post('/new', function (Request $request, Response $response, $args) {
                 $parsedData = $request->getParsedBody();
                 $multiple_events = false;
-                if ( isset($parsedData['events']) && is_array($parsedData['events']) ) {
+                if (isset($parsedData['events']) && is_array($parsedData['events'])) {
                     $multiple_events = true;
                 }
 
@@ -154,7 +160,7 @@ $app->group('/api', function () {
         // Categories group
         $this->group('/category', function () {
 
-            $this->get('/byId/{id}', function(Request $request, Response $response, $args) {
+            $this->get('/byId/{id}', function (Request $request, Response $response, $args) {
                 $category_id = filter_var($args['id'], FILTER_SANITIZE_STRING);
 
                 $data = array();
@@ -165,8 +171,7 @@ $app->group('/api', function () {
                 if ($category !== null) {
                     $data['success'] = true;
                     $data['category'] = $category->toArray();
-                }
-                else {
+                } else {
                     $errors['category'] = "Keine Kategorie mit der ID '$category_id' gefunden.";
                 }
 
@@ -179,7 +184,7 @@ $app->group('/api', function () {
                 return $response;
             });
 
-            $this->get('/byName/{name}', function(Request $request, Response $response, $args) {
+            $this->get('/byName/{name}', function (Request $request, Response $response, $args) {
                 $category_name = filter_var($args['name'], FILTER_SANITIZE_STRING);
 
                 $data = array();
@@ -190,8 +195,7 @@ $app->group('/api', function () {
                 if ($category !== null) {
                     $data['success'] = true;
                     $data['category'] = $category->toArray();
-                }
-                else {
+                } else {
                     $errors['category'] = "Keine Kategorie mit dem Namen '$category_name' gefunden.";
                 }
 
@@ -227,7 +231,7 @@ $app->group('/api', function () {
                 return $response;
             });
 
-            $this->put('/byId/{id}/{newName}', function(Request $request, Response $response, $args) {
+            $this->put('/byId/{id}/{newName}', function (Request $request, Response $response, $args) {
                 $id = filter_var($args['id'], FILTER_SANITIZE_STRING);
                 $newName = filter_var($args['newName'], FILTER_SANITIZE_STRING);
 
@@ -250,7 +254,7 @@ $app->group('/api', function () {
                 return $response;
             });
 
-            $this->put('/byName/{oldName}/{newName}', function(Request $request, Response $response, $args) {
+            $this->put('/byName/{oldName}/{newName}', function (Request $request, Response $response, $args) {
                 $oldName = filter_var($args['oldName'], FILTER_SANITIZE_STRING);
                 $newName = filter_var($args['newName'], FILTER_SANITIZE_STRING);
 
