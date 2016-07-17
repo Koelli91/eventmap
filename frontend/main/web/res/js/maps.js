@@ -75,14 +75,39 @@ var sample_data = [{
     }];
 
 var map;
-
 var prev;
+var prex;
+var prey;
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+        alert('Die Bestimmung Ihrer position war leider nicht möglich');
+        prex = 50.0;
+        prey = 10.0;
+    }
+}
+
+function showPosition(position) {
+    prex = position.coords.latitude;
+    prey = position.coords.longitude;
+}
 
 function initialize() {
-    var latlng = new google.maps.LatLng(51.494229755747405, 7.4204922026910936);
+    getLocation();
+    alert('x: ' + prex + " / y: " + prey);
+    var latlng = new google.maps.LatLng(prex, prey);
     var mapOptions = {
         zoom: 11,
         center: latlng,
+        panControl:true,
+        zoomControl:true,
+        mapTypeControl:true,
+        scaleControl:true,
+        streetViewControl:true,
+        overviewMapControl:true,
+        rotateControl:true,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
 
