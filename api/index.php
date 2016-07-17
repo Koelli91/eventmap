@@ -100,7 +100,8 @@ $app->group('/v1', function () {
                               + POWER(" . $ursprungZ . " - event.koordZ, 2)
                             <= " . pow(2 * $erdradius * sin($radius / (2 * $erdradius)), 2) .
                     (!empty($category) ? " AND category.name = \"" . $category . "\"" : " ") .
-                            " ORDER BY event.begin ASC, tmp_calc ASC";
+                            " ORDER BY event.begin ASC, tmp_calc ASC
+                            LIMIT 200";
                 $stmt = $con->prepare($sql);
                 $stmt->execute();
                 /*$formatter = new ObjectFormatter();
@@ -113,7 +114,7 @@ $app->group('/v1', function () {
             return $response;
         });
 
-        // creates a new event
+        // creates new events
         $this->post('/new', function (Request $request, Response $response, $args) {
             $parsedData = $request->getParsedBody();
             $multiple_events = false;
