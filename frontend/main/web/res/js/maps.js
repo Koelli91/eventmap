@@ -146,24 +146,64 @@ function loadEvents() {
   })
 }
 function initSearchForm() {
+  if(getUrlParameter("lng") != undefined){
+    $("#lng").val(getUrlParameter("lng"))
+  }
+  if(getUrlParameter("lat") != undefined){
+    $("#lat").val(getUrlParameter("lat"))
+  }
+  if(getUrlParameter("radius") != undefined){
+    $("#radius").val(getUrlParameter("radius"))
+  }
+  if(getUrlParameter("category") != undefined){
+    $("#category").val(decodeURIComponent(getUrlParameter("category").replace(/\+/g, '%20')))
+  }
+  if(getUrlParameter("city") != undefined){
+    $("#city").val(decodeURIComponent(getUrlParameter("city").replace(/\+/g, '%20')))
+  }
+
   $("#city").geocomplete({ details: "form" });
+
   $("#search").submit(function (event) {
     if( $("#lng").val() == "" || $("#lat").val() == ""){
       alert("Bitte Ort aus Liste auswählen")
       return false
     }else {
+      var latlng = { lat: parseFloat($("#lat").val()), lng: parseFloat($("#lng").val())}
+      var circ = new google.maps.Circle({
+        map: map,
+        center: latlng,
+        radius: parseInt($("#radius").val() ) * 1000,
+        fillColor: '#EEEEEE',
+        strokeColor: '#555555'
+      });
+      map.setCenter(latlng)
+      map.fitBounds(circ.getBounds());
       loadEvents();
       return false
     }
   })
 }
+function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};
 
 function emptyEventList() {
     $("#eventlist").empty();
 }
 
 function addElement(data, i) {
-    alert('aufruf');
     var li = "\<li><div class=\"event-name\"><img src=\"http://placehold.it/100x100\">" +
         "\<div class=\"about-event-li\">" +
         "\<div class=\"event-list-headline\">" + data[i].name + "\<span class=\"event-kategorie\">" +
