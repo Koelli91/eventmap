@@ -89,7 +89,19 @@ function initialize() {
     map = new google.maps.Map(document.getElementById('googleMap'), mapOptions);
 
     for (var i = 0; i < sample_data.length; i++) {
-        addElement(sample_data, i);
+
+        var li = "\<li>" +
+            "\<div class=\"event-name\"><img src=\"http://placehold.it/100x100\">" +
+            "\<div class=\"about-event-li\">" +
+            "\<div class=\"event-list-headline\">" + sample_data[i].name + "\<span class=\"event-kategorie\">" + sample_data[i].category + "\</span></div>" +
+            "\<div class=\"event-location\">" + sample_data[i].city + "\</div>" +
+            "\<div class=\"termin\">" + parseDay(sample_data[i].time_start) + "\</div>" +
+            "\<div class=\"event-time\">" + parseTime(sample_data[i].time_start) + parseTime(sample_data[i].time_end) + "\</div>" +
+            "\</div>" +
+            "\<div class=\"description\"><strong>Beschreibung</strong>\<p>Lorem</p><a href=\"http://fontawesome.io/icon/angle-down/\">Zur Website</a>\</div>" +
+            "\<div class=\"material-icons more-button\">keyboard_arrow_down</div>" +
+            "\<div>" +
+            "\</li>";
 
         var marker = new google.maps.Marker({
             id: "marker_" + i,
@@ -104,6 +116,8 @@ function initialize() {
                 prev.setIcon('res/img/marker_red.png')
             }
             this.setIcon('res/img/marker_blue.png');
+            $("#eventlist").empty();
+            $("#eventlist").append(li);
             prev = this;
         });
     }
@@ -125,6 +139,7 @@ function parseDay(time) {
     var day = time.substr(8, 2);
     var date = day + "." + month + "." + year;
     return date;
+<<<<<<< HEAD:frontend/main/web/res/js/maps.js
 }
 function loadEvents() {
   var search_data = {
@@ -212,3 +227,6 @@ function addElement(data, i) {
 
     $("#eventlist").append(li);
 }
+=======
+}
+>>>>>>> refs/remotes/origin/test:frontend/main/web/res/js/maps_desktop.js
