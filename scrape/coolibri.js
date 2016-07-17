@@ -26,7 +26,7 @@ Coolibri.prototype.scrape_event_page = function(html, url) {
   var $ = cheerio.load(html);
   data['name'] = $('.details > h1.d > span.name').text()
   data['description'] = $('.details > p.description').text()
-  data['category'] = [$('.details > .what > p.d').text().trim()]
+  data['category'] = $('.details > .what > p.d').text().trim()
 
   data['time_start'] = $('meta[property="og:start_time"]').attr('content')
   data['time_end'] = $('meta[property="og:end_time"]').attr('content')
@@ -36,7 +36,7 @@ Coolibri.prototype.scrape_event_page = function(html, url) {
   if(data['time_end'] == ''){
     data['time_end'] = $('em.gr time[itemprop=endDate]').attr('datetime')
   }
-  data['website'] = { "general":url}
+  data['website'] = url
   data['location']['lat'] = $('.details > span meta[itemprop=latitude]').attr('content')
   data['location']['lon'] = $('.details > span meta[itemprop=longitude]').attr('content')
   data['location']['zip'] = $('.address > div > span[itemprop=postalCode]').text()
@@ -113,7 +113,7 @@ Coolibri.prototype.scrape_all = function (first_url)  {
         function (err) {
             data = { "events": data}
             var options = {
-              uri: 'http://localhost:8000/api/v1/new',
+              uri: 'http://localhost:8000/api/v1/events/new',
               method: 'POST',
               json: JSON.stringify(data)
             };
