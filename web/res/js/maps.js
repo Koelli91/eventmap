@@ -124,9 +124,6 @@ $(function () {
         if (getUrlParameter("category") != undefined) {
             $("#category").val(decodeURIComponent(getUrlParameter("category").replace(/\+/g, ' ')))
         }
-        if (getUrlParameter("city") != undefined) {
-            $("#city").val(decodeURIComponent(getUrlParameter("city").replace(/\+/g, ' ')))
-        }
     }
 
     function search() {
