@@ -69,7 +69,7 @@ $app->group('/v1', function () {
                 $data['errors'] = $errors;
             } else {
                 // Kategorie wandeln
-                if ( strtolower($category) === "alles" || strtolower($category) === "all" )
+                if ( strtolower($category) === "alles" || strtolower($category) === "alle" || strtolower($category) === "all" )
                     $category = '';
 
                 // Gradmaß in Bogenmaß umwandeln
