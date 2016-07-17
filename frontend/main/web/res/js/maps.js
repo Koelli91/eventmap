@@ -76,8 +76,7 @@ var sample_data = [{
 
 var map;
 
-var markers = new Array(sample_data.length);
-
+var prev;
 function initialize() {
     var latlng = new google.maps.LatLng(51.494229755747405, 7.4204922026910936);
     var mapOptions = {
@@ -94,22 +93,18 @@ function initialize() {
         var marker = new google.maps.Marker({
             id: "marker_" + i,
             position: new google.maps.LatLng(sample_data[i].location.lat, sample_data[i].location.lon),
-            icon: '../res/img/marker_red.png'
+            icon: 'res/img/marker_red.png'
         });
-
-        markers[i] = marker;
 
         marker.setMap(map);
 
-        google.maps.event.addListener(markers[i], 'click', function() {
-            alert('set blau ' + markers[i].id);
-            markers[i].setIcon('../res/img/marker_blue.png');
+        google.maps.event.addListener(marker, 'click', function() {
+            if (prev != undefined) {
+                prev.setIcon('res/img/marker_red.png')
+            }
+            this.setIcon('res/img/marker_blue.png');
+            prev = this;
         });
-
-        /*marker.addListener('click', function() {
-            marker.getId
-            marker.setIcon('../res/img/marker_blue.png');
-        });*/
     }
 }
 google.maps.event.addDomListener(window, 'load', initialize);
@@ -132,7 +127,6 @@ function parseDay(time) {
 }
 
 function addElement(data, i) {
-    alert('aufruf');
     var li = "\<li><div class=\"event-name\"><img src=\"http://placehold.it/100x100\">" +
         "\<div class=\"about-event-li\">" +
         "\<div class=\"event-list-headline\">" + data[i].name + "\<span class=\"event-kategorie\">" +
