@@ -61,13 +61,17 @@ $app->group('/v1', function () {
                 $errors['longitude'] = 'Längengrad (longitude) fehlt oder ist leer.';
             if (empty($radius))
                 $errors['radius'] = 'Umkreis fehlt.';
-            if (empty($category))
-                $errors['category'] = 'Kategorie fehlt.';
+            /*if (empty($category))
+                $errors['category'] = 'Kategorie fehlt.';*/
 
             if (!empty($errors)) {
                 $data['success'] = false;
                 $data['errors'] = $errors;
             } else {
+                // Kategorie wandeln
+                if ( strtolower($category) === "alles" || strtolower($category) === "all" )
+                    $category = '';
+
                 // Gradmaß in Bogenmaß umwandeln
                 $lambda = $lon * pi() / 180;
                 $phi = $lat * pi() / 180;
@@ -94,8 +98,9 @@ $app->group('/v1', function () {
                                 POWER(" . $ursprungX . " - event.koordX, 2)
                               + POWER(" . $ursprungY . " - event.koordY, 2)
                               + POWER(" . $ursprungZ . " - event.koordZ, 2)
-                            <= " . pow(2 * $erdradius * sin($radius / (2 * $erdradius)), 2) . "
-                            ORDER BY event.begin ASC, tmp_calc ASC";
+                            <= " . pow(2 * $erdradius * sin($radius / (2 * $erdradius)), 2) .
+                    (!empty($category) ? " AND category.name = \"" . $category . "\"" : " ") .
+                            " ORDER BY event.begin ASC, tmp_calc ASC";
                 $stmt = $con->prepare($sql);
                 $stmt->execute();
                 /*$formatter = new ObjectFormatter();
@@ -135,7 +140,6 @@ $app->group('/v1', function () {
 
             if (!empty($errors)) {
                 $data['success'] = false;
-                $data['multiple_events'] = $multiple_events;
                 $data['errors'] = $errors;
             } else {
                 $data['success'] = true;
