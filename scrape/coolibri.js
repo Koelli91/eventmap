@@ -111,13 +111,25 @@ Coolibri.prototype.scrape_all = function (first_url)  {
           })
         },
         function (err) {
-          fs.writeFile("data/events.json", JSON.stringify(data), function(err) {
-              if(err) {
-                  return console.log(err);
+            var options = {
+              uri: 'http://localhost:8000/api/v1/new',
+              method: 'POST',
+              json: JSON.stringify(data)
+            };
+
+            request(options, function (error, response, body) {
+              if (!error && response.statusCode == 200) {
+                console.log(body) // Print the shortened url.
               }
-              console.log("The file was saved!");
-              callback_s()
-          });
+            });
+
+            fs.writeFile("data/events.json", JSON.stringify(data), function(err) {
+                if(err) {
+                    return console.log(err);
+                }
+                console.log("The file was saved!");
+                callback_s()
+            });
         }
       )
     }
