@@ -59,6 +59,7 @@ function initialize() {
             prev = this;
         });
     }
+    initSearchForm();
 }
 
 function parseTime(time) {
@@ -83,6 +84,69 @@ function parseDay(time) {
     var date = day + "." + month + "." + year;
     return date;
 }
+function loadEvents() {
+  var search_data = {
+    "radius": $('#radius').val(),
+    "lat": $('#lat').val(),
+    "lng": $('#lng').val(),
+    "category": $('#category').val(),
+  }
+  $.get("api/v1/events", search_data, function (data) {
+    emptyEventList();
+    for (var i = 0; i < data.length; i++) {
+      addElement(data, i)
+    }
+  })
+}
+function initSearchForm() {
+  if(getUrlParameter("lng") != undefined){
+    $("#lng").val(getUrlParameter("lng"))
+  }
+  if(getUrlParameter("lat") != undefined){
+    $("#lat").val(getUrlParameter("lat"))
+  }
+  if(getUrlParameter("radius") != undefined){
+    $("#radius").val(getUrlParameter("radius"))
+  }
+  if(getUrlParameter("category") != undefined){
+    $("#category").val(decodeURIComponent(getUrlParameter("category").replace(/\+/g, '%20')))
+  }
+  if(getUrlParameter("city") != undefined){
+    $("#city").val(decodeURIComponent(getUrlParameter("city").replace(/\+/g, '%20')))
+  }
+  $("#city").geocomplete({ details: "form" });
+  $("#search").submit(function (event) {
+    if( $("#lng").val() == "" || $("#lat").val() == ""){
+      alert("Bitte Ort aus Liste auswählen")
+      return false
+    }else {
+      var latlng = { lat: parseFloat($("#lat").val()), lng: parseFloat($("#lng").val())}
+      var circ = new google.maps.Circle({
+        map: map,
+        center: latlng,
+        radius: parseInt($("#radius").val() ) * 1000,
+        fillColor: '#EEEEEE',
+        strokeColor: '#555555'
+      });
+      map.setCenter(latlng)
+      map.fitBounds(circ.getBounds());
+      loadEvents();
+      return false
+    }
+  })
+}
+function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};
 
 function addElement(data) {
     var out = "\<li>" +
