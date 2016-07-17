@@ -18,14 +18,14 @@ $container = $app->getContainer();
 // Add logger for Slim
 $container['logger'] = function ($c) {
     $logger = new \Monolog\Logger('slim_logger');
-    $file_handler = new \Monolog\Handler\StreamHandler("logs/slim.log");
+    $file_handler = new \Monolog\Handler\StreamHandler("../logs/slim.log");
     $logger->pushHandler($file_handler);
     return $logger;
 };
 
 // Add logger for Propel
 $propel_logger = new \Monolog\Logger('propel_logger');
-$propel_logger->pushHandler(new \Monolog\Handler\StreamHandler('logs/propel.log', \Monolog\Logger::WARNING));
+$propel_logger->pushHandler(new \Monolog\Handler\StreamHandler('../logs/propel.log', \Monolog\Logger::WARNING));
 $serviceContainer->setLogger('propel_logger', $propel_logger);
 
 // register the json response and error handlers
