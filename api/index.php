@@ -104,9 +104,6 @@ $app->group('/v1', function () {
                             LIMIT 200";
                 $stmt = $con->prepare($sql);
                 $stmt->execute();
-                /*$formatter = new ObjectFormatter();
-                $formatter->setClass('\Event');
-                $events = $formatter->format($con->getDataFetcher($stmt));*/
                 $events = $stmt->fetchAll(2);
             }
 
