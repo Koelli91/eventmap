@@ -76,8 +76,7 @@ var sample_data = [{
 
 var map;
 
-var markers = new Array(sample_data.length);
-
+var prev;
 function initialize() {
     initSearchForm()
     var latlng = new google.maps.LatLng(51.494229755747405, 7.4204922026910936);
@@ -98,19 +97,15 @@ function initialize() {
             icon: 'res/img/marker_red.png'
         });
 
-        markers[i] = marker;
-
         marker.setMap(map);
 
-        google.maps.event.addListener(markers[i], 'click', function() {
-            alert('set blau ' + markers[i].id);
-            markers[i].setIcon('../res/img/marker_blue.png');
+        google.maps.event.addListener(marker, 'click', function() {
+            if (prev != undefined) {
+                prev.setIcon('res/img/marker_red.png')
+            }
+            this.setIcon('res/img/marker_blue.png');
+            prev = this;
         });
-
-        /*marker.addListener('click', function() {
-            marker.getId
-            marker.setIcon('../res/img/marker_blue.png');
-        });*/
     }
 }
 google.maps.event.addDomListener(window, 'load', initialize);

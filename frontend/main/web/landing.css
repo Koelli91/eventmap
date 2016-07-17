@@ -5,7 +5,7 @@ body, html {
 .map {
   height: 100%;
   width: 100%;
-  background: url(../res/img/map.png); }
+  background: url(res/img/map.png); }
 
 .overlay {
   height: 100%;
