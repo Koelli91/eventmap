@@ -111,8 +111,8 @@ Coolibri.prototype.scrape_all = function (first_url)  {
           })
         },
         function (err) {
-            data = { "events": data}
-            var options = {
+            data = { "events": data};
+            /*var options = {
               uri: 'http://localhost:8000/api/v1/events/new',
               method: 'POST',
               json: JSON.stringify(data)
@@ -122,7 +122,7 @@ Coolibri.prototype.scrape_all = function (first_url)  {
               if (!error && response.statusCode == 200) {
                 console.log(body) // Print the shortened url.
               }
-            });
+            });*/
 
             fs.writeFile("data/events.json", JSON.stringify(data), function(err) {
                 if(err) {

@@ -5,5 +5,6 @@ vendor
 .sass-cache
 config.codekit
 scrape/node_modules/
+scrape/data
 api/database/propel.json.dist
 api/logs
