@@ -1,79 +1,76 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>eventmap</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="res/css/bootstrap.min.css" rel="stylesheet">
-    <link href="res/css/styles.css" rel="stylesheet">
-  </head>
-  <body>
-    <div class="overlay">
-      <nav class="eventnav navbar navbar-default navbar-custom navbar-fixed-top">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <button type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false" class="navbar-toggle collapsed"><span class="sr-only">Navigation ein-/ausblenden</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><span class="logo nav navbar-nav"><a href="map.html" class="navbar-brand"><img src="res/img/logo_white.png"></a></span>
-          </div>
-          <div id="bs-example-navbar-collapse-1" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="imprint.html">Impressum</a></li>
-              <li><a href="about.html">Über Uns</a></li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      <form class="" action="map.html" method="get" id="search">
-        <input name="lat" type="hidden" value="" id="lat">
-        <input name="lng" type="hidden" value="" id="lng">
-        <div class="container search-block">
-          <div class="row">
-            <div class="col-mde-12 index-text text-center">Veranstaltungen in deiner Nähe</div>
-          </div>
-          <div class="row">
-            <div class="col-md-3">
-              <input name="city" id="city" placeholder="Ort" class="form-control index-control custom-input-index">
-            </div>
-            <div class="col-md-3">
-              <select name="category" class="form-control index-control custom-input-index">
-                <option selected="">Alle</option>
-                <option>Konzerte</option>
-                <option>Party</option>
-                <option>Comedy & Co.</option>
-                <option>Musical & Show</option>
-                <option>Theater & Tanz</option>
-                <option>Oper & Klassik</option>
-                <option>Vortrag & Lesung</option>
-                <option>Für Kinder</option>
-                <option>Und Sonst</option>
-                <option>Ausstellungen</option>
-              </select>
-            </div>
-            <div class="col-md-3" style=" padding: 10px;">
-            <input type="number" name="radius" id="radius" step="1" min="1" max="200" style="width: auto; float: left; margin-right: 10px;"
-                   value="20" class="form-control input-map">
-                   <span class="input-group-addon" style="width:auto; padding: 9px 11px; margin-left: 10px;">km</span>
-            </div>
-            <div class="col-md-3">
-              <button type="submit" value="submit" class="btn custom-btn index-control custom-btn-index">Suchen</button>
-            </div>
-          </div>
-        </div>
-      </form>
+<head>
+  <title>eventmap</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="res/css/bootstrap.min.css" rel="stylesheet">
+  <link href="res/css/styles.css" rel="stylesheet">
+</head>
+<body>
+<div class="overlay">
+  <nav class="eventnav navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false" class="navbar-toggle collapsed"><span class="sr-only">Navigation ein-/ausblenden</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><span class="logo nav navbar-nav"><a href="map.html" class="navbar-brand"><img src="res/img/logo_white.png"></a></span>
+      </div>
+      <div id="bs-example-navbar-collapse-1" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="imprint.html">Impressum</a></li>
+          <li><a href="about.html">Über Uns</a></li>
+        </ul>
+      </div>
     </div>
-    <div class="map"></div>
-    <script src="http://maps.googleapis.com/maps/api/js?libraries=places"></script>
-    <script src="res/js/maps.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="res/js/bootstrap.min.js"></script>
-    <script src="res/js/jquery.geocomplete.min.js"></script>
-    <script>
-      	$("#city").geocomplete({ details: "form" });
-        $("#search").submit(function (event) {
-          if( $("#lng").val() == "" || $("#lat").val() == ""){
-            alert("Bitte Ort aus Liste auswählen")
-            return false
-          }
-        })
-    </script>
-  </body>
+  </nav>
+  <form class="" action="map.html" method="get" id="search">
+    <input name="lat" type="hidden" value="" id="lat">
+    <input name="lng" type="hidden" value="" id="lng">
+    <div class="search-block">
+      <div class="col-mde-12 index-text text-center">Veranstaltungen in deiner Nähe</div>
+      <div class="main-search-block">
+        <div class="col-md-6">
+          <input name="city" id="city" placeholder="Ort" class="form-control index-control custom-input-index">
+        </div>
+        <div class="col-md-6">
+          <select name="category" class="form-control index-control custom-input-index">
+            <option selected="">Alle</option>
+            <option>Konzerte</option>
+            <option>Party</option>
+            <option>Comedy & Co.</option>
+            <option>Musical & Show</option>
+            <option>Theater & Tanz</option>
+            <option>Oper & Klassik</option>
+            <option>Vortrag & Lesung</option>
+            <option>Für Kinder</option>
+            <option>Und Sonst</option>
+            <option>Ausstellungen</option>
+          </select>
+        </div>
+        <div class="col-md-12">
+          <input type="number" name="radius" step="1" min="1" max="200" value="20" class="form-control index-control custom-input-index input-radius">
+          <span class="km-addition">km</span>
+        </div>
+        <div class="col-md-12">
+          <button type="submit" value="submit" class="btn custom-btn index-control custom-btn-index">Suchen</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="map"></div>
+<script src="http://maps.googleapis.com/maps/api/js?libraries=places"></script>
+<script src="res/js/maps.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="res/js/bootstrap.min.js"></script>
+<script src="res/js/jquery.geocomplete.min.js"></script>
+<script>
+  $("#city").geocomplete({ details: "form" });
+  $("#search").submit(function (event) {
+    if( $("#lng").val() == "" || $("#lat").val() == ""){
+      alert("Bitte Ort aus Liste auswählen")
+      return false
+    }
+  })
+</script>
+</body>
 </html>

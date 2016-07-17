@@ -9,7 +9,7 @@ $.ajax({
 }).done(function (data) {
     sample_data = JSON.parse(data);
     console.log(data);
-    if (window.innerWidth < 500) {
+    if (window.innerWidth < 800) {
         function mobilinitialize() {
             $("#eventlist").empty();
             for (var i = 0; i < sample_data.length; i++) {
@@ -63,7 +63,7 @@ function initialize() {
 
 function parseTime(time) {
     if (time == undefined || time == "") {
-        return "";
+        return "nicht festgelegt";
     }
     //2016-07-16T17:00:00+0200
     var hour = time.substr(11, 2);
@@ -87,11 +87,10 @@ function addElement(sample_data, i) {
         "\<div class=\"about-event-li\">" +
         "\<div class=\"event-list-headline\">" + sample_data[i].name + "\</div>" +
         "\<div class=\"event-kategorie text-muted\">(" + sample_data[i].category + ")\</div>" +
-        "\<div class=\"event-location\">" + sample_data[i].street_no + "\<br>" + sample_data[i].zip_code + " " + sample_data[i].city + "\<br>" + sample_data[i].country + "\</div>" +
-        "\<div class=\"termin\">" + parseDay(sample_data[i].begin) + "\</div>" +
-        "\<div class=\"event-time\">" + parseTime(sample_data[i].begin) + parseTime(sample_data[i].end) + "\</div>" +
+        "\<div class=\"termin\">" + parseDay(sample_data[i].begin) + ", " +
+        "\<span class=\"event-time\">" + parseTime(sample_data[i].begin)  + " - " + parseTime(sample_data[i].end) + "\</span></div>" +
         "\</div>" +
-        "\<div class=\"description\"><strong>Beschreibung</strong>\<p>Lorem</p><a class=\"website_link\" href=\"http://fontawesome.io/icon/angle-down/\">Zur Website</a>\</div>" +
+        "\<div class=\"description\"><div class=\"event-location\">" + sample_data[i].street_no + "\<br>" + sample_data[i].zip_code + " " + sample_data[i].city + "\<br>" + sample_data[i].country + "\</div><br>" + "\<strong>Beschreibung</strong>\<p>" + sample_data[i].description + "\</p><a class=\"website_link\" href=\"http://fontawesome.io/icon/angle-down/\">Zur Website</a>\</div>" +
         "\<div class=\"material-icons more-button\">keyboard_arrow_down</div>" +
         "\</div>" +
         "\</li>";
