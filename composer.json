@@ -6,6 +6,6 @@
     "monolog/monolog": "*"
   },
   "autoload": {
-    "classmap": ["models/"]
+    "classmap": ["api/models/"]
   }
 }
