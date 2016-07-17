@@ -36,7 +36,7 @@ function initialize() {
     };
 
     map = new google.maps.Map(document.getElementById('googleMap'), mapOptions);
-    console.log(event_data);
+    //console.log(event_data);
 
     for (var i = 0; i < event_data.length; i++) {
 
