@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eventmap</title>
+    <link href="res/css/bootstrap.min.css" rel="stylesheet">
+    <link href="res/css/styles.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+<nav class="eventnav navbar navbar-default navbar-map">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Navigation ein-/ausblenden</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <span class="logo nav navbar-nav">
+                <a class="navbar-brand" href="map.html"><img src="res/img/logo_white.png"></a>
+            </span>
+        </div>
+        <div id="bs-example-navbar-collapse-1" class="collapse navbar-collapse">
+            <form role="search" class="navbar-form navbar-left">
+                <div class="input-group">
+                    <input type="text" style="width: auto" placeholder="Ort" class="form-control input-map">
+                    <select style="width: auto" class="form-control input-map">
+                        <option>Alles</option>
+                        <option>Party</option>
+                        <option>Festival</option>
+                        <option>Konzert</option>
+                    </select>
+                    <input type="number" step="1" min="1" max="200" style="width: auto"
+                           placeholder="Radius in km" class="form-control input-map">
+                </div>
+                <button type="submit" class="btn btn-default custom-btn custom-btn-map-nav">Suche</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="imprint.html">Impressum</a></li>
+                <li><a href="about.html">Über Uns</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div>
+    <ul id="eventlist" class="show-events">
+        <li>
+            <div class="event-info"><img src="http://placehold.it/100x100">
+                <div class="about-event-li">
+                    <div class="event-list-headline">Blub<span class="event-kategorie">krass</span></div>
+                    <div class="event-location">zu Hause</div>
+                    <div class="termin">22.4.1222</div>
+                    <div class="event-time">16:00:00 - 18:00:00</div>
+                </div>
+                <div class="description"><strong>Beschreibung</strong><p>Lorem</p><a
+                        href="http://fontawesome.io/icon/angle-down/">Zur Website</a></div>
+                <div class="material-icons more-button">keyboard_arrow_down</div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<input id="datainput" type="hidden" value="">
+
+<div id="googleMap"></div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="res/js/bootstrap.min.js"></script>
+<script src="http://maps.googleapis.com/maps/api/js"></script>
+<script src="res/js/sample.js"></script>
+<script src="res/js/maps.js"></script>
+<script src="res/js/list.js"></script>
+</body>
+</html>
