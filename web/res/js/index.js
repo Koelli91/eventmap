@@ -1,4 +1,8 @@
 $(function () {
+    $(".navbar-toggle").on("click", function () {
+        $(this).toggleClass("active");
+    });
+    
     $("#city").geocomplete({details: "form"});
 
     $("#search").submit(function (event) {

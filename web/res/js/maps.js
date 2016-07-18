@@ -1,15 +1,22 @@
 $(function () {
 
+    $(".navbar-toggle").on("click", function () {
+        $(this).toggleClass("active");
+    });
+
     initSearchForm();
 
     var search_data = {
         "radius": $('#radius').val(),
         "lat": $('#lat').val(),
         "lng": $('#lng').val(),
-        "category": $('#category').val(),
-    }
-    var url = "../api/v1/events?lat=" + search_data["lat"] + "&lon="+ search_data["lng"] +"&radius=" + search_data["radius"] + "&category=" + search_data["category"]
+        "category": $('#category').val()
+    };
+
+    var url = "../api/v1/events?lat=" + search_data["lat"] + "&lon="+ search_data["lng"] +"&radius=" + search_data["radius"] + "&category=" + search_data["category"];
+
     var event_data;
+
     $.ajax({
         "method": "GET",
         "url": url,
