@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eventmap</title>
+    <title>Eventmap</title>
     <link href="res/css/bootstrap.min.css" rel="stylesheet">
     <link href="res/css/styles.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 <nav class="eventnav navbar navbar-default navbar-map">
@@ -20,37 +20,37 @@
                 <span class="icon-bar"></span>
             </button>
             <span class="logo nav navbar-nav">
-                <a class="navbar-brand" href="map.html"><img src="res/img/logo_white.png"></a>
+                <a class="navbar-brand" href="./"><img src="res/img/logo_white.png"></a>
             </span>
         </div>
         <div id="bs-example-navbar-collapse-1" class="collapse navbar-collapse">
-          <form class="navbar-form navbar-left" role="search" action="map.html" method="get" id="search">
-            <input name="lat" type="hidden" value="" id="lat">
-            <input name="lng" type="hidden" value="" id="lng">
-            <div class="input-group">
-               <input id="city" type="text" name="city" style="width: auto" placeholder="Ort" class="form-control input-map">
-               <select style="width: auto" class="form-control input-map" name="category" id="category">
-                 <option selected="">Alle</option>
-                 <option>Konzerte</option>
-                 <option>Party</option>
-                 <option>Comedy & Co.</option>
-                 <option>Musical & Show</option>
-                 <option>Theater & Tanz</option>
-                 <option>Oper & Klassik</option>
-                 <option>Vortrag & Lesung</option>
-                 <option>Für Kinder</option>
-                 <option>Und Sonst</option>
-                 <option>Ausstellungen</option>
-               </select>
-               <input type="number" name="radius" id="radius" step="1" min="1" max="200" style="width: auto"
-                      value="20" class="form-control input-map">
-                      <span class="input-group-addon">km</span>
-           </div>
-           <button type="submit" class="btn btn-default custom-btn custom-btn-map-nav">Update</button>
-         </form>
+            <form class="navbar-form navbar-left" role="search" action="map.html" method="get" id="search">
+                <input name="lat" type="hidden" value="" id="lat">
+                <input name="lng" type="hidden" value="" id="lng">
+                <div class="input-group">
+                    <input id="city" type="text" name="city" style="width: auto" placeholder="Ort" class="form-control input-map">
+                    <select style="width: auto" class="form-control input-map" name="category" id="category">
+                        <option selected="">Alle</option>
+                        <option>Konzerte</option>
+                        <option>Party</option>
+                        <option>Comedy & Co.</option>
+                        <option>Musical & Show</option>
+                        <option>Theater & Tanz</option>
+                        <option>Oper & Klassik</option>
+                        <option>Vortrag & Lesung</option>
+                        <option>Für Kinder</option>
+                        <option>Und Sonst</option>
+                        <option>Ausstellungen</option>
+                    </select>
+                    <input type="number" name="radius" id="radius" step="1" min="1" max="200" style="width: auto"
+                           value="20" class="form-control input-map">
+                    <span class="input-group-addon">km</span>
+                </div>
+                <button type="submit" class="btn btn-default custom-btn custom-btn-map-nav">Update</button>
+            </form>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="imprint.html">Impressum</a></li>
-                <li><a href="about.html">Über Uns</a></li>
+                <li><a href="web/about.html">Über Uns</a></li>
+                <li><a href="web/imprint.html">Impressum</a></li>
             </ul>
         </div>
     </div>
@@ -64,9 +64,9 @@
 
 <div id="googleMap"></div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="//maps.googleapis.com/maps/api/js?key=AIzaSyAOZEBtHdLnUCL8yPbQRBZL9gdbAS3KE2g&libraries=places"></script>
 <script src="res/js/bootstrap.min.js"></script>
-<script src="http://maps.googleapis.com/maps/api/js?libraries=places"></script>
 <script src="res/js/jquery.geocomplete.min.js"></script>
 <script src="res/js/sample.js"></script>
 <script src="res/js/maps.js"></script>

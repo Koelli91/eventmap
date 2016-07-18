@@ -1,8 +1,8 @@
 {
     "propel": {
         "paths": {
-            "schemaDir": "C:\\Users\\kevin\\Documents\\GitHub\\eventmap\\api\\database",
-            "phpDir": "C:\\Users\\kevin\\Documents\\GitHub\\eventmap\\api\\models"
+            "schemaDir": "D:\\Dropbox\\Dokumente\\workspace-intellij\\eventmap\\api\\database",
+            "phpDir": "D:\\Dropbox\\Dokumente\\workspace-intellij\\eventmap\\api\\models"
         }
     }
 }

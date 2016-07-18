@@ -1,17 +1,14 @@
-/**
- * Created by Johannes Teklote on 16.07.2016.
- */
 $(function () {
 
     initSearchForm();
 
     var search_data = {
-      "radius": $('#radius').val(),
-      "lat": $('#lat').val(),
-      "lng": $('#lng').val(),
-      "category": $('#category').val(),
+        "radius": $('#radius').val(),
+        "lat": $('#lat').val(),
+        "lng": $('#lng').val(),
+        "category": $('#category').val(),
     }
-    var url = "http://localhost:8000/api/v1/events?lat=" + search_data["lat"] + "&lon="+ search_data["lng"] +"&radius=" + search_data["radius"] + "&category=" + search_data["category"]
+    var url = "../api/v1/events?lat=" + search_data["lat"] + "&lon="+ search_data["lng"] +"&radius=" + search_data["radius"] + "&category=" + search_data["category"]
     var event_data;
     $.ajax({
         "method": "GET",
@@ -40,14 +37,25 @@ $(function () {
 
     function initialize() {
         var latlng = new google.maps.LatLng(parseFloat($('#lat').val()), parseFloat($('#lng').val()));
+        var zoomLevel = 11;
+        var radius = parseInt($('#radius').val());
+        if (radius >= 200)
+            zoomLevel -= 2;
+        else if (radius >= 100)
+            zoomLevel -= 1;
         var mapOptions = {
-            zoom: 11,
+            zoom: zoomLevel,
             center: latlng,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
 
         map = new google.maps.Map(document.getElementById('googleMap'), mapOptions);
         //console.log(event_data);
+
+        if (event_data.length > 0)
+            $('#eventlist').prepend('<div class="text-muted" style="padding: 0 20px;">Es sind <strong>' + event_data.length + ' Veranstaltungen</strong> in deiner Nähe verfügbar.</div>');
+        else
+            $('#eventlist').prepend('<div class="text-muted" style="padding: 0 20px;">Es sind leider keiner Veranstaltungen in deiner Nähe verfügbar. Versuche den Radius oder den Suchort zu ändern.</div>');
 
         for (var i = 0; i < event_data.length; i++) {
 
@@ -155,18 +163,33 @@ $(function () {
     };
 
     function addElement(data) {
-        var out = "\<li>" +
-            "\<div class=\"event-info\"><img src=\"http://placehold.it/100x100\">" +
-            "\<div class=\"about-event-li\">" +
-            "\<div class=\"event-list-headline\">" + data.name + "\</div>" +
-            "\<div class=\"event-kategorie text-muted\">(" + data.category + ")\</div>" +
-            "\<div class=\"termin\">" + parseDay(data.begin) + ", " +
-            "\<span class=\"event-time\">" + parseTime(data.begin) + " - " + parseTime(data.end) + "\</span></div>" +
-            "\</div>" +
-            "\<div class=\"description\"><div class=\"event-location\">" + data.street_no + "\<br>" + data.zip_code + " " + data.city + "\<br>" + data.country + "\</div><br>" + "\<strong>Beschreibung</strong>\<p>" + data.description + "\</p><a class=\"website_link\" href=\"" + data.website + "\">Zur Website</a>\</div>" +
-            "\<div class=\"material-icons more-button\">keyboard_arrow_down</div>" +
-            "\</div>" +
-            "\</li>";
+        var out = `
+		<li>
+            <div class="event-info">
+				<img src="//placehold.it/100x100">
+				<div class="about-event-li">
+					<div class="event-list-headline">${data.name}</div>
+					<div class="event-kategorie text-muted">(${data.category})</div>
+					<div class="termin">
+						${parseDay(data.begin)},
+						<span class="event-time">${parseTime(data.begin)} - ${parseTime(data.end)}</span>
+					</div>
+				</div>
+				<div class="description">
+					<div class="event-location">
+						${data.street_no}<br>
+						${data.zip_code} ${data.city}<br>
+						${data.country}
+					</div>
+					<br>
+					<strong>Beschreibung</strong>
+					<p>${data.description}</p>
+					<a class="website_link" href="${data.website}">Zur Website</a>
+				</div>
+				<div class="material-icons more-button">keyboard_arrow_down</div>
+            </div>
+		</li>
+		`;
         return out;
     }
 

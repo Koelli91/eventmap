@@ -25,11 +25,11 @@ use Propel\Runtime\Parser\AbstractParser;
 /**
  * Base class that represents a row from the 'event_category' table.
  *
- *
+ * 
  *
  * @package    propel.generator..Base
  */
-abstract class EventCategory implements ActiveRecordInterface
+abstract class EventCategory implements ActiveRecordInterface 
 {
     /**
      * TableMap class name
@@ -65,14 +65,14 @@ abstract class EventCategory implements ActiveRecordInterface
 
     /**
      * The value for the event_id field.
-     *
+     * 
      * @var        int
      */
     protected $event_id;
 
     /**
      * The value for the category_id field.
-     *
+     * 
      * @var        int
      */
     protected $category_id;
@@ -312,17 +312,17 @@ abstract class EventCategory implements ActiveRecordInterface
         $cls = new \ReflectionClass($this);
         $propertyNames = [];
         $serializableProperties = array_diff($cls->getProperties(), $cls->getProperties(\ReflectionProperty::IS_STATIC));
-
+        
         foreach($serializableProperties as $property) {
             $propertyNames[] = $property->getName();
         }
-
+        
         return $propertyNames;
     }
 
     /**
      * Get the [event_id] column value.
-     *
+     * 
      * @return int
      */
     public function getEventId()
@@ -332,7 +332,7 @@ abstract class EventCategory implements ActiveRecordInterface
 
     /**
      * Get the [category_id] column value.
-     *
+     * 
      * @return int
      */
     public function getCategoryId()
@@ -342,7 +342,7 @@ abstract class EventCategory implements ActiveRecordInterface
 
     /**
      * Set the value of [event_id] column.
-     *
+     * 
      * @param int $v new value
      * @return $this|\EventCategory The current object (for fluent API support)
      */
@@ -366,7 +366,7 @@ abstract class EventCategory implements ActiveRecordInterface
 
     /**
      * Set the value of [category_id] column.
-     *
+     * 
      * @param int $v new value
      * @return $this|\EventCategory The current object (for fluent API support)
      */
@@ -674,10 +674,10 @@ abstract class EventCategory implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'event_id':
+                    case 'event_id':                        
                         $stmt->bindValue($identifier, $this->event_id, PDO::PARAM_INT);
                         break;
-                    case 'category_id':
+                    case 'category_id':                        
                         $stmt->bindValue($identifier, $this->category_id, PDO::PARAM_INT);
                         break;
                 }
@@ -778,10 +778,10 @@ abstract class EventCategory implements ActiveRecordInterface
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
-
+        
         if ($includeForeignObjects) {
             if (null !== $this->aEvent) {
-
+                
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
                         $key = 'event';
@@ -792,11 +792,11 @@ abstract class EventCategory implements ActiveRecordInterface
                     default:
                         $key = 'Event';
                 }
-
+        
                 $result[$key] = $this->aEvent->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aCategory) {
-
+                
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
                         $key = 'category';
@@ -807,7 +807,7 @@ abstract class EventCategory implements ActiveRecordInterface
                     default:
                         $key = 'Category';
                 }
-
+        
                 $result[$key] = $this->aCategory->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
@@ -988,7 +988,7 @@ abstract class EventCategory implements ActiveRecordInterface
 
         return spl_object_hash($this);
     }
-
+        
     /**
      * Returns the composite primary key for this object.
      * The array elements will be in same order as specified in XML.
