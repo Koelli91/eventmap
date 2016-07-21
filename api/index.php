@@ -113,6 +113,9 @@ $app->group('/v1', function () {
 
         // creates new events
         $this->post('/new', function (Request $request, Response $response, $args) {
+            // Vor dem Einfügen alle vergangenen Veranstaltungen löschen
+            delete_old_events();
+
             $parsedData = $request->getParsedBody();
             $multiple_events = false;
             if (isset($parsedData['events']) && is_array($parsedData['events'])) {

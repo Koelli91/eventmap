@@ -144,6 +144,17 @@ function add_event($eventarr) {
     return $errors;
 }
 
+function delete_old_events() {
+    $today = (new DateTime("now"))->format('Y-m-d');
+    $tomorrow = (new DateTime("now + 1 day"))->format('Y-m-d');
+    // DELETE FROM event WHERE begin < {heute} AND (end IS NULL OR end < {morgen})
+    // Eigentlich würde die Prüfung auf 'end' genügen, da dieses Feld allerdings NULL sein kann
+    // zusätzliche Prüfung ob der 'begin' vor Heute liegt
+    return EventQuery::create()
+        ->where('Event.begin < "' . $today . '" AND ( Event.end IS NULL OR Event.end < "' . $tomorrow . '")')
+        ->delete();
+}
+
 function get_event_by_name($name) {
     return EventQuery::create()->findOneByName($name);
 }
