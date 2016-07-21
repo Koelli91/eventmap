@@ -31,10 +31,10 @@
     <table name="event_category" isCrossRef="true">
         <column name="event_id" type="integer" primaryKey="true"/>
         <column name="category_id" type="integer" primaryKey="true"/>
-        <foreign-key foreignTable="event">
+        <foreign-key foreignTable="event" onDelete="CASCADE">
             <reference local="event_id" foreign="id"/>
         </foreign-key>
-        <foreign-key foreignTable="category">
+        <foreign-key foreignTable="category" onDelete="CASCADE">
             <reference local="category_id" foreign="id"/>
         </foreign-key>
     </table>
