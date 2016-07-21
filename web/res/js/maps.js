@@ -93,7 +93,7 @@ $(function () {
 
     function parseTime(time) {
         if (time == undefined || time == "")
-            return "nicht festgelegt";
+            return 0;
 
         //2016-07-16T17:00:00+0200
         var hour = time.substr(11, 2);
@@ -104,12 +104,22 @@ $(function () {
 
     function parseDay(time) {
         if (time == undefined || time == "")
-            return "nicht festgelegt";
+            return 0;
 
         var year = time.substr(0, 4);
         var month = time.substr(5, 2);
         var day = time.substr(8, 2);
         return day + "." + month + "." + year;
+    }
+
+    function parseTimeAndDate(time) {
+        var _date = parseDay(time);
+        var _time = parseTime(time);
+
+        if (_date === 0 && _time === 0)
+            return "";
+        else
+            return _date + ", " + _time;
     }
 
     function loadEvents() {
@@ -181,8 +191,11 @@ $(function () {
 					<div class="event-list-headline">${data.name}</div>
 					<div class="event-kategorie text-muted">(${data.category})</div>
 					<div class="termin">
-						${parseDay(data.begin)},
-						<span class="event-time">${parseTime(data.begin)} - ${parseTime(data.end)}</span>
+						<span class="event-time">
+							${parseTimeAndDate(data.begin)}
+							${(parseTimeAndDate(data.end) !== "") ? "-" : ""}
+							${parseTimeAndDate(data.end)}
+						</span>
 					</div>
 				</div>
 				<div class="description">
