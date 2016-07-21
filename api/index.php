@@ -69,7 +69,7 @@ $app->group('/v1', function () {
                 $data['errors'] = $errors;
             } else {
                 // Kategorie wandeln
-                if ( strtolower($category) === "alles" || strtolower($category) === "alle" || strtolower($category) === "all" )
+                if (strtolower($category) === "alles" || strtolower($category) === "alle" || strtolower($category) === "all")
                     $category = '';
 
                 // Gradmaß in Bogenmaß umwandeln
@@ -100,7 +100,7 @@ $app->group('/v1', function () {
                               + POWER(" . $ursprungZ . " - event.koordZ, 2)
                             <= " . pow(2 * $erdradius * sin($radius / (2 * $erdradius)), 2) .
                     (!empty($category) ? " AND category.name = \"" . $category . "\"" : " ") .
-                            " ORDER BY event.begin ASC, tmp_calc ASC
+                    " ORDER BY event.begin ASC, tmp_calc ASC
                             LIMIT 200";
                 $stmt = $con->prepare($sql);
                 $stmt->execute();
@@ -151,12 +151,16 @@ $app->group('/v1', function () {
             return $response;
         });
 
-        $this->delete('/old', function(Request $request, Response $response) {
-            $oldEvents = delete_old_events();
+        $this->delete('/old', function (Request $request, Response $response) {
+            $countOldEvents = delete_old_events();
 
             $data['success'] = true;
-            $data['message'] = 'Vergangene Veranstaltungen gelöscht.';
-            $data['count'] = $oldEvents;
+            if ($countOldEvents > 0) {
+                $data['message'] = 'Vergangene Veranstaltungen gelöscht.';
+                $data['count'] = $countOldEvents;
+            } else {
+                $data['message'] = 'Keine vergangenen Veranstaltungen vorhanden.';
+            }
 
             $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
         });

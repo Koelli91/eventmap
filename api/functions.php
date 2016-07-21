@@ -150,9 +150,21 @@ function delete_old_events() {
     // DELETE FROM event WHERE begin < {heute} AND (end IS NULL OR end < {morgen})
     // Eigentlich würde die Prüfung auf 'end' genügen, da dieses Feld allerdings NULL sein kann
     // zusätzliche Prüfung ob der 'begin' vor Heute liegt
-    return EventQuery::create()
+    $to_delete = EventQuery::create()
         ->where('Event.begin < "' . $today . '" AND ( Event.end IS NULL OR Event.end < "' . $tomorrow . '")')
+        ->find()
+        ->getPrimaryKeys();
+
+    foreach ($to_delete as $d)
+        EventCategoryQuery::create()
+            ->findByEventId($d)
+            ->delete();
+
+    EventQuery::create()
+        ->filterByPrimaryKeys($to_delete)
         ->delete();
+
+    return count($to_delete);
 }
 
 function get_event_by_name($name) {
