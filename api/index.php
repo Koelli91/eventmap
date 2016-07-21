@@ -2,7 +2,6 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use \Propel\Runtime\Propel;
-use \Propel\Runtime\Formatter\ObjectFormatter;
 
 // setup the autoloading
 require_once '../vendor/autoload.php';
@@ -16,7 +15,7 @@ $app = new \Slim\App();
 $container = $app->getContainer();
 
 // Add logger for Slim
-$container['logger'] = function ($c) {
+$container['logger'] = function () {
     $logger = new \Monolog\Logger('slim_logger');
     $file_handler = new \Monolog\Handler\StreamHandler("logs/slim.log");
     $logger->pushHandler($file_handler);
@@ -45,7 +44,7 @@ $app->group('/v1', function () {
     // Events group
     $this->group('/events', function () {
 
-        $this->get('', function (Request $request, Response $response, $args) {
+        $this->get('', function (Request $request, Response $response) {
             $queryParams = $request->getQueryParams();
             $lon = isset($queryParams['lon']) ? $queryParams['lon'] : '';
             $lat = isset($queryParams['lat']) ? $queryParams['lat'] : '';
@@ -54,6 +53,7 @@ $app->group('/v1', function () {
 
             $data = array();
             $errors = array();
+            $events = array();
 
             if (empty($lat))
                 $errors['latitude'] = 'Breitengrad (latitude) fehlt oder ist leer.';
@@ -112,7 +112,7 @@ $app->group('/v1', function () {
         });
 
         // creates new events
-        $this->post('/new', function (Request $request, Response $response, $args) {
+        $this->post('/new', function (Request $request, Response $response) {
             // Vor dem Einfügen alle vergangenen Veranstaltungen löschen
             delete_old_events();
 
@@ -151,7 +151,7 @@ $app->group('/v1', function () {
             return $response;
         });
 
-        $this->delete('/old', function(Request $request, Response $response, $args) {
+        $this->delete('/old', function(Request $request, Response $response) {
             $oldEvents = delete_old_events();
 
             $data['success'] = true;
@@ -214,7 +214,7 @@ $app->group('/v1', function () {
             return $response;
         });
 
-        $this->post('/new', function (Request $request, Response $response, $args) {
+        $this->post('/new', function (Request $request, Response $response) {
             $category_name = filter_var($request->getParam('category_name'), FILTER_SANITIZE_STRING);
 
             $data = array();
