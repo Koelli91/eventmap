@@ -26,12 +26,13 @@ $(function () {
         event_data = JSON.parse(data);
         if (window.innerWidth < 768) {
             function mobilinitialize() {
-                $("#eventlist").empty();
+                var $eventlist = $("#eventlist");
+                $eventlist.empty();
                 for (var i = 0; i < event_data.length; i++) {
                     var li = addElement(event_data[i]);
-                    $("#eventlist").append(li);
+                    $eventlist.append(li);
                 }
-            };
+            }
             mobilinitialize();
         } else {
             google.maps.event.addDomListener(window, 'load', initialize());
@@ -82,8 +83,9 @@ $(function () {
                     prev.setIcon('res/img/marker_red.png')
                 }
                 this.setIcon('res/img/marker_blue.png');
-                $("#eventlist").empty();
-                $("#eventlist").append(addElement(this.event));
+                var $eventlist = $("#eventlist");
+                $eventlist.empty();
+                $eventlist.append(addElement(this.event));
                 prev = this;
             });
         }
@@ -97,8 +99,7 @@ $(function () {
         var hour = time.substr(11, 2);
         var min = time.substr(14, 2);
         var sek = time.substr(17, 2);
-        var date = hour + ":" + min + ":" + sek;
-        return date;
+        return hour + ":" + min + ":" + sek;
     }
 
     function parseDay(time) {
@@ -108,8 +109,7 @@ $(function () {
         var year = time.substr(0, 4);
         var month = time.substr(5, 2);
         var day = time.substr(8, 2);
-        var date = day + "." + month + "." + year;
-        return date;
+        return day + "." + month + "." + year;
     }
 
     function loadEvents() {
@@ -118,7 +118,7 @@ $(function () {
             "lat": $('#lat').val(),
             "lng": $('#lng').val(),
             "category": $('#category').val(),
-        }
+        };
         $.get("api/v1/events", search_data, function (data) {
             emptyEventList();
             for (var i = 0; i < data.length; i++) {
@@ -128,7 +128,8 @@ $(function () {
     }
 
     function initSearchForm() {
-        $("#city").geocomplete({details: "form"});
+        var $city = $("#city");
+        $city.geocomplete({details: "form"});
         if (getUrlParameter("lng") != undefined) {
             $("#lng").val(getUrlParameter("lng"))
         }
@@ -142,14 +143,14 @@ $(function () {
             $("#category").val(decodeURIComponent(getUrlParameter("category").replace(/\+/g, ' ')))
         }
         if (getUrlParameter("city") != undefined) {
-            $("#city").val(decodeURIComponent(getUrlParameter("city").replace(/\+/g, ' ')))
+            $city.val(decodeURIComponent(getUrlParameter("city").replace(/\+/g, ' ')))
         }
     }
 
     function search() {
-        $("#search").submit(function (event) {
+        $("#search").submit(function () {
             if ($("#lng").val() == "" || $("#lat").val() == "") {
-                alert("Bitte Ort aus Liste auswählen")
+                alert("Bitte Ort aus Liste auswählen");
                 return false
             } else {
                 loadEvents();
@@ -169,10 +170,10 @@ $(function () {
                 return sParameterName[1] === undefined ? true : sParameterName[1];
             }
         }
-    };
+    }
 
     function addElement(data) {
-        var out = `
+        return `
 		<li>
             <div class="event-info">
 				<img src="//placehold.it/100x100">
@@ -197,9 +198,7 @@ $(function () {
 				</div>
 				<div class="material-icons more-button">keyboard_arrow_down</div>
             </div>
-		</li>
-		`;
-        return out;
+		</li>`;
     }
 
 });
