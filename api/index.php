@@ -151,6 +151,16 @@ $app->group('/v1', function () {
             return $response;
         });
 
+        $this->delete('/old', function(Request $request, Response $response, $args) {
+            $oldEvents = delete_old_events();
+
+            $data['success'] = true;
+            $data['message'] = 'Vergangene Veranstaltungen gelöscht.';
+            $data['count'] = $oldEvents;
+
+            $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
+        });
+
     });
 
     // Categories group
