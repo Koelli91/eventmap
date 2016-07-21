@@ -85,8 +85,8 @@ function add_event($eventarr) {
         $errors['longitude'] = 'Längengrad (longitude) fehlt.';
     if ( empty($event_name) )
         $errors['event_name'] = 'Eventname fehlt.';
-    if ( empty($description) )
-        $errors['description'] = 'Eventbeschreibung fehlt.';
+    /*if ( empty($description) )
+        $errors['description'] = 'Eventbeschreibung fehlt.';*/
     if ( empty($begin) )
         $errors['time_start'] = 'Starttermin fehlt.';
 
