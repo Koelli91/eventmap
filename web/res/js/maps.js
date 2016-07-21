@@ -13,7 +13,7 @@ $(function () {
         "category": $('#category').val()
     };
 
-    var url = "../api/v1/events?lat=" + search_data["lat"] + "&lon="+ search_data["lng"] +"&radius=" + search_data["radius"] + "&category=" + search_data["category"];
+    var url = "../api/v1/events?lat=" + search_data["lat"] + "&lon=" + search_data["lng"] + "&radius=" + search_data["radius"] + "&category=" + search_data["category"];
 
     var event_data;
 
@@ -24,7 +24,7 @@ $(function () {
         "cache": false
     }).done(function (data) {
         event_data = JSON.parse(data);
-        if (window.innerWidth < 800) {
+        if (window.innerWidth < 768) {
             function mobilinitialize() {
                 $("#eventlist").empty();
                 for (var i = 0; i < event_data.length; i++) {
@@ -47,8 +47,10 @@ $(function () {
         var zoomLevel = 11;
         var radius = parseInt($('#radius').val());
         if (radius >= 200)
-            zoomLevel -= 2;
+            zoomLevel -= 3;
         else if (radius >= 100)
+            zoomLevel -= 2;
+        else if (radius >= 50)
             zoomLevel -= 1;
         var mapOptions = {
             zoom: zoomLevel,
