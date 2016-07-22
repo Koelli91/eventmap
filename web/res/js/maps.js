@@ -257,6 +257,7 @@ $(function () {
                 var $eventlist = $("#eventlist");
                 $eventlist.empty();
                 $eventlist.append(addElement(this.event));
+                $('#eventlist-container h2').remove();
                 prev = this;
             });
         }
@@ -393,7 +394,7 @@ $(function () {
 					<br>
 					<strong>Beschreibung</strong>
 					<p>${data.description}</p>
-					<a class="website_link" href="${data.website}">Zur Website</a>
+					<a class="website_link" href="${data.website}" target="_blank">Zur Website</a>
 				</div>
 				<div class="material-icons more-button">keyboard_arrow_down</div>
             </div>
