@@ -1,0 +1,76 @@
+doctype html
+html(lang='de')
+  head
+    title Eventmap
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0, user-scalable=no')
+    link(rel='icon', href='res/img/favicon.png')
+    link(href='res/css/bootstrap.min.css', rel='stylesheet')
+    link(href='res/css/cssload.css', rel='stylesheet')
+    link(href='res/css/styles.css', rel='stylesheet')
+  body.bgimage
+    .overlay
+      nav.eventnav.navbar.navbar-default.navbar-custom.navbar-fixed-top
+        .container-fluid
+          .navbar-header
+            button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1', aria-expanded='false')
+              span.sr-only Navigation ein-/ausblenden
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+            span.logo.nav.navbar-nav
+              a.navbar-brand(href='index.html')
+                img(src='res/img/logo_white.png')
+          #bs-example-navbar-collapse-1.collapse.navbar-collapse
+            ul.nav.navbar-nav.navbar-right
+              li
+                a(href='about.html') Über Uns
+              li
+                a(href='imprint.html') Impressum
+      .search-block
+        .col-md-12.index-text.text-center Veranstaltungen in deiner Nähe
+        .col-md-8.col-md-offset-2
+          form#search(action='web/map.html', method='get')
+            input#lat(name='lat', type='hidden', value='')
+            input#lng(name='lng', type='hidden', value='')
+            .row
+              .col-sm-6.col-md-4.col-md-offset-2
+                .form-group
+                  input#city.form-control.index-control.custom-input-index(name='city', data-geo='administrative_area_level_2', placeholder='Ort')
+              .col-sm-6.col-md-4
+                .form-group
+                  select.form-control.index-control.custom-input-index(name='category')
+                    option(selected='') Alle
+                    option Konzerte
+                    option Party
+                    option Comedy & Co.
+                    option Musical & Show
+                    option Theater & Tanz
+                    option Oper & Klassik
+                    option Vortrag & Lesung
+                    option Für Kinder
+                    option Ausstellungen
+            .row
+              .col-sm-12.col-md-8.col-md-offset-2
+                .form-group
+                  .input-group
+                    input.form-control.custom-input-index.input-radius(type='number', name='radius', step='1', min='1', max='200', value='20')
+                    span.input-group-addon.km-addition km
+            .row
+              .col-sm-6.col-sm-offset-3
+                button.btn.custom-btn.index-control.custom-btn-index(type='submit', value='submit')
+                  | Suchen
+            .row
+              .col-md-12.text-center.waiting-container.waiting
+                .cssload-container
+                  .cssload-speeding-wheel
+                p
+                  | Dein Standort wird ermittelt...
+                  br
+                  | (falls du den Standortzugriff nicht erlaubst, wird dieser anhand deiner IP-Adresse ermittelt
+                  | und kann erheblich von deinem eigentlichen Standort abweichen)
+    script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
+    script(src='http://maps.googleapis.com/maps/api/js?key=AIzaSyAOZEBtHdLnUCL8yPbQRBZL9gdbAS3KE2g&libraries=places')
+    script(src='res/js/bootstrap.min.js')
+    script(src='res/js/jquery.geocomplete.min.js')
+    script(src='file:///Users/dominikwieners/Desktop/DoHack/eventmap/web/res/js/index.js')

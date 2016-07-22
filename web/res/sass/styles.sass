@@ -1,0 +1,280 @@
+@import 'bourbon/bourbon'
+
+*
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+
+.eventnav
+  background-color: #000
+  color: #fff
+  border: 0px
+  border-radius: 0px
+
+.eventinput
+  width: auto
+
+.logo
+  margin-top: -8px
+  float: left
+
+.contentbox
+  margin: 0 auto
+  padding-top: 70px
+
+#googleMap
+  width: calc(100% - 300px)
+  height: calc(100vh - 62px)
+
+.navbar-form
+  -webkit-box-shadow: none
+  box-shadow: none
+  border-top: 0px
+
+.navbar-default
+  padding: 5px
+  .navbar-collapse, .navbar-form
+    border-color: #2b2b2b
+  .navbar-toggle
+    .icon-bar
+      background-color: rgba(128, 236, 147, 0.9)
+    &.active .icon-bar
+      background-color: crimson
+
+.navbar-toggle
+  .icon-bar
+    &:nth-of-type(2)
+      top: 1px
+    &:nth-of-type(3)
+      top: 2px
+    &:nth-of-type(4)
+      top: 3px
+    position: relative
+    transition: all 500ms ease-in-out
+  &.active .icon-bar
+    &:nth-of-type(2)
+      transform: rotate(-45deg) translateY(10px)
+    &:nth-of-type(3)
+      top: 0px
+      background: transparent
+    &:nth-of-type(4)
+      transform: rotate(45deg) translateY(-10px)
+
+.navbar-default .navbar-nav > li > a
+  color: #a0a0a0
+  transition: color 0.2s
+  &:hover, &:focus
+    color: #a0a0a0
+    background: #1f1f1f
+
+.navbar-map
+  margin-bottom: 0px
+
+.index-text
+  font-size: 50px
+  color: #fff
+  padding: 10px 10px 75px 10px
+
+body, html
+  height: 100%
+  width: 100%
+
+body.bgimage
+  background: url('../img/index.png') no-repeat
+  background-size: cover
+
+.overlay
+  height: 100%
+  width: 100%
+  background: rgba(0, 0, 0, 0.5)
+  position: absolute
+
+.search-block
+  position: relative
+  padding: 10px
+  top: 20vh
+
+.custom-btn
+  background: #80ec93
+  color: #000
+  transition: all 0.2s
+  &:hover
+    background: #6ae980
+
+.custom-btn-map-nav
+  background: #000
+  border-radius: 5px
+  border: 1px solid #fff
+  color: #fff
+  padding-left: 20px
+  padding-right: 20px
+  transition: all 0.2s
+  &:hover
+    color: #000
+    background: #fff
+
+.custom-input-index
+  color: black
+
+.input-radius
+  width: calc(100% - 50px)
+  border-radius: 5px 0px 0px 5px
+  display: inline-block
+
+.km-addition
+  background: #fff
+  border-radius: 0px 5px 5px 0px
+
+.show-events
+  height: calc(100vh - 62px)
+  width: 300px
+  background: #eee
+  float: left
+  margin: 0px
+  padding-bottom: 0px
+
+ul.show-events
+  list-style: none
+  padding: 10px 0px
+  min-height: 1px
+  overflow-y: auto
+  li
+    width: 95%
+    background: #fff
+    padding: 10px 15px 0px 15px
+    margin: 5px auto
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05)
+    img
+      width: 60px
+      height: 60px
+      display: inline-block
+      float: left
+    .about-event-li
+      padding: 0px 10px
+      display: inline-block
+      width: 180px
+      .event-list-headline
+        font-size: 18px
+        font-weight: bold
+        padding-bottom: 5px
+      .event-kategorie
+        font-style: italic
+        font-size: 16px
+        font-weight: normal
+        padding: 0px 5px
+      .termin, .event-time
+        color: #989898
+
+.more-button
+  text-align: center
+  width: 100%
+  color: #d0d0d0
+  padding-top: 10px
+  cursor: pointer
+
+.description
+  min-height: 1px
+  width: 100%
+  background: #fff
+  display: none
+  padding: 10px 0px
+
+.custom-btn-index
+  width: 100%
+  border-radius: 100px
+  background: rgba(128, 236, 147, 0.9)
+  color: #000
+  margin-top: 20px !important
+  transition: all 0.2s
+  &:hover
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.25)
+
+a.website_link
+  background: #fff
+  border-radius: 5px
+  border: 1px solid #000
+  color: #000
+  padding: 10px 10px
+  text-align: center
+  display: inline-block
+  width: 100%
+  margin-top: 10px
+  transition: all 0.2s
+  &:hover
+    background: #000
+    color: #fff
+    text-decoration: none
+
+@media (max-width: 991px)
+  #googleMap
+    display: none
+  .index-text
+    font-size: 40px
+    padding: 10px 10px 30px 10px
+
+@media (max-width: 771px)
+  .custom-btn-map-nav
+    width: 100%
+  .input-nav
+    padding: 5px
+  .navbar-form
+    padding: 20px 10px
+  .navbar-default .navbar-toggle
+    border-color: transparent
+    border: 0px
+    &:focus, &:hover
+      background-color: #000 !important
+  .show-events
+    width: 100%
+
+.overlay-about
+  background: rgba(30, 168, 249, 0.85)
+  width: 100%
+  min-height: 100%
+  position: absolute
+
+.about-img
+  background: url('../img/map.png')
+  -webkit-background-size: cover
+  background-size: cover
+  width: 100%
+  min-height: 100%
+
+.about-us-box
+  display: block
+  display: block
+  max-width: 800px
+  margin: 10px auto 0px auto
+  color: #fff
+
+.member-box
+  height: 250px
+  width: 100%
+  background: #fff
+  margin: 0px 0px 10px
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2)
+  border-radius: 5px
+
+.member-img
+  width: 150px
+  height: 150px
+  padding: 20px
+  border-radius: 100%
+
+.member-text-box
+  color: #000
+  padding: 10px
+  p
+    text-align: center
+
+@media (max-width: 771px)
+  .input-map
+    width: 100% !important
+    border-radius: 5px !important
+    margin: 5px 0px
+
+.waiting-container
+  display: none
+  color: #fff
+  &.waiting
+    display: block
+  .cssload-container
+    margin: 20px 0 10px 0

@@ -1,0 +1,62 @@
+doctype html
+html(lang='de')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    title Eventmap
+    link(href='res/css/bootstrap.min.css', rel='stylesheet')
+    link(href='res/css/styles.css', rel='stylesheet')
+    link(href='http://fonts.googleapis.com/icon?family=Material+Icons', rel='stylesheet')
+  body
+    nav.eventnav.navbar.navbar-default.navbar-map
+      .container-fluid
+        .navbar-header
+          button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1', aria-expanded='false')
+            span.sr-only Navigation ein-/ausblenden
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          span.logo.nav.navbar-nav
+            a.navbar-brand(href='index.html')
+              img(src='res/img/logo_white.png')
+        #bs-example-navbar-collapse-1.collapse.navbar-collapse
+          form#search.navbar-form.navbar-left(role='search', action='map.html', method='get')
+            input#lat(name='lat', type='hidden', value='')
+            input#lng(name='lng', type='hidden', value='')
+            .form-group
+              input#city.form-control(type='text', name='city', placeholder='Ort')
+            .form-group
+              select#category.form-control(name='category')
+                option(selected='') Alle
+                option Konzerte
+                option Party
+                option Comedy & Co.
+                option Musical & Show
+                option Theater & Tanz
+                option Oper & Klassik
+                option Vortrag & Lesung
+                option Für Kinder
+                option Und Sonst
+                option Ausstellungen
+            .form-group
+              .input-group
+                input#radius.form-control(type='number', name='radius', step='1', min='1', max='200', value='20')
+                span.input-group-addon km
+            button.btn.btn-default.custom-btn.custom-btn-map-nav(type='submit') Update
+          ul.nav.navbar-nav.navbar-right
+            li
+              a(href='about.html') Über Uns
+            li
+              a(href='imprint.html') Impressum
+    div
+      ul#eventlist.show-events
+        h2(style='padding: 0 20px;') Wähle ein Event auf der Karte aus!
+    input#datainput(type='hidden', value='')
+    #googleMap
+    script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
+    script(src='http://maps.googleapis.com/maps/api/js?key=AIzaSyAOZEBtHdLnUCL8yPbQRBZL9gdbAS3KE2g&libraries=places')
+    script(src='res/js/bootstrap.min.js')
+    script(src='res/js/jquery.geocomplete.min.js')
+    script(src='res/js/sample.js')
+    script(src='res/js/maps.js')
+    script(src='res/js/list.js')
