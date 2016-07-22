@@ -390,7 +390,7 @@ $(function () {
 					</div>
 					<br>
 					<strong>Beschreibung</strong>
-					<p>${data.description}</p>
+					<p>${data.description == "" ? "keine Beschreibung verfügbar" : data.description}</p>
 					<a class="website_link" href="${data.website}" target="_blank">Zur Website</a>
 				</div>
 				<div class="material-icons more-button">keyboard_arrow_down</div>
