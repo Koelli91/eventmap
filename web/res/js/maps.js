@@ -13,7 +13,15 @@ $(function () {
         "category": $('#category').val()
     };
 
+    var currentPage = 1;
+    var pages = 1;
+    if (getUrlHashParameter("page") != undefined) {
+        currentPage = parseInt(getUrlHashParameter("page"));
+    }
+    refreshPagination();
+
     var url = "../api/v1/events?lat=" + search_data["lat"] + "&lon=" + search_data["lng"] + "&radius=" + search_data["radius"] + "&category=" + search_data["category"];
+    url += window.innerWidth < 768 ? "&page=" + currentPage : "&page=-1";
 
     var event_data;
 
@@ -23,21 +31,190 @@ $(function () {
         "returnType": "JSON",
         "cache": false
     }).done(function (data) {
-        event_data = JSON.parse(data);
+        data = JSON.parse(data);
+        event_data = data.eventlist;
+        var event_count = data.eventCount;
         if (window.innerWidth < 768) {
-            function mobilinitialize() {
-                var $eventlist = $("#eventlist");
-                $eventlist.empty();
-                for (var i = 0; i < event_data.length; i++) {
-                    var li = addElement(event_data[i]);
-                    $eventlist.append(li);
-                }
+            // Alle gefundenen Events zur Eventlist hinzufügen
+            var $eventlist = $("#eventlist");
+            $eventlist.empty();
+            for (var i = 0; i < event_data.length; i++) {
+                var li = addElement(event_data[i]);
+                $eventlist.append(li);
             }
-            mobilinitialize();
+
+            var baseUrl = "map.html?lat=" + getUrlParameter("lat") + "&lng=" + getUrlParameter("lng") + "&city=" + getUrlParameter("city") + "&category=" + getUrlParameter("category") + "&radius=" + getUrlParameter("radius");
+            pages = parseInt(Math.ceil(event_count / event_data.length));
+            pages = !pages ? 1 : pages; // Fall "NaN" abfangen
+
+            if (event_count > 0) {
+                // Pagination Start
+                var pagination = `
+                    <nav class="text-center" id="event-pagination">
+                        <ul class="pagination">`;
+                // "Previous"-Link
+                if (currentPage == 1) pagination += `
+                            <li class="disabled">
+                                <span>
+                                    <span aria-hidden="true">&laquo;</span>
+                                </span>
+                            </li>`;
+                else pagination += `
+                            <li>
+                                <a href="${baseUrl + "#!/page=" + (currentPage - 1)}" aria-label="Vorherige">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>`;
+                // Pages Links
+                for (var i = 1; i <= pages; i++) {
+                    if (currentPage == i) pagination += `
+                        <li class="active">
+                            <span>${i}</span>
+                        </li>
+                `;
+                    else pagination += `
+                            <li>
+                                <a href="${baseUrl + "#!/page=" + i}">${i}</a>
+                            </li>
+                `;
+                }
+                // "Next"-Link
+                if (currentPage == pages) pagination += `
+                            <li class="disabled">
+                                <span>
+                                    <span aria-hidden="true">&raquo;</span>
+                                </span>
+                            </li>`;
+                else pagination += `
+                            <li>
+                                <a href="${baseUrl + "#!/page=" + (currentPage + 1)}" aria-label="Nächste">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>`;
+                // Pagination End
+                pagination += `
+                        </ul>
+                    </nav>  
+                `;
+
+                $('#eventlist-container #eventlist').before(pagination);
+                $('#eventlist-container #eventlist').after(pagination);
+            }
+
         } else {
+            $('#eventlist-container').append(`<h2 style="padding: 0 20px;">Wähle ein Event auf der Karte aus!</h2>`);
             google.maps.event.addDomListener(window, 'load', initialize());
         }
+
+        if (event_data.length > 0) {
+            var ist_sind = event_count > 1 ? "sind" : "ist",
+                veranstaltung_en = event_count > 1 ? "Veranstaltungen" : "Veranstaltung";
+            $('#eventlist-container .help-block').prepend('<div class="bg-info text-info">Es ' + ist_sind + ' <strong>' + event_count + ' ' + veranstaltung_en + '</strong> in deiner Nähe verfügbar.</div>');
+        } else
+            $('#eventlist-container .help-block').prepend('<div class="bg-danger text-danger">Es sind leider keiner Veranstaltungen in deiner Nähe verfügbar. Versuche den Radius oder den Suchort zu ändern.</div>');
     });
+
+    $('body').on('click', '#event-pagination a', function (event) {
+        // Das Folgen des Links verhindern
+        //event.preventDefault();
+
+        window.setTimeout(function () {
+            currentPage = parseInt(getUrlHashParameter("page"));
+            var url = "../api/v1/events?lat=" + getUrlParameter("lat") + "&lon=" + getUrlParameter("lng") + "&radius=" + getUrlParameter("radius") + "&category=" + getUrlParameter("category") + "&page=" + currentPage;
+            var $eventlist = $("#eventlist");
+
+            $eventlist.fadeOut(400, function () {
+                $('#eventlist-container .loading-container').addClass('loading');
+                // Set a small timeout so the page doesn't "blink" the loading animation
+                window.setTimeout(function() {
+                    $.ajax({
+                        "method": "GET",
+                        "url": url,
+                        "returnType": "JSON"
+                    }).done(function (data) {
+                        $('#eventlist-container .loading-container').removeClass('loading');
+
+                        data = JSON.parse(data);
+                        event_data = data.eventlist;
+
+                        // Alle gefundenen Events zur Eventlist hinzufügen
+                        $eventlist.empty();
+                        for (var i = 0; i < event_data.length; i++) {
+                            var li = addElement(event_data[i]);
+                            $eventlist.append(li);
+                        }
+                        $eventlist.fadeIn();
+                    });
+                }, 200);
+            });
+
+            refreshPagination();
+        }, 0);
+    });
+
+    function refreshPagination() {
+        var baseUrl = "map.html?lat=" + getUrlParameter("lat") + "&lng=" + getUrlParameter("lng") + "&city=" + getUrlParameter("city") + "&category=" + getUrlParameter("category") + "&radius=" + getUrlParameter("radius");
+
+        // Make old "active" page no more active and clickable
+        var $pagination = $('#eventlist-container .pagination');
+        var $oldActive = $pagination.find('.active').removeClass('active');
+        var oldPageNo = $oldActive.find('span').html();
+        var url = baseUrl + "#!/page=" + oldPageNo;
+        $oldActive.find('span').replaceWith('<a href="' + url + '">' + oldPageNo + '</a>');
+
+        // Make current page "active" and no more clickable
+        $pagination.find('li a').each(function () {
+            var pageNo = $(this).html();
+            if (pageNo == currentPage) {
+                $(this).parent('li').addClass('active');
+                $(this).replaceWith('<span>' + pageNo + '</span>');
+            }
+        });
+
+        // Refresh the "Previous"-Link
+        var $previous = $pagination.find('li:first');
+        var url = baseUrl + "#!/page=" + (currentPage - 1);
+        if ($previous.find('a').length == 0) {
+            // "Previous"-Link wasn't clickable, now it will be
+            $previous.removeClass('disabled');
+            var $span = $previous.find('span').first(),
+                innerHtml = $span.html();
+            $span.replaceWith('<a href="' + url + '">' + innerHtml + '</a>');
+        } else {
+            // "Previous"-Link was clickable before, check if it should be any longer
+            if (currentPage == 1) {
+                // Nope, make it non-clickable
+                $previous.addClass('disabled');
+                var innerHtml = $previous.find('a').html();
+                $previous.find('a').replaceWith('<span>' + innerHtml + '</span>');
+            } else {
+                // Let him be, let him be.. (but refresh it's link!!)
+                $previous.find('a').prop('href', url);
+            }
+        }
+
+        // Refresh the "Next"-Link
+        var $next = $pagination.find('li:last');
+        var url = baseUrl + "#!/page=" + (currentPage + 1);
+        if ($next.find('a').length == 0) {
+            // "Next"-Link wasn't clickable, now it will be
+            $next.removeClass('disabled');
+            var $span = $next.find('span').first(),
+                innerHtml = $span.html();
+            $span.replaceWith('<a href="' + url + '">' + innerHtml + '</a>');
+        } else {
+            // "Next"-Link was clickable before, check if it should be any longer
+            if (currentPage == pages) {
+                // Nope, make it non-clickable
+                $next.addClass('disabled');
+                var innerHtml = $next.find('a').html();
+                $next.find('a').replaceWith('<span>' + innerHtml + '</span>');
+            } else {
+                // Let him be, let him be.. (but refresh it's link!!)
+                $next.find('a').prop('href', url);
+            }
+        }
+    }
 
     var map;
 
@@ -60,12 +237,6 @@ $(function () {
         };
 
         map = new google.maps.Map(document.getElementById('googleMap'), mapOptions);
-        //console.log(event_data);
-
-        if (event_data.length > 0)
-            $('#eventlist').prepend('<div class="text-muted" style="padding: 0 20px;">Es sind <strong>' + event_data.length + ' Veranstaltungen</strong> in deiner Nähe verfügbar.</div>');
-        else
-            $('#eventlist').prepend('<div class="text-muted" style="padding: 0 20px;">Es sind leider keiner Veranstaltungen in deiner Nähe verfügbar. Versuche den Radius oder den Suchort zu ändern.</div>');
 
         for (var i = 0; i < event_data.length; i++) {
 
@@ -98,8 +269,11 @@ $(function () {
         //2016-07-16T17:00:00+0200
         var hour = time.substr(11, 2);
         var min = time.substr(14, 2);
-        var sek = time.substr(17, 2);
-        return hour + ":" + min + ":" + sek;
+        if (hour == 0 && min == 0)
+            return 0;
+        //var sek = time.substr(17, 2);
+        //return hour + ":" + min + ":" + sek;
+        return hour + ":" + min;
     }
 
     function parseDay(time) {
@@ -118,6 +292,8 @@ $(function () {
 
         if (_date === 0 && _time === 0)
             return "";
+        else if (_time === 0)
+            return _date;
         else
             return _date + ", " + _time;
     }
@@ -180,6 +356,16 @@ $(function () {
                 return sParameterName[1] === undefined ? true : sParameterName[1];
             }
         }
+    }
+
+    function getUrlHashParameter(sParam) {
+        var fullHash = decodeURIComponent(window.location.hash.substr(1)),
+            patt = new RegExp(sParam + "=[0-9]+", "i"),
+            matches = fullHash.match(patt),
+            value;
+        if (matches !== null)
+            value = matches[0].split("=")[1];
+        return value;
     }
 
     function addElement(data) {

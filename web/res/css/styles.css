@@ -103,6 +103,7 @@
 body, html {
     height: 100%;
     width: 100%;
+    background-color: #eee;
 }
 
 body.bgimage {
@@ -163,23 +164,39 @@ body.bgimage {
     border-radius: 0 5px 5px 0;
 }
 
-.show-events {
-    height: calc(100vh - 62px);
-    width: 300px;
+#eventlist-container {
+    position: relative;
+    top: -5px; /* workaround: container fängt sonst erst 5px nach der navbar an */
+    min-height: calc(100vh - 60px); /* minus Navigation */
+    width: 100%;
     background: #eee;
-    float: left;
+}
+
+#eventlist-container .help-block {
+    font-size: 12px;
+}
+
+#eventlist-container .help-block div {
+    padding: 10px 20px;
+}
+
+#eventlist-container .help-block strong {
+    font-size: 14px;
+}
+
+.show-events {
     margin: 0;
     padding-bottom: 0;
 }
 
 ul.show-events {
     list-style: none;
-    padding: 10px 0;
+    padding: 0;
     min-height: 1px;
     overflow-y: auto;
 }
 
-ul.show-events li {
+ul.show-events > li {
     width: 95%;
     background: #fff;
     padding: 10px 15px 0 15px;
@@ -187,37 +204,37 @@ ul.show-events li {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
-ul.show-events li img {
+ul.show-events > li img {
     width: 60px;
     height: 60px;
     display: inline-block;
     float: left;
 }
 
-ul.show-events li .about-event-li {
+ul.show-events > li .about-event-li {
     padding: 0 10px;
     display: inline-block;
-    width: 180px;
+    width: calc(100% - 60px);
 }
 
-ul.show-events li .about-event-li .event-list-headline {
+ul.show-events > li .about-event-li .event-list-headline {
     font-size: 18px;
     font-weight: bold;
     padding-bottom: 5px;
 }
 
-ul.show-events li .about-event-li .event-kategorie {
+ul.show-events > li .about-event-li .event-kategorie {
     font-style: italic;
     font-size: 16px;
     font-weight: normal;
     padding: 0 5px;
 }
 
-ul.show-events li .about-event-li .termin {
+ul.show-events > li .about-event-li .termin {
     color: #989898;
 }
 
-ul.show-events li .about-event-li .event-time {
+ul.show-events > li .about-event-li .event-time {
     color: #989898;
 }
 
@@ -305,10 +322,18 @@ a.website_link:hover {
     }
 }
 
-@media (max-width: 768px) {
-    .show-events {
-        width: 100%;
+@media (min-width: 768px) {
+    #eventlist-container {
+        max-height: calc(100vh - 60px); /* minus Navigation */
+        width: 300px;
+        float: left;
+        overflow-y: auto;
     }
+}
+
+#event-pagination .pagination {
+    margin: 0;
+    padding: 10px;
 }
 
 .overlay-about {
@@ -379,4 +404,29 @@ a.website_link:hover {
 
 .waiting-container .cssload-container {
     margin: 20px 0 10px 0;
+}
+
+.loading-container {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255,255,255, .9);
+    z-index: 5;
+}
+
+.loading-container.loading {
+    display: block;
+}
+
+.loading-container .cssload-container {
+    position: relative;
+    top: 50vh;
+    -webkit-transform: translateY(-55%);
+    -moz-transform: translateY(-55%);
+    -ms-transform: translateY(-55%);
+    -o-transform: translateY(-55%);
+    transform: translateY(-55%);
 }

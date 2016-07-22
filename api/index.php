@@ -50,10 +50,12 @@ $app->group('/v1', function () {
             $lat = isset($queryParams['lat']) ? $queryParams['lat'] : '';
             $radius = isset($queryParams['radius']) ? $queryParams['radius'] : '';
             $category = isset($queryParams['category']) ? $queryParams['category'] : '';
+            $page = isset($queryParams['page']) ? $queryParams['page'] : -1;
 
             $data = array();
             $errors = array();
             $events = array();
+            $eventCountAll = 0;
 
             if (empty($lat))
                 $errors['latitude'] = 'Breitengrad (latitude) fehlt oder ist leer.';
@@ -72,42 +74,20 @@ $app->group('/v1', function () {
                 if (strtolower($category) === "alles" || strtolower($category) === "alle" || strtolower($category) === "all")
                     $category = '';
 
-                // Gradmaß in Bogenmaß umwandeln
-                $lambda = $lon * pi() / 180;
-                $phi = $lat * pi() / 180;
-                // Erdradius in km
-                $erdradius = 6371;
-                // Ermittlung des Ursprungsorts
-                $ursprungX = $erdradius * cos($phi) * cos($lambda);
-                $ursprungY = $erdradius * cos($phi) * sin($lambda);
-                $ursprungZ = $erdradius * sin($phi);
+                // Offset in Zahl umwandeln
+                if (!empty($offset))
+                    $offset = intval($offset);
 
-                // Events innerhalb des Bereichs aus DB abfragen
-                $con = Propel::getWriteConnection(\Map\EventTableMap::DATABASE_NAME);
-                $sql = "SELECT event.id,event.name,event.description,event.longitude,event.latitude,
-                              event.koordX, event.koordY, event.koordZ,
-                              event.location_name,event.street_no,event.zip_code,event.city,event.country,
-                              event.begin,event.end,event.image,event.website,category.name AS category,
-                              POWER(" . $ursprungX . " - event.koordX, 2)
-                              + POWER(" . $ursprungY . " - event.koordY, 2)
-                              + POWER(" . $ursprungZ . " - event.koordZ, 2) AS tmp_calc
-                            FROM event
-                            INNER JOIN event_category ON event.id = event_category.event_id
-                            INNER JOIN category ON category.id = event_category.category_id
-                            WHERE
-                                POWER(" . $ursprungX . " - event.koordX, 2)
-                              + POWER(" . $ursprungY . " - event.koordY, 2)
-                              + POWER(" . $ursprungZ . " - event.koordZ, 2)
-                            <= " . pow(2 * $erdradius * sin($radius / (2 * $erdradius)), 2) .
-                    (!empty($category) ? " AND category.name = \"" . $category . "\"" : " ") .
-                    " ORDER BY event.begin ASC, tmp_calc ASC
-                            LIMIT 200";
-                $stmt = $con->prepare($sql);
-                $stmt->execute();
-                $events = $stmt->fetchAll(2);
+                $result = get_events($lon, $lat, $radius, $category, $page);
+                $events = $result['events'];
+                $eventCountAll = $result['eventCountAll'];
             }
 
-            $response->getBody()->write(json_encode($events, JSON_PRETTY_PRINT));
+            $data['success'] = true;
+            $data['message'] = 'Events erfolgreich geladen';
+            $data['eventlist'] = $events;
+            $data['eventCount'] = $eventCountAll;
+            $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
             return $response;
         });
 

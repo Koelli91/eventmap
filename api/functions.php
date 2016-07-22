@@ -1,4 +1,7 @@
 <?php
+
+use Propel\Runtime\Propel;
+
 function add_category($name)
 {
     $category = CategoryQuery::create()->findOneByName($name);
@@ -169,4 +172,60 @@ function delete_old_events() {
 
 function get_event_by_name($name) {
     return EventQuery::create()->findOneByName($name);
+}
+
+function get_events($lon, $lat, $radius, $category, $page) {
+    // Max. Anzahl an Ergebnissen pro Seite (mobile Ansicht)
+    $max_results = 20;
+
+    // Gradmaß in Bogenmaß umwandeln
+    $lambda = $lon * pi() / 180;
+    $phi = $lat * pi() / 180;
+    // Erdradius in km
+    $erdradius = 6371;
+    // Ermittlung des Ursprungsorts
+    $ursprungX = $erdradius * cos($phi) * cos($lambda);
+    $ursprungY = $erdradius * cos($phi) * sin($lambda);
+    $ursprungZ = $erdradius * sin($phi);
+
+    // Events innerhalb des Bereichs aus DB abfragen
+    $con = Propel::getWriteConnection(\Map\EventTableMap::DATABASE_NAME);
+
+    // 1. Alle Einträge gemäß der Parameter Lat,Lon,Radius,Category abrufen
+    $sql = "SELECT event.id,event.name,event.description,event.longitude,event.latitude,
+                              event.koordX, event.koordY, event.koordZ,
+                              event.location_name,event.street_no,event.zip_code,event.city,event.country,
+                              event.begin,event.end,event.image,event.website,category.name AS category,
+                              POWER($ursprungX - event.koordX, 2)
+                              + POWER($ursprungY - event.koordY, 2)
+                              + POWER($ursprungZ - event.koordZ, 2) AS tmp_calc
+                            FROM event
+                            INNER JOIN event_category ON event.id = event_category.event_id
+                            INNER JOIN category ON category.id = event_category.category_id
+                            WHERE
+                                POWER($ursprungX - event.koordX, 2)
+                              + POWER($ursprungY - event.koordY, 2)
+                              + POWER($ursprungZ - event.koordZ, 2)
+                            <= " . pow(2 * $erdradius * sin($radius / (2 * $erdradius)), 2) .
+        (!empty($category) ? " AND category.name = \"$category\"" : " ") .
+        " ORDER BY event.begin ASC, tmp_calc ASC";
+    $stmt = $con->prepare($sql);
+    $stmt->execute();
+    $events = $stmt->fetchAll(2);
+    $eventCount = count($events);
+    $stmt->closeCursor();
+
+    // Get Results for Page 1, 2, ..., n
+    if ($page > 0) {
+        $offset = ($page - 1) * $max_results;
+        $sql .= " LIMIT $offset,$max_results";
+        $stmt = $con->prepare($sql);
+        $stmt->execute();
+        $events = $stmt->fetchAll(2);
+    }
+
+    return array(
+        'events' => $events,
+        'eventCountAll' => $eventCount
+    );
 }
