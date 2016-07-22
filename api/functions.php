@@ -187,6 +187,9 @@ function get_events($lon, $lat, $radius, $category, $page) {
     $ursprungX = $erdradius * cos($phi) * cos($lambda);
     $ursprungY = $erdradius * cos($phi) * sin($lambda);
     $ursprungZ = $erdradius * sin($phi);
+    // Aktuelles und morgiges Datum, damit nur aktuelle Events angezeigt werden
+    $today = (new DateTime("now"))->format('Y-m-d');
+    $tomorrow = (new DateTime("now + 1 day"))->format('Y-m-d');
 
     // Events innerhalb des Bereichs aus DB abfragen
     $con = Propel::getWriteConnection(\Map\EventTableMap::DATABASE_NAME);
@@ -208,6 +211,7 @@ function get_events($lon, $lat, $radius, $category, $page) {
                               + POWER($ursprungZ - event.koordZ, 2)
                             <= " . pow(2 * $erdradius * sin($radius / (2 * $erdradius)), 2) .
         (!empty($category) ? " AND category.name = \"$category\"" : " ") .
+        " AND ( begin >= \"$today\" OR (end IS NOT NULL AND end >= \"$tomorrow\") )" .
         " ORDER BY event.begin ASC, tmp_calc ASC";
     $stmt = $con->prepare($sql);
     $stmt->execute();
