@@ -146,9 +146,18 @@ class CategoryTableMap extends TableMap
     0 => ':category_id',
     1 => ':id',
   ),
-), null, null, 'EventCategories', false);
-        $this->addRelation('Event', '\\Event', RelationMap::MANY_TO_MANY, array(), null, null, 'Events');
+), 'CASCADE', null, 'EventCategories', false);
+        $this->addRelation('Event', '\\Event', RelationMap::MANY_TO_MANY, array(), 'CASCADE', null, 'Events');
     } // buildRelations()
+    /**
+     * Method to invalidate the instance pool of all tables related to category     * by a foreign key with ON DELETE CASCADE
+     */
+    public static function clearRelatedInstancePool()
+    {
+        // Invalidate objects in related instance pools,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        EventCategoryTableMap::clearInstancePool();
+    }
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.

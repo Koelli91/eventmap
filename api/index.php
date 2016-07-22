@@ -2,7 +2,6 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use \Propel\Runtime\Propel;
-use \Propel\Runtime\Formatter\ObjectFormatter;
 
 // setup the autoloading
 require_once '../vendor/autoload.php';
@@ -16,7 +15,7 @@ $app = new \Slim\App();
 $container = $app->getContainer();
 
 // Add logger for Slim
-$container['logger'] = function ($c) {
+$container['logger'] = function () {
     $logger = new \Monolog\Logger('slim_logger');
     $file_handler = new \Monolog\Handler\StreamHandler("logs/slim.log");
     $logger->pushHandler($file_handler);
@@ -45,7 +44,7 @@ $app->group('/v1', function () {
     // Events group
     $this->group('/events', function () {
 
-        $this->get('', function (Request $request, Response $response, $args) {
+        $this->get('', function (Request $request, Response $response) {
             $queryParams = $request->getQueryParams();
             $lon = isset($queryParams['lon']) ? $queryParams['lon'] : '';
             $lat = isset($queryParams['lat']) ? $queryParams['lat'] : '';
@@ -54,6 +53,7 @@ $app->group('/v1', function () {
 
             $data = array();
             $errors = array();
+            $events = array();
 
             if (empty($lat))
                 $errors['latitude'] = 'Breitengrad (latitude) fehlt oder ist leer.';
@@ -69,7 +69,7 @@ $app->group('/v1', function () {
                 $data['errors'] = $errors;
             } else {
                 // Kategorie wandeln
-                if ( strtolower($category) === "alles" || strtolower($category) === "alle" || strtolower($category) === "all" )
+                if (strtolower($category) === "alles" || strtolower($category) === "alle" || strtolower($category) === "all")
                     $category = '';
 
                 // Gradmaß in Bogenmaß umwandeln
@@ -100,7 +100,7 @@ $app->group('/v1', function () {
                               + POWER(" . $ursprungZ . " - event.koordZ, 2)
                             <= " . pow(2 * $erdradius * sin($radius / (2 * $erdradius)), 2) .
                     (!empty($category) ? " AND category.name = \"" . $category . "\"" : " ") .
-                            " ORDER BY event.begin ASC, tmp_calc ASC
+                    " ORDER BY event.begin ASC, tmp_calc ASC
                             LIMIT 200";
                 $stmt = $con->prepare($sql);
                 $stmt->execute();
@@ -112,7 +112,10 @@ $app->group('/v1', function () {
         });
 
         // creates new events
-        $this->post('/new', function (Request $request, Response $response, $args) {
+        $this->post('/new', function (Request $request, Response $response) {
+            // Vor dem Einfügen alle vergangenen Veranstaltungen löschen
+            delete_old_events();
+
             $parsedData = $request->getParsedBody();
             $multiple_events = false;
             if (isset($parsedData['events']) && is_array($parsedData['events'])) {
@@ -146,6 +149,20 @@ $app->group('/v1', function () {
 
             $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
             return $response;
+        });
+
+        $this->delete('/old', function (Request $request, Response $response) {
+            $countOldEvents = delete_old_events();
+
+            $data['success'] = true;
+            if ($countOldEvents > 0) {
+                $data['message'] = 'Vergangene Veranstaltungen gelöscht.';
+                $data['count'] = $countOldEvents;
+            } else {
+                $data['message'] = 'Keine vergangenen Veranstaltungen vorhanden.';
+            }
+
+            $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
         });
 
     });
@@ -201,7 +218,7 @@ $app->group('/v1', function () {
             return $response;
         });
 
-        $this->post('/new', function (Request $request, Response $response, $args) {
+        $this->post('/new', function (Request $request, Response $response) {
             $category_name = filter_var($request->getParam('category_name'), FILTER_SANITIZE_STRING);
 
             $data = array();

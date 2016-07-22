@@ -147,14 +147,14 @@ class EventCategoryTableMap extends TableMap
     0 => ':event_id',
     1 => ':id',
   ),
-), null, null, null, false);
+), 'CASCADE', null, null, false);
         $this->addRelation('Category', '\\Category', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':category_id',
     1 => ':id',
   ),
-), null, null, null, false);
+), 'CASCADE', null, null, false);
     } // buildRelations()
 
     /**

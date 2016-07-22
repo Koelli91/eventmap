@@ -85,8 +85,8 @@ function add_event($eventarr) {
         $errors['longitude'] = 'Längengrad (longitude) fehlt.';
     if ( empty($event_name) )
         $errors['event_name'] = 'Eventname fehlt.';
-    if ( empty($description) )
-        $errors['description'] = 'Eventbeschreibung fehlt.';
+    /*if ( empty($description) )
+        $errors['description'] = 'Eventbeschreibung fehlt.';*/
     if ( empty($begin) )
         $errors['time_start'] = 'Starttermin fehlt.';
 
@@ -142,6 +142,29 @@ function add_event($eventarr) {
         $errors['event'] = 'Event konnte nicht gespeichert werden.';
 
     return $errors;
+}
+
+function delete_old_events() {
+    $today = (new DateTime("now"))->format('Y-m-d');
+    $tomorrow = (new DateTime("now + 1 day"))->format('Y-m-d');
+    // DELETE FROM event WHERE begin < {heute} AND (end IS NULL OR end < {morgen})
+    // Eigentlich würde die Prüfung auf 'end' genügen, da dieses Feld allerdings NULL sein kann
+    // zusätzliche Prüfung ob der 'begin' vor Heute liegt
+    $to_delete = EventQuery::create()
+        ->where('Event.begin < "' . $today . '" AND ( Event.end IS NULL OR Event.end < "' . $tomorrow . '")')
+        ->find()
+        ->getPrimaryKeys();
+
+    foreach ($to_delete as $d)
+        EventCategoryQuery::create()
+            ->findByEventId($d)
+            ->delete();
+
+    EventQuery::create()
+        ->filterByPrimaryKeys($to_delete)
+        ->delete();
+
+    return count($to_delete);
 }
 
 function get_event_by_name($name) {

@@ -58,10 +58,12 @@ CREATE TABLE `event_category`
     INDEX `event_category_fi_904832` (`category_id`),
     CONSTRAINT `event_category_fk_b54508`
         FOREIGN KEY (`event_id`)
-        REFERENCES `event` (`id`),
+        REFERENCES `event` (`id`)
+        ON DELETE CASCADE,
     CONSTRAINT `event_category_fk_904832`
         FOREIGN KEY (`category_id`)
         REFERENCES `category` (`id`)
+        ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 # This restores the fkey checks, after having unset them earlier
