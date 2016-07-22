@@ -1,0 +1,96 @@
+/*navigation*/
+
+
+.logo
+  margin-top: -8px
+  float: left
+
+.eventnav
+  background-color: #000
+  color: #fff
+  border: 0px
+  border-radius: 0px
+
+.navbar-form
+  -webkit-box-shadow: none
+  box-shadow: none
+  border-top: 0px
+
+.navbar-default
+  padding: 5px
+  .navbar-collapse, .navbar-form
+    border-color: #2b2b2b
+  .navbar-toggle
+    .icon-bar
+      background-color: rgba(128, 236, 147, 0.9)
+    &.active .icon-bar
+      background-color: crimson
+
+.navbar-toggle
+  .icon-bar
+    &:nth-of-type(2)
+      top: 1px
+    &:nth-of-type(3)
+      top: 2px
+    &:nth-of-type(4)
+      top: 3px
+    position: relative
+    transition: all 500ms ease-in-out
+  &.active .icon-bar
+    &:nth-of-type(2)
+      transform: rotate(-45deg) translateY(10px)
+    &:nth-of-type(3)
+      top: 0px
+      background: transparent
+    &:nth-of-type(4)
+      transform: rotate(45deg) translateY(-10px)
+
+.navbar-default .navbar-nav > li > a
+  color: #a0a0a0
+  transition: color 0.2s
+  &:hover, &:focus
+    color: #a0a0a0
+    background: #1f1f1f
+
+.navbar-map
+  margin-bottom: 0px
+
+
+.custom-btn-map-nav
+  background: #000
+  border-radius: 5px
+  border: 1px solid #fff
+  color: #fff
+  padding-left: 20px
+  padding-right: 20px
+  transition: all 0.2s
+  &:hover
+    color: #000
+    background: #fff
+
+.custom-btn-map-nav
+  background: #000
+  border-radius: 5px
+  border: 1px solid #fff
+  color: #fff
+  padding-left: 20px
+  padding-right: 20px
+  transition: all 0.2s
+  &:hover
+    color: #000
+    background: #fff
+
+@media (max-width: 771px)
+  .custom-btn-map-nav
+    width: 100%
+  .input-nav
+    padding: 5px
+  .navbar-form
+    padding: 20px 10px
+  .navbar-default .navbar-toggle
+    border-color: transparent
+    border: 0px
+    &:focus, &:hover
+      background-color: #000 !important
+  .show-events
+    width: 100%
