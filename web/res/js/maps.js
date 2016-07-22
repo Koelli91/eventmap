@@ -383,6 +383,7 @@ $(function () {
 				</div>
 				<div class="description">
 					<div class="event-location">
+					    ${data.location_name !== "" ? "<strong>" + data.location_name + "</strong><br>" : ""}
 						${data.street_no}<br>
 						${data.zip_code} ${data.city}<br>
 						${data.country}
