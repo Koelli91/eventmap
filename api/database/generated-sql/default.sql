@@ -41,7 +41,8 @@ CREATE TABLE `category`
 (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `category_u_d94269` (`name`)
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------

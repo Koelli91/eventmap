@@ -26,6 +26,9 @@
     <table name="category">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="name" type="varchar" size="255" required="true"/>
+        <unique>
+            <unique-column name="name" />
+        </unique>
     </table>
 
     <table name="event_category" isCrossRef="true">
