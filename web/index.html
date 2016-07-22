@@ -45,23 +45,14 @@
                         <div class="form-group">
                             <label for="city" class="sr-only">Ort</label>
                             <input name="city" id="city" data-geo="administrative_area_level_2" placeholder="Ort"
-                                   class="form-control index-control custom-input-index">
+                                   class="form-control index-control custom-input-index" required>
                         </div>
                     </div>
                     <div class="col-sm-6 col-md-5 col-lg-4">
                         <div class="form-group">
                             <label for="category" class="sr-only">Kategorie</label>
-                            <select name="category" id="category" class="form-control index-control custom-input-index">
-                                <option selected="">Alle</option>
-                                <option>Konzerte</option>
-                                <option>Party</option>
-                                <option>Comedy & Co.</option>
-                                <option>Musical & Show</option>
-                                <option>Theater & Tanz</option>
-                                <option>Oper & Klassik</option>
-                                <option>Vortrag & Lesung</option>
-                                <option>Für Kinder</option>
-                                <option>Ausstellungen</option>
+                            <select name="category" id="category" class="form-control index-control custom-input-index" required>
+                                <option selected>Alle</option>
                             </select>
                         </div>
                     </div>
@@ -71,7 +62,8 @@
                         <div class="form-group">
                             <label for="radius" class="sr-only">Radius</label>
                             <div class="input-group">
-                                <input type="number" name="radius" id="radius" step="1" min="1" max="200" value="20" class="form-control custom-input-index input-radius">
+                                <input type="number" name="radius" id="radius" step="1" min="1" max="250" value="20"
+                                       class="form-control custom-input-index input-radius" required>
                                 <span class="input-group-addon km-addition">km</span>
                             </div>
                         </div>

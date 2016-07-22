@@ -5,6 +5,18 @@ $(function () {
     
     $("#city").geocomplete({details: "form"});
 
+    $.get("../api/v1/category", function (data) {
+        // Get categories from api/database
+        var categories = data.categories;
+        if (categories) {
+            for (var i = 0; i < categories.length; i++) {
+                $('select#category').append(`
+                        <option>${categories[i].Name}</option>
+                    `);
+            }
+        }
+    }, 'json');
+
     $("#search").submit(function (event) {
         if ($("#lng").val() == "" || $("#lat").val() == "") {
             alert("Bitte Ort aus Liste auswählen");

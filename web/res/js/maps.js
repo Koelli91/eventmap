@@ -4,115 +4,13 @@ $(function () {
         $(this).toggleClass("active");
     });
 
+    var currentPage = 1,
+        pages = 1,
+        event_data,
+        map,
+        prev;
+
     initSearchForm();
-
-    var search_data = {
-        "radius": $('#radius').val(),
-        "lat": $('#lat').val(),
-        "lng": $('#lng').val(),
-        "category": $('#category').val()
-    };
-
-    var currentPage = 1;
-    var pages = 1;
-    if (getUrlHashParameter("page") != undefined) {
-        currentPage = parseInt(getUrlHashParameter("page"));
-    }
-    refreshPagination();
-
-    var url = "../api/v1/events?lat=" + search_data["lat"] + "&lon=" + search_data["lng"] + "&radius=" + search_data["radius"] + "&category=" + search_data["category"];
-    url += window.innerWidth < 768 ? "&page=" + currentPage : "&page=-1";
-
-    var event_data;
-
-    $.ajax({
-        "method": "GET",
-        "url": url,
-        "returnType": "JSON",
-        "cache": false
-    }).done(function (data) {
-        data = JSON.parse(data);
-        event_data = data.eventlist;
-        var event_count = data.eventCount;
-        if (window.innerWidth < 768) {
-            // Alle gefundenen Events zur Eventlist hinzufügen
-            var $eventlist = $("#eventlist");
-            $eventlist.empty();
-            for (var i = 0; i < event_data.length; i++) {
-                var li = addElement(event_data[i]);
-                $eventlist.append(li);
-            }
-
-            var baseUrl = "map.html?lat=" + getUrlParameter("lat") + "&lng=" + getUrlParameter("lng") + "&city=" + getUrlParameter("city") + "&category=" + getUrlParameter("category") + "&radius=" + getUrlParameter("radius");
-            pages = parseInt(Math.ceil(event_count / event_data.length));
-            pages = !pages ? 1 : pages; // Fall "NaN" abfangen
-
-            if (event_count > 0) {
-                // Pagination Start
-                var pagination = `
-                    <nav class="text-center" id="event-pagination">
-                        <ul class="pagination pagination-lg">`;
-                // "Previous"-Link
-                if (currentPage == 1) pagination += `
-                            <li class="disabled">
-                                <span>
-                                    <span aria-hidden="true">&laquo;</span>
-                                </span>
-                            </li>`;
-                else pagination += `
-                            <li>
-                                <a href="${baseUrl + "#!/page=" + (currentPage - 1)}" aria-label="Vorherige">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>`;
-                // Pages Links
-                for (var i = 1; i <= pages; i++) {
-                    if (currentPage == i) pagination += `
-                        <li class="active">
-                            <span>${i}</span>
-                        </li>
-                `;
-                    else pagination += `
-                            <li>
-                                <a href="${baseUrl + "#!/page=" + i}">${i}</a>
-                            </li>
-                `;
-                }
-                // "Next"-Link
-                if (currentPage == pages) pagination += `
-                            <li class="disabled">
-                                <span>
-                                    <span aria-hidden="true">&raquo;</span>
-                                </span>
-                            </li>`;
-                else pagination += `
-                            <li>
-                                <a href="${baseUrl + "#!/page=" + (currentPage + 1)}" aria-label="Nächste">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>`;
-                // Pagination End
-                pagination += `
-                        </ul>
-                    </nav>  
-                `;
-
-                $('#eventlist-container #eventlist').before(pagination);
-                $('#eventlist-container #eventlist').after(pagination);
-            }
-
-        } else {
-            $('#eventlist-container').append(`<h2 style="padding: 0 20px;">Wähle ein Event auf der Karte aus!</h2>`);
-            google.maps.event.addDomListener(window, 'load', initialize());
-        }
-
-        if (event_data.length > 0) {
-            var ist_sind = event_count > 1 ? "sind" : "ist",
-                veranstaltung_en = event_count > 1 ? "Veranstaltungen" : "Veranstaltung";
-            $('#eventlist-container .help-block').prepend('<div class="bg-info text-info">Es ' + ist_sind + ' <strong>' + event_count + ' ' + veranstaltung_en + '</strong> in deiner Nähe verfügbar.</div>');
-        } else
-            $('#eventlist-container .help-block').prepend('<div class="bg-danger text-danger">Es sind leider keiner Veranstaltungen in deiner Nähe verfügbar. Versuche den Radius oder den Suchort zu ändern.</div>');
-    });
 
     $('body').on('click', '#event-pagination a', function (event) {
         // Das Folgen des Links verhindern
@@ -125,7 +23,7 @@ $(function () {
 
             $('#eventlist-container .loading-container').addClass('loading');
             // Set a small timeout so the page doesn't "blink" the loading animation
-            window.setTimeout(function() {
+            window.setTimeout(function () {
                 $.ajax({
                     "method": "GET",
                     "url": url,
@@ -211,10 +109,6 @@ $(function () {
             }
         }
     }
-
-    var map;
-
-    var prev;
 
     function initialize() {
         var latlng = new google.maps.LatLng(parseFloat($('#lat').val()), parseFloat($('#lng').val()));
@@ -302,32 +196,155 @@ $(function () {
             "lng": $('#lng').val(),
             "category": $('#category').val(),
         };
-        $.get("api/v1/events", search_data, function (data) {
+        $.get("../api/v1/events", search_data, function (data) {
             emptyEventList();
             for (var i = 0; i < data.length; i++) {
                 addElement(data, i)
             }
-        })
+        }, 'json');
     }
 
     function initSearchForm() {
-        var $city = $("#city");
-        $city.geocomplete({details: "form"});
-        if (getUrlParameter("lng") != undefined) {
-            $("#lng").val(getUrlParameter("lng"))
+        $.get('../api/v1/category', function (data) {
+            // Get categories from api/database
+            var categories = data.categories;
+
+            if (categories) {
+                for (var i = 0; i < categories.length; i++) {
+                    $('select#category').append(`
+                        <option>${categories[i].Name}</option>
+                    `);
+                }
+            }
+
+            // Fill the form fields
+            var $city = $("#city");
+            $city.geocomplete({details: "form"});
+            if (getUrlParameter("lng") != undefined) {
+                $("#lng").val(decodeURIComponent(getUrlParameter("lng")))
+            }
+            if (getUrlParameter("lat") != undefined) {
+                $("#lat").val(decodeURIComponent(getUrlParameter("lat")))
+            }
+            if (getUrlParameter("radius") != undefined) {
+                $("#radius").val(decodeURIComponent(getUrlParameter("radius")))
+            }
+            if (getUrlParameter("category") != undefined) {
+                $("#category").val(decodeURIComponent(getUrlParameter("category").replace(/\+/g, ' ')))
+            }
+            if (getUrlParameter("city") != undefined) {
+                $city.val(decodeURIComponent(getUrlParameter("city").replace(/\+/g, ' ')))
+            }
+
+            // let the initialization continue
+            initSearchFormContinue();
+        }, 'json');
+    }
+
+    function initSearchFormContinue() {
+        var search_data = {
+            "radius": $('#radius').val(),
+            "lat": $('#lat').val(),
+            "lng": $('#lng').val(),
+            "category": $('#category').val()
+        };
+
+        if (getUrlHashParameter("page") != undefined) {
+            currentPage = parseInt(getUrlHashParameter("page"));
         }
-        if (getUrlParameter("lat") != undefined) {
-            $("#lat").val(getUrlParameter("lat"))
-        }
-        if (getUrlParameter("radius") != undefined) {
-            $("#radius").val(getUrlParameter("radius"))
-        }
-        if (getUrlParameter("category") != undefined) {
-            $("#category").val(decodeURIComponent(getUrlParameter("category").replace(/\+/g, ' ')))
-        }
-        if (getUrlParameter("city") != undefined) {
-            $city.val(decodeURIComponent(getUrlParameter("city").replace(/\+/g, ' ')))
-        }
+        refreshPagination();
+
+        var url = "../api/v1/events?lat=" + search_data["lat"] + "&lon=" + search_data["lng"] + "&radius=" + search_data["radius"] + "&category=" + encodeURIComponent(search_data["category"]).replace(/\%20/g, '+');
+        url += window.innerWidth < 768 ? "&page=" + currentPage : "&page=-1";
+
+        $.ajax({
+            "method": "GET",
+            "url": url,
+            "returnType": "JSON",
+            "cache": false
+        }).done(function (data) {
+            data = JSON.parse(data);
+            event_data = data.eventlist;
+            var event_count = data.eventCount;
+            if (window.innerWidth < 768) {
+                // Alle gefundenen Events zur Eventlist hinzufügen
+                var $eventlist = $("#eventlist");
+                $eventlist.empty();
+                for (var i = 0; i < event_data.length; i++) {
+                    var li = addElement(event_data[i]);
+                    $eventlist.append(li);
+                }
+
+                var baseUrl = "map.html?lat=" + getUrlParameter("lat") + "&lng=" + getUrlParameter("lng") + "&city=" + getUrlParameter("city") + "&category=" + getUrlParameter("category") + "&radius=" + getUrlParameter("radius");
+                pages = parseInt(Math.ceil(event_count / event_data.length));
+                pages = !pages ? 1 : pages; // Fall "NaN" abfangen
+
+                if (event_count > 0) {
+                    // Pagination Start
+                    var pagination = `
+                    <nav class="text-center" id="event-pagination">
+                        <ul class="pagination pagination-lg">`;
+                    // "Previous"-Link
+                    if (currentPage == 1) pagination += `
+                            <li class="disabled">
+                                <span>
+                                    <span aria-hidden="true">&laquo;</span>
+                                </span>
+                            </li>`;
+                    else pagination += `
+                            <li>
+                                <a href="${baseUrl + "#!/page=" + (currentPage - 1)}" aria-label="Vorherige">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>`;
+                    // Pages Links
+                    for (var i = 1; i <= pages; i++) {
+                        if (currentPage == i) pagination += `
+                        <li class="active">
+                            <span>${i}</span>
+                        </li>
+                `;
+                        else pagination += `
+                            <li>
+                                <a href="${baseUrl + "#!/page=" + i}">${i}</a>
+                            </li>
+                `;
+                    }
+                    // "Next"-Link
+                    if (currentPage == pages) pagination += `
+                            <li class="disabled">
+                                <span>
+                                    <span aria-hidden="true">&raquo;</span>
+                                </span>
+                            </li>`;
+                    else pagination += `
+                            <li>
+                                <a href="${baseUrl + "#!/page=" + (currentPage + 1)}" aria-label="Nächste">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>`;
+                    // Pagination End
+                    pagination += `
+                        </ul>
+                    </nav>  
+                `;
+
+                    $('#eventlist-container #eventlist').before(pagination);
+                    $('#eventlist-container #eventlist').after(pagination);
+                }
+
+            } else {
+                $('#eventlist-container').append(`<h2 style="padding: 0 20px;">Wähle ein Event auf der Karte aus!</h2>`);
+                google.maps.event.addDomListener(window, 'load', initialize());
+            }
+
+            if (event_data.length > 0) {
+                var ist_sind = event_count > 1 ? "sind" : "ist",
+                    veranstaltung_en = event_count > 1 ? "Veranstaltungen" : "Veranstaltung";
+                $('#eventlist-container .help-block').prepend('<div class="bg-info text-info">Es ' + ist_sind + ' <strong>' + event_count + ' ' + veranstaltung_en + '</strong> in deiner Nähe verfügbar.</div>');
+            } else
+                $('#eventlist-container .help-block').prepend('<div class="bg-danger text-danger">Es sind leider keiner Veranstaltungen in deiner Nähe verfügbar. Versuche den Radius oder den Suchort zu ändern.</div>');
+        });
     }
 
     function search() {
@@ -343,7 +360,7 @@ $(function () {
     }
 
     function getUrlParameter(sParam) {
-        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        var sPageURL = window.location.search.substring(1),
             sURLVariables = sPageURL.split('&'),
             sParameterName,
             i;

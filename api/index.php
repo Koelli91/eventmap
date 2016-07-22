@@ -49,7 +49,7 @@ $app->group('/v1', function () {
             $lon = isset($queryParams['lon']) ? $queryParams['lon'] : '';
             $lat = isset($queryParams['lat']) ? $queryParams['lat'] : '';
             $radius = isset($queryParams['radius']) ? $queryParams['radius'] : '';
-            $category = isset($queryParams['category']) ? $queryParams['category'] : '';
+            $category = isset($queryParams['category']) ? urldecode($queryParams['category']) : '';
             $page = isset($queryParams['page']) ? $queryParams['page'] : -1;
 
             $data = array();
@@ -149,6 +149,28 @@ $app->group('/v1', function () {
 
     // Categories group
     $this->group('/category', function () {
+
+        $this->get('', function(Request $request, Response $response) {
+            $data = array();
+            $errors = array();
+
+            $categories = get_categories();
+
+            if ($categories !== null) {
+                $data['success'] = true;
+                $data['categories'] = $categories->toArray();
+            } else {
+                $errors['categories'] = "Keine Kategorien vorhanden.";
+            }
+
+            if (!empty($errors)) {
+                $data['success'] = false;
+                $data['errors'] = $errors;
+            }
+
+            $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
+            return $response;
+        });
 
         $this->get('/byId/{id}', function (Request $request, Response $response, $args) {
             $category_id = filter_var($args['id'], FILTER_SANITIZE_STRING);
