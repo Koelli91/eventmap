@@ -63,6 +63,10 @@ function get_or_add_category($name) {
     return get_category_by_name($name);
 }
 
+function get_categories() {
+    return CategoryQuery::create()->orderByName()->find();
+}
+
 function add_event($eventarr) {
     $errors = array();
 
@@ -133,9 +137,12 @@ function add_event($eventarr) {
     if (!empty($website))
         $event->setWebsite($website);
     if (!empty($category)) {
-        $cat = new Category();
-        $cat->setName($category);
-        $cat->save();
+        $cat = get_category_by_name($category);
+        if ($cat === null) {
+            $cat = new Category();
+            $cat->setName($category);
+            $cat->save();
+        }
         $event->addCategory($cat);
     }
 
@@ -195,24 +202,24 @@ function get_events($lon, $lat, $radius, $category, $page) {
     $con = Propel::getWriteConnection(\Map\EventTableMap::DATABASE_NAME);
 
     // 1. Alle Einträge gemäß der Parameter Lat,Lon,Radius,Category abrufen
-    $sql = "SELECT event.id,event.name,event.description,event.longitude,event.latitude,
-                              event.koordX, event.koordY, event.koordZ,
-                              event.location_name,event.street_no,event.zip_code,event.city,event.country,
-                              event.begin,event.end,event.image,event.website,category.name AS category,
-                              POWER($ursprungX - event.koordX, 2)
-                              + POWER($ursprungY - event.koordY, 2)
-                              + POWER($ursprungZ - event.koordZ, 2) AS tmp_calc
-                            FROM event
-                            INNER JOIN event_category ON event.id = event_category.event_id
-                            INNER JOIN category ON category.id = event_category.category_id
-                            WHERE
-                                POWER($ursprungX - event.koordX, 2)
-                              + POWER($ursprungY - event.koordY, 2)
-                              + POWER($ursprungZ - event.koordZ, 2)
-                            <= " . pow(2 * $erdradius * sin($radius / (2 * $erdradius)), 2) .
-        (!empty($category) ? " AND category.name = \"$category\"" : " ") .
-        " AND ( begin >= \"$today\" OR (end IS NOT NULL AND end >= \"$tomorrow\") )" .
-        " ORDER BY event.begin ASC, tmp_calc ASC";
+    $sql = "SELECT event.id,event.name,event.description,event.longitude,event.latitude,".
+                              "event.koordX, event.koordY, event.koordZ,".
+                              "event.location_name,event.street_no,event.zip_code,event.city,event.country,".
+                              "event.begin,event.end,event.image,event.website,category.name AS category,".
+                              "POWER($ursprungX - event.koordX, 2) ".
+                              "+ POWER($ursprungY - event.koordY, 2) ".
+                              " + POWER($ursprungZ - event.koordZ, 2) AS tmp_calc ".
+                            "FROM event ".
+                            "INNER JOIN event_category ON event.id = event_category.event_id ".
+                            "INNER JOIN category ON category.id = event_category.category_id ".
+                            "WHERE ".
+                                "POWER($ursprungX - event.koordX, 2)".
+                              "+ POWER($ursprungY - event.koordY, 2)".
+                              "+ POWER($ursprungZ - event.koordZ, 2) ".
+                            "<= " . pow(2 * $erdradius * sin($radius / (2 * $erdradius)), 2) . " " .
+        (!empty($category) ? "AND category.name = \"$category\" " : "") .
+        "AND ( begin >= \"$today\" OR (end IS NOT NULL AND end >= \"$tomorrow\") ) " .
+        "ORDER BY event.begin ASC, tmp_calc ASC";
     $stmt = $con->prepare($sql);
     $stmt->execute();
     $events = $stmt->fetchAll(2);
