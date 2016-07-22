@@ -7,4 +7,6 @@ config.codekit
 scrape/node_modules/
 scrape/data
 api/database/propel.json.dist
+api/database/propel.json
+api/database/generated-conf/config.php
 api/logs
