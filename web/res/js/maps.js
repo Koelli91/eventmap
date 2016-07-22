@@ -51,7 +51,7 @@ $(function () {
                 // Pagination Start
                 var pagination = `
                     <nav class="text-center" id="event-pagination">
-                        <ul class="pagination">`;
+                        <ul class="pagination pagination-lg">`;
                 // "Previous"-Link
                 if (currentPage == 1) pagination += `
                             <li class="disabled">
@@ -123,30 +123,26 @@ $(function () {
             var url = "../api/v1/events?lat=" + getUrlParameter("lat") + "&lon=" + getUrlParameter("lng") + "&radius=" + getUrlParameter("radius") + "&category=" + getUrlParameter("category") + "&page=" + currentPage;
             var $eventlist = $("#eventlist");
 
-            $eventlist.fadeOut(400, function () {
-                $('#eventlist-container .loading-container').addClass('loading');
-                // Set a small timeout so the page doesn't "blink" the loading animation
-                window.setTimeout(function() {
-                    $.ajax({
-                        "method": "GET",
-                        "url": url,
-                        "returnType": "JSON"
-                    }).done(function (data) {
-                        $('#eventlist-container .loading-container').removeClass('loading');
+            $('#eventlist-container .loading-container').addClass('loading');
+            // Set a small timeout so the page doesn't "blink" the loading animation
+            window.setTimeout(function() {
+                $.ajax({
+                    "method": "GET",
+                    "url": url,
+                    "returnType": "JSON"
+                }).done(function (data) {
+                    data = JSON.parse(data);
+                    event_data = data.eventlist;
 
-                        data = JSON.parse(data);
-                        event_data = data.eventlist;
-
-                        // Alle gefundenen Events zur Eventlist hinzufügen
-                        $eventlist.empty();
-                        for (var i = 0; i < event_data.length; i++) {
-                            var li = addElement(event_data[i]);
-                            $eventlist.append(li);
-                        }
-                        $eventlist.fadeIn();
-                    });
-                }, 200);
-            });
+                    // Alle gefundenen Events zur Eventlist hinzufügen
+                    $eventlist.empty();
+                    for (var i = 0; i < event_data.length; i++) {
+                        var li = addElement(event_data[i]);
+                        $eventlist.append(li);
+                    }
+                    $('#eventlist-container .loading-container').removeClass('loading');
+                });
+            }, 200);
 
             refreshPagination();
         }, 0);
