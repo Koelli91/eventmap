@@ -336,7 +336,7 @@ a.website_link:hover {
     text-decoration: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     #googleMap {
         display: none;
     }
