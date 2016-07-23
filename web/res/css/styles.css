@@ -107,7 +107,7 @@
     background: #fff;
 }
 
-@media (max-width: 771px) {
+@media (max-width: 767px) {
     .custom-btn-map-nav {
         width: 100%;
     }
