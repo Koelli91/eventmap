@@ -22,7 +22,6 @@ $(function () {
                 currentPage = page;
                 
                 var url = "../api/v1/events?lat=" + getUrlParameter("lat") + "&lon=" + getUrlParameter("lng") + "&radius=" + getUrlParameter("radius") + "&category=" + getUrlParameter("category") + "&page=" + currentPage;
-                var $eventlist = $("#eventlist");
 
                 $('#eventlist-container .loading-container').addClass('loading');
                 // Set a small timeout so the page doesn't "blink" the loading animation
@@ -130,37 +129,49 @@ $(function () {
         };
 
         map = new google.maps.Map(document.getElementById('googleMap'), mapOptions);
-
-        for (var i = 0; i < event_data.length; i++) {
-
-            var marker = new google.maps.Marker({
-                id: "marker_" + i,
-                position: new google.maps.LatLng(event_data[i].longitude, event_data[i].latitude),
-                icon: 'res/img/marker_red.png',
-                event: event_data[i]
-            });
-
-            marker.setMap(map);
-
-            google.maps.event.addListener(marker, 'click', function () {
-                if (activeMarker == undefined) {
-                    activeMarker = this;
-                    this.setIcon('res/img/marker_blue.png');
-                    var $eventlist = $("#eventlist");
-                    emptyEventList();
-                    $eventlist.append(addElement(this.event));
-                    $('#eventlist-container h2').remove();
-                } else {
-                    disableActiveMarker();
-                }
-            });
+        
+        // Get ALL events (not only current page)
+        var url = "../api/v1/events?lat=" + getUrlParameter("lat") + "&lon=" + getUrlParameter("lng") + "&radius=" + getUrlParameter("radius") + "&category=" + getUrlParameter("category") + "&page=-1";
+        var all_event_data;
+        
+        $.ajax({
+            "method": "GET",
+            "url": url,
+            "returnType": "JSON"
+        }).done(function (data) {
+            data = JSON.parse(data);
+            all_event_data = data.eventlist;
             
-            google.maps.event.addListener(map, 'click', function() {
-                if (activeMarker != undefined) {
-                    disableActiveMarker();
-                }
-            });
-        }
+            for (var i = 0; i < all_event_data.length; i++) {
+                var marker = new google.maps.Marker({
+                    id: "marker_" + i,
+                    position: new google.maps.LatLng(all_event_data[i].longitude, all_event_data[i].latitude),
+                    icon: 'res/img/marker_red.png',
+                    event: all_event_data[i]
+                });
+
+                marker.setMap(map);
+
+                google.maps.event.addListener(marker, 'click', function () {
+                    if (activeMarker == undefined) {
+                        activeMarker = this;
+                        this.setIcon('res/img/marker_blue.png');
+                        var $eventlist = $("#eventlist");
+                        emptyEventList();
+                        $eventlist.append(addElement(this.event));
+                        $('#eventlist-container h2').remove();
+                    } else {
+                        disableActiveMarker();
+                    }
+                });
+                
+                google.maps.event.addListener(map, 'click', function() {
+                    if (activeMarker != undefined) {
+                        disableActiveMarker();
+                    }
+                });
+            }
+        });
     }
     
     function disableActiveMarker() {
