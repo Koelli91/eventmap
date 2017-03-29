@@ -241,10 +241,6 @@ body.bgimage {
     font-size: 14px;
 }
 
-#googleMap {
-    height: 100%;
-}
-
 .show-events {
     margin: 0;
     padding-bottom: 0;
@@ -393,15 +389,14 @@ a.website_link:hover {
 @media (min-width: 768px) {
     #googleMap {
         height: 100%;
+        max-height: calc(100vh - 60px); /* minus Navigation */
     }
     
     #eventlist-container {
-        top: 0;
         max-height: calc(100vh - 60px); /* minus Navigation */
         min-width: 250px;
         max-width: 30%;
         float: left;
-        overflow-y: auto;
     }
 }
 
