@@ -13,40 +13,37 @@ $(function () {
 
     initSearchForm();
 
-    $('body').on('click', '#event-pagination-top a, #event-pagination-bottom a', function (event) {
-        // Das Folgen des Links verhindern
-        //event.preventDefault();
+    // Auf Änderung des Hash-Werts zu "page" in der URL reagieren
+    window.addEventListener('hashchange', function() {
+        if (getUrlHashParameter("page") != undefined) {
+            var page = parseInt(getUrlHashParameter("page"));
+            if (currentPage !== page) {
+                currentPage = page;
+                
+                var url = "../api/v1/events?lat=" + getUrlParameter("lat") + "&lon=" + getUrlParameter("lng") + "&radius=" + getUrlParameter("radius") + "&category=" + getUrlParameter("category") + "&page=" + currentPage;
+                var $eventlist = $("#eventlist");
 
-        window.setTimeout(function () {
-            if (getUrlHashParameter("page") != undefined) {
-                currentPage = parseInt(getUrlHashParameter("page"));
+                $('#eventlist-container .loading-container').addClass('loading');
+                // Set a small timeout so the page doesn't "blink" the loading animation
+                window.setTimeout(function () {
+                    $.ajax({
+                        "method": "GET",
+                        "url": url,
+                        "returnType": "JSON"
+                    }).done(function (data) {
+                        data = JSON.parse(data);
+                        event_data = data.eventlist;
+
+                        // Alle gefundenen Events zur Eventlist hinzufügen
+                        addEventsToEventlist();
+                        
+                        $('#eventlist-container .loading-container').removeClass('loading');
+                    });
+                }, 200);
+
+                refreshPagination();
             }
-            var url = "../api/v1/events?lat=" + getUrlParameter("lat") + "&lon=" + getUrlParameter("lng") + "&radius=" + getUrlParameter("radius") + "&category=" + getUrlParameter("category") + "&page=" + currentPage;
-            var $eventlist = $("#eventlist");
-
-            $('#eventlist-container .loading-container').addClass('loading');
-            // Set a small timeout so the page doesn't "blink" the loading animation
-            window.setTimeout(function () {
-                $.ajax({
-                    "method": "GET",
-                    "url": url,
-                    "returnType": "JSON"
-                }).done(function (data) {
-                    data = JSON.parse(data);
-                    event_data = data.eventlist;
-
-                    // Alle gefundenen Events zur Eventlist hinzufügen
-                    emptyEventList();
-                    for (var i = 0; i < event_data.length; i++) {
-                        var li = addElement(event_data[i]);
-                        $eventlist.append(li);
-                    }
-                    $('#eventlist-container .loading-container').removeClass('loading');
-                });
-            }, 200);
-
-            refreshPagination();
-        }, 0);
+        }
     });
 
     function refreshPagination() {
