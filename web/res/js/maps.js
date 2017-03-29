@@ -1,23 +1,26 @@
+var currentPage = 1,
+    pages = 1,
+    event_data,
+    event_count,
+    map,
+    activeMarker;
+
 $(function () {
 
     $(".navbar-toggle").on("click", function () {
         $(this).toggleClass("active");
     });
 
-    var currentPage = 1,
-        pages = 1,
-        event_data,
-        map,
-        prev;
-
     initSearchForm();
 
-    $('body').on('click', '#event-pagination a', function (event) {
+    $('body').on('click', '#event-pagination-top a, #event-pagination-bottom a', function (event) {
         // Das Folgen des Links verhindern
         //event.preventDefault();
 
         window.setTimeout(function () {
-            currentPage = parseInt(getUrlHashParameter("page"));
+            if (getUrlHashParameter("page") != undefined) {
+                currentPage = parseInt(getUrlHashParameter("page"));
+            }
             var url = "../api/v1/events?lat=" + getUrlParameter("lat") + "&lon=" + getUrlParameter("lng") + "&radius=" + getUrlParameter("radius") + "&category=" + getUrlParameter("category") + "&page=" + currentPage;
             var $eventlist = $("#eventlist");
 
@@ -33,7 +36,7 @@ $(function () {
                     event_data = data.eventlist;
 
                     // Alle gefundenen Events zur Eventlist hinzufügen
-                    $eventlist.empty();
+                    emptyEventList();
                     for (var i = 0; i < event_data.length; i++) {
                         var li = addElement(event_data[i]);
                         $eventlist.append(li);
@@ -140,17 +143,30 @@ $(function () {
             marker.setMap(map);
 
             google.maps.event.addListener(marker, 'click', function () {
-                if (prev != undefined) {
-                    prev.setIcon('res/img/marker_red.png')
+                if (activeMarker == undefined) {
+                    activeMarker = this;
+                    this.setIcon('res/img/marker_blue.png');
+                    var $eventlist = $("#eventlist");
+                    emptyEventList();
+                    $eventlist.append(addElement(this.event));
+                    $('#eventlist-container h2').remove();
+                } else {
+                    disableActiveMarker();
                 }
-                this.setIcon('res/img/marker_blue.png');
-                var $eventlist = $("#eventlist");
-                $eventlist.empty();
-                $eventlist.append(addElement(this.event));
-                $('#eventlist-container h2').remove();
-                prev = this;
+            });
+            
+            google.maps.event.addListener(map, 'click', function() {
+                if (activeMarker != undefined) {
+                    disableActiveMarker();
+                }
             });
         }
+    }
+    
+    function disableActiveMarker() {
+        activeMarker.setIcon('res/img/marker_red.png')
+        activeMarker = undefined;
+        addEventsToEventlist();
     }
 
     function parseTime(time) {
@@ -254,8 +270,7 @@ $(function () {
         }
         refreshPagination();
 
-        var url = "../api/v1/events?lat=" + search_data["lat"] + "&lon=" + search_data["lng"] + "&radius=" + search_data["radius"] + "&category=" + encodeURIComponent(search_data["category"]).replace(/\%20/g, '+');
-        url += window.innerWidth < 768 ? "&page=" + currentPage : "&page=-1";
+        var url = "../api/v1/events?lat=" + search_data["lat"] + "&lon=" + search_data["lng"] + "&radius=" + search_data["radius"] + "&category=" + encodeURIComponent(search_data["category"]).replace(/\%20/g, '+') + "&page=" + currentPage;
 
         $.ajax({
             "method": "GET",
@@ -265,76 +280,12 @@ $(function () {
         }).done(function (data) {
             data = JSON.parse(data);
             event_data = data.eventlist;
-            var event_count = data.eventCount;
-            if (window.innerWidth < 768) {
-                // Alle gefundenen Events zur Eventlist hinzufügen
-                var $eventlist = $("#eventlist");
-                $eventlist.empty();
-                for (var i = 0; i < event_data.length; i++) {
-                    var li = addElement(event_data[i]);
-                    $eventlist.append(li);
-                }
-
-                var baseUrl = "map.html?lat=" + getUrlParameter("lat") + "&lng=" + getUrlParameter("lng") + "&city=" + getUrlParameter("city") + "&category=" + getUrlParameter("category") + "&radius=" + getUrlParameter("radius");
-                pages = parseInt(Math.ceil(event_count / event_data.length));
-                pages = !pages ? 1 : pages; // Fall "NaN" abfangen
-
-                if (event_count > 0) {
-                    // Pagination Start
-                    var pagination = `
-                    <nav class="text-center" id="event-pagination">
-                        <ul class="pagination pagination-lg">`;
-                    // "Previous"-Link
-                    if (currentPage == 1) pagination += `
-                            <li class="disabled">
-                                <span>
-                                    <span aria-hidden="true">&laquo;</span>
-                                </span>
-                            </li>`;
-                    else pagination += `
-                            <li>
-                                <a href="${baseUrl + "#!/page=" + (currentPage - 1)}" aria-label="Vorherige">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>`;
-                    // Pages Links
-                    for (var i = 1; i <= pages; i++) {
-                        if (currentPage == i) pagination += `
-                        <li class="active">
-                            <span>${i}</span>
-                        </li>
-                `;
-                        else pagination += `
-                            <li>
-                                <a href="${baseUrl + "#!/page=" + i}">${i}</a>
-                            </li>
-                `;
-                    }
-                    // "Next"-Link
-                    if (currentPage == pages) pagination += `
-                            <li class="disabled">
-                                <span>
-                                    <span aria-hidden="true">&raquo;</span>
-                                </span>
-                            </li>`;
-                    else pagination += `
-                            <li>
-                                <a href="${baseUrl + "#!/page=" + (currentPage + 1)}" aria-label="Nächste">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>`;
-                    // Pagination End
-                    pagination += `
-                        </ul>
-                    </nav>  
-                `;
-
-                    $('#eventlist-container #eventlist').before(pagination);
-                    $('#eventlist-container #eventlist').after(pagination);
-                }
-
-            } else {
-                $('#eventlist-container').append(`<h2 style="padding: 0 20px;">Wähle ein Event auf der Karte aus!</h2>`);
+            event_count = data.eventCount;
+            
+            // Alle gefundenen Events zur Eventlist hinzufügen
+            addEventsToEventlist();
+            
+            if (window.innerWidth >= 768) {
                 google.maps.event.addDomListener(window, 'load', initialize());
             }
 
@@ -346,6 +297,76 @@ $(function () {
                 $('#eventlist-container .help-block').prepend('<div class="bg-danger text-danger">Es sind leider keiner Veranstaltungen in deiner Nähe verfügbar. Versuche den Radius oder den Suchort zu ändern.</div>');
         });
     }
+    
+    function addEventsToEventlist() {
+        var $eventlist = $("#eventlist");
+        emptyEventList();
+        for (var i = 0; i < event_data.length; i++) {
+            var li = addElement(event_data[i]);
+            $eventlist.append(li);
+        }
+
+        var baseUrl = "map.html?lat=" + getUrlParameter("lat") + "&lng=" + getUrlParameter("lng") + "&city=" + getUrlParameter("city") + "&category=" + getUrlParameter("category") + "&radius=" + getUrlParameter("radius");
+        pages = parseInt(Math.ceil(event_count / event_data.length));
+        pages = !pages ? 1 : pages; // Fall "NaN" abfangen
+
+        if (event_count > 0) {
+            // Pagination Start
+            var pagination_common = `
+                <ul class="pagination">`;
+            // "Previous"-Link
+            if (currentPage == 1) pagination_common += `
+                    <li class="disabled">
+                        <span>
+                            <span aria-hidden="true">&laquo;</span>
+                        </span>
+                    </li>`;
+            else pagination_common += `
+                    <li>
+                        <a href="${baseUrl + "#!/page=" + (currentPage - 1)}" aria-label="Vorherige">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>`;
+            // Pages Links
+            for (var i = 1; i <= pages; i++) {
+                if (currentPage == i) pagination_common += `
+                <li class="active">
+                    <span>${i}</span>
+                </li>
+        `;
+                else pagination_common += `
+                    <li>
+                        <a href="${baseUrl + "#!/page=" + i}">${i}</a>
+                    </li>
+        `;
+            }
+            // "Next"-Link
+            if (currentPage == pages) pagination_common += `
+                    <li class="disabled">
+                        <span>
+                            <span aria-hidden="true">&raquo;</span>
+                        </span>
+                    </li>`;
+            else pagination_common += `
+                    <li>
+                        <a href="${baseUrl + "#!/page=" + (currentPage + 1)}" aria-label="Nächste">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>`;
+            // Pagination End
+            pagination_common += `
+                </ul>
+            </nav>`;
+            
+            var pagination_top = `
+            <nav class="text-center" id="event-pagination-top">` + pagination_common;
+            var pagination_bottom = `
+            <nav class="text-center" id="event-pagination-bottom">` + pagination_common;
+            
+            $('#eventlist-container #eventlist-wrapper #eventlist').before(pagination_top);
+            $('#eventlist-container #eventlist-wrapper #eventlist').after(pagination_bottom);
+        }
+    }
 
     function search() {
         $("#search").submit(function () {
@@ -356,7 +377,7 @@ $(function () {
                 loadEvents();
                 return false
             }
-        })
+        });
     }
 
     function getUrlParameter(sParam) {
@@ -413,6 +434,12 @@ $(function () {
 				<div class="material-icons more-button">keyboard_arrow_down</div>
             </div>
 		</li>`;
+    }
+    
+    function emptyEventList() {
+        $('#eventlist-wrapper #event-pagination-top').remove();
+        $('#eventlist-wrapper #event-pagination-bottom').remove();
+        $('#eventlist-wrapper #eventlist').empty();
     }
 
 });

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>eventmap</title>
     <link rel="icon" href="res/img/favicon.png">
-    <link rel="manifest" href="manifest.json">
+		<link rel="manifest" href="manifest.json">
     <link href="res/css/bootstrap.min.css" rel="stylesheet">
     <link href="res/css/cssload.css" rel="stylesheet">
     <link href="res/css/styles.css" rel="stylesheet">
@@ -36,7 +36,7 @@
 				</div>
 				<div class="form-group">
                     <label for="category" class="sr-only">Kategorie</label>
-                    <select class="form-control" name="category" id="category" required>
+                    <select class="form-control" name="category" id="category">
                         <option selected>Alle</option>
                     </select>
 				</div>
@@ -59,7 +59,9 @@
 
 <div id="eventlist-container">
     <span class="help-block text-center"></span>
-    <ul id="eventlist" class="show-events"></ul>
+    <div id="eventlist-wrapper">
+        <ul id="eventlist" class="show-events"></ul>
+    </div>
     <div class="loading-container">
         <div class="cssload-container">
             <div class="cssload-speeding-wheel cssload-speeding-wheel-black"></div>
@@ -67,15 +69,12 @@
     </div>
 </div>
 
-<input id="datainput" type="hidden" value="">
-
 <div id="googleMap"></div>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyAOZEBtHdLnUCL8yPbQRBZL9gdbAS3KE2g&libraries=places"></script>
 <script src="res/js/bootstrap.min.js"></script>
 <script src="res/js/jquery.geocomplete.min.js"></script>
-<script src="res/js/sample.js"></script>
 <script src="res/js/maps.js"></script>
 <script src="res/js/list.js"></script>
 </body>
