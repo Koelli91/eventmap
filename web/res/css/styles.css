@@ -223,10 +223,9 @@ body.bgimage {
 
 #eventlist-container {
     position: relative;
-    top: -5px; /* workaround: container fängt sonst erst 5px nach der navbar an */
-    min-height: calc(100vh - 60px); /* minus Navigation */
     width: 100%;
     background: #eee;
+    overflow: auto;
 }
 
 #eventlist-container .help-block {
@@ -240,6 +239,10 @@ body.bgimage {
 
 #eventlist-container .help-block strong {
     font-size: 14px;
+}
+
+#googleMap {
+    height: 100%;
 }
 
 .show-events {
@@ -312,11 +315,6 @@ ul.show-events > li .about-event-li .event-time {
     padding: 10px 0px;
 }
 
-#googleMap {
-    width: calc(100% - 300px);
-    height: calc(100vh - 62px);
-}
-
 a.website_link {
     background: #fff;
     border-radius: 5px;
@@ -337,10 +335,6 @@ a.website_link:hover {
 }
 
 @media (max-width: 767px) {
-    #googleMap {
-        display: none;
-    }
-
     .index-text {
         font-size: 40px;
         padding: 10px 10px 30px 10px;
@@ -372,11 +366,40 @@ a.website_link:hover {
     }
 }
 
+@media (max-width: 767px) and (orientation: portrait) {
+    #googleMap {
+        height: calc(50% - 30px); /* minus halbe Navigationshöhe */
+    }
+    
+    #eventlist-container {
+        height: calc(50% - 30px); /* minus halbe Navigationshöhe */
+    }
+}
+
+@media (max-width: 767px) and (orientation: landscape) {
+    #googleMap {
+        float: left;
+        width: 50%;
+        height: calc(100% - 60px); /* minus Navigationshöhe */
+    }
+    
+    #eventlist-container {
+        float: right;
+        width: 50%;
+        height: calc(100% - 60px); /* minus Navigationshöhe */
+    }
+}
+
 @media (min-width: 768px) {
+    #googleMap {
+        height: 100%;
+    }
+    
     #eventlist-container {
         top: 0;
         max-height: calc(100vh - 60px); /* minus Navigation */
-        width: 300px;
+        min-width: 250px;
+        max-width: 30%;
         float: left;
         overflow-y: auto;
     }

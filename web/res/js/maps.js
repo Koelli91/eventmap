@@ -285,9 +285,8 @@ $(function () {
             // Alle gefundenen Events zur Eventlist hinzufügen
             addEventsToEventlist();
             
-            if (window.innerWidth >= 768) {
-                google.maps.event.addDomListener(window, 'load', initialize());
-            }
+            // Google Map initialisieren
+            google.maps.event.addDomListener(window, 'load', initialize());
 
             if (event_data.length > 0) {
                 var ist_sind = event_count > 1 ? "sind" : "ist",
