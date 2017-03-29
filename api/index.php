@@ -49,7 +49,7 @@ $app->group('/v1', function () {
             $lon = isset($queryParams['lon']) ? $queryParams['lon'] : '';
             $lat = isset($queryParams['lat']) ? $queryParams['lat'] : '';
             $radius = isset($queryParams['radius']) ? $queryParams['radius'] : '';
-            $category = isset($queryParams['category']) ? urldecode($queryParams['category']) : '';
+            $category = isset($queryParams['category']) ? $queryParams['category'] : '';
             $page = isset($queryParams['page']) ? $queryParams['page'] : -1;
 
             $data = array();
@@ -81,12 +81,14 @@ $app->group('/v1', function () {
                 $result = get_events($lon, $lat, $radius, $category, $page);
                 $events = $result['events'];
                 $eventCountAll = $result['eventCountAll'];
+                $eventsPerPage = $result['eventsPerPage'];
             }
 
             $data['success'] = true;
             $data['message'] = 'Events erfolgreich geladen';
-            $data['eventlist'] = $events;
             $data['eventCount'] = $eventCountAll;
+            $data['eventlist'] = $events;
+            $data['eventsPerPage'] = $eventsPerPage;
             $response->getBody()->write(json_encode($data, JSON_PRETTY_PRINT));
             return $response;
         });
@@ -149,7 +151,7 @@ $app->group('/v1', function () {
 
     // Categories group
     $this->group('/category', function () {
-
+				
         $this->get('', function(Request $request, Response $response) {
             $data = array();
             $errors = array();

@@ -2,6 +2,7 @@ var currentPage = 1,
     pages = 1,
     event_data,
     event_count,
+    events_per_page,
     map,
     activeMarker;
 
@@ -33,6 +34,8 @@ $(function () {
                     }).done(function (data) {
                         data = JSON.parse(data);
                         event_data = data.eventlist;
+                        event_count = data.eventCount;
+                        events_per_page = data.eventsPerPage;
 
                         // Alle gefundenen Events zur Eventlist hinzufügen
                         addEventsToEventlist();
@@ -278,6 +281,7 @@ $(function () {
             data = JSON.parse(data);
             event_data = data.eventlist;
             event_count = data.eventCount;
+            events_per_page = data.eventsPerPage;
             
             // Alle gefundenen Events zur Eventlist hinzufügen
             addEventsToEventlist();
@@ -303,7 +307,7 @@ $(function () {
         }
 
         var baseUrl = "map.html?lat=" + getUrlParameter("lat") + "&lng=" + getUrlParameter("lng") + "&city=" + getUrlParameter("city") + "&category=" + getUrlParameter("category") + "&radius=" + getUrlParameter("radius");
-        pages = parseInt(Math.ceil(event_count / event_data.length));
+        pages = parseInt(Math.ceil(event_count / events_per_page));
         pages = !pages ? 1 : pages; // Fall "NaN" abfangen
 
         if (event_count > 0) {

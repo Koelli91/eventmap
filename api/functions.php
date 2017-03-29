@@ -31,7 +31,8 @@ function update_category_by_id($id, $newName)
     return false;
 }
 
-function update_category_by_name($oldName, $newName) {
+function update_category_by_name($oldName, $newName)
+{
     $category = CategoryQuery::create()->findOneByName($oldName);
 
     if ($category !== null) {
@@ -54,7 +55,8 @@ function get_category_by_id($id)
     return CategoryQuery::create()->findPk($id);
 }
 
-function get_or_add_category($name) {
+function get_or_add_category($name)
+{
     $category = get_category_by_name($name);
     if ($category !== null)
         return $category;
@@ -63,11 +65,13 @@ function get_or_add_category($name) {
     return get_category_by_name($name);
 }
 
-function get_categories() {
+function get_categories()
+{
     return CategoryQuery::create()->orderByName()->find();
 }
 
-function add_event($eventarr) {
+function add_event($eventarr)
+{
     $errors = array();
 
     $latitude = isset($eventarr['location']['lat']) ? $eventarr['location']['lat'] : '';
@@ -154,7 +158,8 @@ function add_event($eventarr) {
     return $errors;
 }
 
-function delete_old_events() {
+function delete_old_events()
+{
     $today = (new DateTime("now"))->format('Y-m-d');
     $tomorrow = (new DateTime("now + 1 day"))->format('Y-m-d');
     // DELETE FROM event WHERE begin < {heute} AND (end IS NULL OR end < {morgen})
@@ -177,11 +182,13 @@ function delete_old_events() {
     return count($to_delete);
 }
 
-function get_event_by_name($name) {
+function get_event_by_name($name)
+{
     return EventQuery::create()->findOneByName($name);
 }
 
-function get_events($lon, $lat, $radius, $category, $page) {
+function get_events($lon, $lat, $radius, $category, $page)
+{
     // Max. Anzahl an Ergebnissen pro Seite (mobile Ansicht)
     $max_results = 20;
 
@@ -226,7 +233,7 @@ function get_events($lon, $lat, $radius, $category, $page) {
     $eventCount = count($events);
     $stmt->closeCursor();
 
-    // Get Results for Page 1, 2, ..., n
+    // 2. Falls angegeben nur die Events für die Pagination-Seite holen
     if ($page > 0) {
         $offset = ($page - 1) * $max_results;
         $sql .= " LIMIT $offset,$max_results";
@@ -237,6 +244,7 @@ function get_events($lon, $lat, $radius, $category, $page) {
 
     return array(
         'events' => $events,
-        'eventCountAll' => $eventCount
+        'eventCountAll' => $eventCount,
+        'eventsPerPage' => $max_results
     );
 }
